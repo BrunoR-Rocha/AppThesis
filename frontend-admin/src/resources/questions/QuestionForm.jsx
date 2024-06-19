@@ -1,18 +1,58 @@
 import * as React from "react";
-import { ArrayInput, AutocompleteInput, ImageField, ImageInput, ReferenceInput, SelectInput, SimpleForm, SimpleFormIterator, TextInput, required } from "react-admin";
+import { ArrayInput, ImageField, ImageInput, ReferenceInput, SelectInput, SimpleForm, SimpleFormIterator, TextInput, required, useNotify, useRedirect } from "react-admin";
+import { generateDifficultyChoices } from "../../utils/helpers";
+import apiUrl from "../../providers/apiUrl";
+import { httpClient } from "../../providers/dataProvider";
 
 const RichTextInput = React.lazy(() =>
   import("ra-input-rich-text").then((module) => ({
     default: module.RichTextInput,
   }))
 );
+
+const difficultyChoices = generateDifficultyChoices(1, 10);
+
 export default function QuestionForm(props) {
+  const redirect = useRedirect();
+  const notify = useNotify();
+
+  const submit = (data) => {
+    let formData = new FormData();
+
+    if (data.image && data.image.rawFile) {
+      formData.append("image", data.image.rawFile);
+    }
+
+    for (let key in data) {
+      if (key === "tags")
+        formData.append(key, JSON.stringify(data[key]));
+      else if (key !== "image") formData.append(key, data[key]);
+    }
+    let requestUrl = apiUrl + "/questions";
+
+    if (data.id) {
+      requestUrl = requestUrl + "/" + data.id;
+    }
+
+    httpClient(requestUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then(() => {
+        notify("Atualizado com sucesso", {
+          type: "success",
+        });
+        redirect("list", "questions");
+      })
+      .catch((err) => notify(err.message, { type: "error" }));
+  };
+
   return (
-    <SimpleForm {...props}>
+    <SimpleForm {...props} onSubmit={submit}>
       <RichTextInput source="title" validate={required()} />
 
-      <ReferenceInput source="type_id" reference="question_types">
-        <SelectInput optionText="name"/>
+      <ReferenceInput source="type_id" reference="question_types" >
+        <SelectInput optionText="name" label="Question Type"/>
       </ReferenceInput>
 
       <ReferenceInput source="user_id" reference="users">
@@ -23,12 +63,13 @@ export default function QuestionForm(props) {
       <RichTextInput source="hint" />
 
       <SelectInput source="status" choices={[
-          { id: 'active', name: 'Active' },
-          { id: 'inactive', name: 'Inactive' },
           { id: 'pending', name: 'Pending' },
+          { id: 'active', name: 'Active' },
+          { id: 'inactive', name: 'Inactive' }
       ]} />
+      <SelectInput source="difficulty" choices={difficultyChoices} />
 
-      <ImageInput source="pictures" label="Related pictures">
+      <ImageInput source="image" label="Related Image">
         <ImageField source="src" title="title" />
       </ImageInput>
 

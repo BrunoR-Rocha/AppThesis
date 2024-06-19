@@ -8,6 +8,7 @@ use App\Http\Controllers\ForumPostController;
 use App\Http\Controllers\ForumThreadController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\MailTemplateController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionTopicController;
@@ -33,8 +34,12 @@ Route::group([
     'prefix' => '/backend',
 ], function (Router $router) {
 
+    Route::get('storage/images/{filename}', [MediaController::class, 'showImage']);
+
     $router->get('/journals/autoUpdate', [JournalController::class, 'autoUpdateJournalData']);
 
+    $router->post('questions/{id}', [QuestionController::class, 'update']);
+    
     $router->resources([
         'users'             => UserController::class,
         'faqs'              => FaqController::class,
@@ -52,7 +57,8 @@ Route::group([
     ]);
 
     $router->post('/admin/login', [AuthController::class , 'adminLogin']);
-});
 
+    
+});
 
 Route::redirect('/', '/backend');

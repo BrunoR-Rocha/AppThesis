@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\QuestionResource;
+use App\Http\Resources\QuestionShowResource;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,8 @@ class QuestionController extends Controller
             'hint' => 'nullable|string',
             'difficulty' => 'nullable|integer',
             'status' => 'nullable|string',
-            'tags' => 'nullable|array'
+            'tags' => 'nullable|array',
+            'image' => 'nullable|image',
         ]);
 
         if ($validatedData->fails()) {
@@ -47,17 +49,29 @@ class QuestionController extends Controller
                 'message' => __('errors.validator_fail'),
             ], 400);
         }
+        
+        $image = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $image = $imagePath;
+        }
 
-        // $question = Question::create([
-        //     'title' => $request->title,
-        //     'type_id' => $request->type_id,
-        //     'user_id' => Auth::user()->id
-        // ]);
+        $question = Question::create([
+            'title' => $request->title,
+            'explanation' => $request->explanation,
+            'hint' => $request->hint,
+            'status' => $request->status,
+            'difficulty' => $request->difficulty,
+            'tags' => $request->tags,
+            'image_path' => $image,
+            'type_id' => $request->type_id,
+            'user_id' => Auth::user()->id,
+        ]);
 
-        // return response()->json([
-        //     'id' => $question->id, 
-        //     'message' => __('validator.success'),
-        // ], 200);
+        return response()->json([
+            'id' => $question->id, 
+            'message' => __('validator.success'),
+        ], 200);
     }
 
     /**
@@ -68,7 +82,7 @@ class QuestionController extends Controller
      */
     public function show($id)
     {
-        $question = Question::findOrFail();
+        $question = Question::findOrFail($id);
 
         return new QuestionResource($question);
     }
@@ -82,7 +96,7 @@ class QuestionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $question = Question::findOrFail();
+        $question = Question::findOrFail($id);
 
         $question->update($request->all());
 
@@ -97,7 +111,7 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        $question = Question::findOrFail();
+        $question = Question::findOrFail($id);
 
         $question->delete();
 

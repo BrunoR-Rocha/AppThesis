@@ -1,12 +1,12 @@
 import * as React from "react";
-import { List, Datagrid, TextField, ShowButton, EditButton, ReferenceField, SelectField } from "react-admin";
+import { List, Datagrid, TextField, ShowButton, EditButton, ReferenceField, SelectField, RichTextField } from "react-admin";
 
 export default function QuestionList(props) {
   return (
     <List perPage={25} {...props}>
       <Datagrid>
         <TextField source="id" />
-        <TextField source="title" />
+        <RichTextField source="title" />
         <SelectField source="status" choices={[
             { id: 'active', name: 'Active' },
             { id: 'inactive', name: 'Inactive' },
@@ -16,7 +16,9 @@ export default function QuestionList(props) {
           <TextField source="name" />
         </ReferenceField>
 
-        <ReferenceField source="user_id" reference="users" label="Author" />
+        <ReferenceField source="user_id" reference="users" label="Author">
+          <TextField source="name" />  
+        </ReferenceField>
         <ShowButton basePath={props.basePath} />
         <EditButton basePath={props.basePath} />
       </Datagrid>

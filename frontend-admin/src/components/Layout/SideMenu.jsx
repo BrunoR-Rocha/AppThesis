@@ -73,7 +73,7 @@ const SideMenu = (props) => {
 
           <MenuItemLink
             to="/forum_categories"
-            primaryText="Categorias"
+            primaryText="Categories"
             leftIcon={<CategoryIcon />}
           />
 
@@ -115,7 +115,7 @@ const SideMenu = (props) => {
         >
             <MenuItemLink
               to="/users"
-              primaryText="Utilizadores"
+              primaryText="Users"
               leftIcon={<PeopleIcon />}
             />
 

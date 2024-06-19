@@ -5,7 +5,7 @@ import QuestionForm from "./QuestionForm";
 export default function QuestionEdit(props) {
   return (
     <Edit {...props}>
-      <QuestionForm {...props} />
+      <QuestionForm {...props} isedit={true} />
     </Edit>
   );
 }

@@ -5,6 +5,9 @@ import {
 import appDataProvider from "./providers/dataProvider";
 import authProvider from "./providers/authProvider";
 import { Login } from "./pages/Login";
+import MyLayout from "./components/Layout/Layout";
+import { SidebarProvider } from "./components/Layout/SidebarContext";
+
 import { UserCreate, UserEdit, UserList, UserShow } from "./resources/user";
 import { FaqCreate, FaqEdit, FaqList, FaqShow } from "./resources/faqs";
 import { NewsCreate, NewsEdit, NewsList, NewsShow } from "./resources/news";
@@ -15,11 +18,10 @@ import { ForumThreadCreate, ForumThreadEdit, ForumThreadList, ForumThreadShow } 
 import { ForumPostCreate, ForumPostEdit, ForumPostList, ForumPostShow } from "./resources/forum/forum_posts";
 import { SysConfigCreate, SysConfigEdit, SysConfigList, SysConfigShow } from "./resources/sys_configs";
 import { JournalCreate, JournalEdit, JournalList, JournalShow } from "./resources/journals";
-import MyLayout from "./components/Layout/Layout";
-import { SidebarProvider } from "./components/Layout/SidebarContext";
 import { QuestionTopicCreate, QuestionTopicEdit, QuestionTopicList, QuestionTopicShow } from "./resources/question_topics";
 import { QuestionTypeCreate, QuestionTypeEdit, QuestionTypeList, QuestionTypeShow } from "./resources/question_types";
 import { QuestionCreate, QuestionEdit, QuestionList, QuestionShow } from "./resources/questions";
+
 
 export const App = () => (
     <SidebarProvider>
@@ -28,7 +30,6 @@ export const App = () => (
             authProvider={authProvider} 
             loginPage={Login}
             layout={MyLayout}
-
         >
             <Resource
                 name="users"
