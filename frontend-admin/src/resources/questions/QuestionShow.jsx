@@ -10,9 +10,23 @@ import {
   ChipField, 
   ReferenceField,
   SelectField,
-  RichTextField
+  RichTextField,
+  Datagrid,
+  BooleanField,
+  useRecordContext,
+  TopToolbar,
+  CreateButton
 } from "react-admin";
 import { generateDifficultyChoices } from "../../utils/helpers";
+
+const OptionToolbar = () => {
+  const record = useRecordContext();
+  return (
+    <TopToolbar>
+      <CreateButton resource="question_options" label="Add Option" record={{ question_id: record.id }} />
+    </TopToolbar>
+  );
+};
 
 export default function QuestionShow(props) {
   const difficultyChoices = generateDifficultyChoices(1, 10);
@@ -50,6 +64,19 @@ export default function QuestionShow(props) {
             </SingleFieldList>
           </ArrayField>
 
+        </Tab>
+        <Tab label="Opções">
+          <OptionToolbar />
+          <ArrayField source="options" label="">
+            <Datagrid optimized bulkActionButtons={false}>
+              <TextField source="option_text" label="Opção" />
+              <BooleanField source="is_correct" label="Correto?" />
+            </Datagrid>
+          </ArrayField>
+        </Tab>
+        <Tab label="Tópicos Relacionados">
+          <ArrayField source="topics" label="">
+          </ArrayField>
         </Tab>
       </TabbedShowLayout>
     </Show>

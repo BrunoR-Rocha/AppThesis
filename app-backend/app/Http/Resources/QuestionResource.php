@@ -27,7 +27,9 @@ class QuestionResource extends JsonResource
             'user_id' => $this->user_id,
             'tags' => json_decode($this->tags),
             'image' => Storage::disk('public')->url($this->image_path),
-            'image_path' => $this->image_path
+            'image_path' => $this->image_path,
+            'options' => $this->options,
+            'topics' => $this->topics,
         ];
     }
 }

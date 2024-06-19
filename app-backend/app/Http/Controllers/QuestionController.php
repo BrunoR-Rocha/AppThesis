@@ -8,6 +8,7 @@ use App\Http\Resources\QuestionShowResource;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class QuestionController extends Controller
@@ -96,9 +97,44 @@ class QuestionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $question = Question::findOrFail($id);
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'sometimes|string',
+            'type_id' => 'sometimes',
+            'explanation' => 'nullable|string',
+            'hint' => 'nullable|string',
+            'difficulty' => 'nullable|integer',
+            'status' => 'nullable|string',
+            'tags' => 'nullable',
+            'image' => 'nullable|image',
+        ]);
 
-        $question->update($request->all());
+        if ($validatedData->fails()) {
+            return response()->json([
+                'errors' => $validatedData->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        $question = Question::findOrFail($id);
+        $image = $question->image_path;
+
+        if (isset($request->image)) {
+            Storage::disk('public')->delete($question->image_path);
+            $imagePath = $request->file('image')->store('images', 'public');
+            $image = $imagePath;
+        }
+
+        $question = $question->update([
+            'title' => $request->title,
+            'explanation' => $request->explanation,
+            'hint' => $request->hint,
+            'status' => $request->status,
+            'difficulty' => $request->difficulty,
+            'tags' => $request->tags,
+            'image_path' => $image,
+            'type_id' => $request->type_id,
+            'user_id' => Auth::user()->id,
+        ]);
 
         return $question;
     }
@@ -112,6 +148,8 @@ class QuestionController extends Controller
     public function destroy($id)
     {
         $question = Question::findOrFail($id);
+
+        Storage::disk('public')->delete($question->image_path);
 
         $question->delete();
 

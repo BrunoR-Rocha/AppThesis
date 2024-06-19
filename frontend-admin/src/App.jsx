@@ -18,6 +18,7 @@ import { ForumThreadCreate, ForumThreadEdit, ForumThreadList, ForumThreadShow } 
 import { ForumPostCreate, ForumPostEdit, ForumPostList, ForumPostShow } from "./resources/forum/forum_posts";
 import { SysConfigCreate, SysConfigEdit, SysConfigList, SysConfigShow } from "./resources/sys_configs";
 import { JournalCreate, JournalEdit, JournalList, JournalShow } from "./resources/journals";
+import { QuestionOptionCreate, QuestionOptionEdit, QuestionOptionList, QuestionOptionShow } from "./resources/question_options";
 import { QuestionTopicCreate, QuestionTopicEdit, QuestionTopicList, QuestionTopicShow } from "./resources/question_topics";
 import { QuestionTypeCreate, QuestionTypeEdit, QuestionTypeList, QuestionTypeShow } from "./resources/question_types";
 import { QuestionCreate, QuestionEdit, QuestionList, QuestionShow } from "./resources/questions";
@@ -94,6 +95,14 @@ export const App = () => (
                 show={QuestionTopicShow}
                 edit={QuestionTopicEdit}
                 create={QuestionTopicCreate}
+            />
+
+            <Resource
+                name="question_options"
+                list={QuestionOptionList}
+                show={QuestionOptionShow}
+                edit={QuestionOptionEdit}
+                create={QuestionOptionCreate}
             />
 
             <Resource

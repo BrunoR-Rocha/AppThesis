@@ -11,11 +11,11 @@ use App\Http\Controllers\MailTemplateController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionOptionController;
 use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
-use App\Models\MailTemplate;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +39,7 @@ Route::group([
     $router->get('/journals/autoUpdate', [JournalController::class, 'autoUpdateJournalData']);
 
     $router->post('questions/{id}', [QuestionController::class, 'update']);
-    
+
     $router->resources([
         'users'             => UserController::class,
         'faqs'              => FaqController::class,
@@ -54,6 +54,7 @@ Route::group([
         'question_topics'   => QuestionTopicController::class,
         'question_types'    => QuestionTypeController::class,
         'questions'         => QuestionController::class,
+        'question_options'  => QuestionOptionController::class,
     ]);
 
     $router->post('/admin/login', [AuthController::class , 'adminLogin']);

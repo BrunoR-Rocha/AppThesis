@@ -93,6 +93,12 @@ const SideMenu = (props) => {
           />
 
           <MenuItemLink
+            to="/question_options"
+            primaryText="Question Options"
+            leftIcon={<TopicIcon />}
+          />
+
+          <MenuItemLink
             to="/question_topics"
             primaryText="Question Topics"
             leftIcon={<TopicIcon />}
