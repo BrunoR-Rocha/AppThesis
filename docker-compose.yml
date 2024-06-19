@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  app-backend:
+    build:
+      context: ./app-backend
+    container_name: app-backend
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./app-backend:/var/www
+      - /var/www/vendor
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - '/app/node_modules'
+    environment:
+      - CHOKIDAR_USEPOLLING=true 
+      - FAST_REFRESH=false
+      - WATCHPACK_POLLING=true 
+    networks:
+      - app-network
+    command: npm start
+
+  frontend-admin:
+    build:
+      context: ./frontend-admin
+    container_name: frontend-admin
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend-admin:/app
+      - '/app/node_modules'
+    environment:
+      - CHOKIDAR_USEPOLLING=true  
+    stdin_open: true
+    networks:
+      - app-network
+    command: npm run dev
+
+  nginx:
+    image: nginx:latest
+    container_name: app-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app-backend
+      - frontend
+      - frontend-admin
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "54320:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pgdata:
