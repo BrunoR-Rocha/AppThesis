@@ -22,6 +22,7 @@ import { QuestionOptionCreate, QuestionOptionEdit, QuestionOptionList, QuestionO
 import { QuestionTopicCreate, QuestionTopicEdit, QuestionTopicList, QuestionTopicShow } from "./resources/question_topics";
 import { QuestionTypeCreate, QuestionTypeEdit, QuestionTypeList, QuestionTypeShow } from "./resources/question_types";
 import { QuestionCreate, QuestionEdit, QuestionList, QuestionShow } from "./resources/questions";
+import { QuizCreate, QuizEdit, QuizList, QuizShow } from "./resources/quizzes";
 
 
 export const App = () => (
@@ -119,6 +120,14 @@ export const App = () => (
                 show={QuestionShow}
                 edit={QuestionEdit}
                 create={QuestionCreate}
+            />
+
+            <Resource
+                name="quizzes"
+                list={QuizList}
+                show={QuizShow}
+                edit={QuizEdit}
+                create={QuizCreate}
             />
 
             <Resource

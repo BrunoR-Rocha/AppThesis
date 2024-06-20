@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
+use App\Http\Resources\QuizResource;
+use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\Response;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class QuizController extends Controller
 {
@@ -12,9 +19,11 @@ class QuizController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = new ApiResponse($request, Quiz::class);
+
+        return $data->returnCollectionAsJsonResponse(QuizResource::collection($data->collection('quizzes')));
     }
 
     /**
@@ -25,18 +34,94 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'topic_id' => 'required|exists:question_topics,id',
+            'description' => 'nullable|string',
+            'time_limit' => 'nullable|integer|min:1',
+            'difficulty' => 'nullable|integer',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'errors' => $validatedData->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        $quiz = Quiz::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'topic_id' => $request->topic_id,
+            'user_id' => Auth::user()->id,
+            'time_limit' => $request->time_limit,
+            'difficulty' => $request->difficulty,
+            'start_time' => Carbon::now()
+        ]);
+
+        $questions = Question::where('difficulty', '<=', $quiz->difficulty)
+                    ->whereHas('topics', function ($query) use ($quiz) {
+                        $query->where('topics.id', $quiz->topic_id);
+                    })
+                    ->inRandomOrder()
+                    ->take(10)
+                    ->get();
+
+        foreach ($questions as $index => $question) {
+            $quiz->questions()->attach($question, ['order' => $index + 1]);
+        }
+
+        return response()->json([
+            'id' => $quiz->id, 
+            'message' => __('validator.success'),
+        ], 200);
     }
 
+    public function submit(Request $request, $id)
+    {
+        // Adicionar validação do request
+        // 
+
+        $quiz = Quiz::findOrFail($id);
+
+        // Verificar se todas as perguntas do quiz foram respondidas
+        $totalQuestions = $quiz->questions()->count();
+        $answeredQuestions = Response::where('quiz_id', $quiz->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->count();
+
+        if ($totalQuestions !== $answeredQuestions) {
+            return response()->json(['message' => 'Not all questions answered'], 400);
+        }
+
+        // Atualizar o estado do quiz
+        $quiz->end_time = Carbon::now();
+        $quiz->is_complete = true;
+        $quiz->save();
+
+        // Adicionar validação de tempo
+        $timeSpent = $quiz->end_time->diffInMinutes($quiz->start_time);
+
+        if ($quiz->time_limit && $timeSpent > $quiz->time_limit) {
+            return response()->json(['message' => 'Time limit exceeded'], 400);
+        }
+
+        // Adicionar processamento de dados estatísticos do utilizador e score
+        // 
+
+        return response()->json(['message' => 'Quiz submitted successfully']);
+    }
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function show(Quiz $quiz)
+    public function show($id)
     {
-        //
+        $quiz = Quiz::findOrFail($id);
+
+        return new QuizResource($quiz);
     }
 
     /**
@@ -46,9 +131,13 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quiz $quiz)
+    public function update(Request $request, $id)
     {
-        //
+        $quiz = Quiz::findOrFail($id);
+
+        $quiz->update($request->all());
+
+        return $quiz;
     }
 
     /**
@@ -57,8 +146,14 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
+    public function destroy($id)
     {
-        //
+        $quiz = Quiz::findOrFail($id);
+
+        $quiz->delete();
+
+        return response()->json([
+            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+        ]);
     }
 }

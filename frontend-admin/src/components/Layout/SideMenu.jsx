@@ -87,6 +87,12 @@ const SideMenu = (props) => {
           icon={<QuizIcon />}
         >
           <MenuItemLink
+            to="/quizzes"
+            primaryText="Quizzes"
+            leftIcon={<ChatBubbleIcon />}
+          />
+
+          <MenuItemLink
             to="/questions"
             primaryText="Questions"
             leftIcon={<ChatBubbleIcon />}

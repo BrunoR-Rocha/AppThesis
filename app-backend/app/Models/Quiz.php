@@ -13,8 +13,13 @@ class Quiz extends Model
         'title',
         'description',
         'topic_id',
+        'user_id',
         'difficulty',
-        'time_limit'
+        'time_limit',
+        'is_complete',
+        'start_time',
+        'end_time',
+        'score'
     ];
 
     public function questions()
@@ -27,9 +32,9 @@ class Quiz extends Model
         return $this->belongsTo(QuestionTopic::class);
     }
 
-    public function userQuizzes()
+    public function user()
     {
-        return $this->hasMany(UserQuiz::class);
+        return $this->belongsTo(User::class);
     }
 
 }

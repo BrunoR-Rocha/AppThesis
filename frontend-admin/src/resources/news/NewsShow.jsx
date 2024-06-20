@@ -5,7 +5,7 @@ import {
   TabbedShowLayout,
   Tab,
   BooleanField,
-  RichTextField
+  RichTextField,
 } from "react-admin";
 
 export default function NewsShow(props) {

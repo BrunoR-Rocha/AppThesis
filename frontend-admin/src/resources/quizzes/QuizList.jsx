@@ -5,16 +5,22 @@ import {
   TextField,
   ShowButton,
   EditButton,
-  BooleanField
+  ReferenceField,
 } from "react-admin";
 
-export default function NewsList(props) {
+export default function QuizList(props) {
   return (
     <List perPage={25} {...props}>
       <Datagrid>
         <TextField source="id" />
         <TextField source="title" />
-        <BooleanField source="enabled" />
+        <ReferenceField
+          source="topic_id"
+          reference="question_topics"
+          label="Topic"
+        >
+          <TextField source="name" />
+        </ReferenceField>
         <ShowButton basePath={props.basePath} />
         <EditButton basePath={props.basePath} />
       </Datagrid>

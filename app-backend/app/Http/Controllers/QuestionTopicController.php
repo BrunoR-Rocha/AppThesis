@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\QuestionTopicResource;
+use App\Models\Question;
 use App\Models\QuestionTopic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,6 +34,7 @@ class QuestionTopicController extends Controller
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'tag' => 'required|unique:question_topics|string|max:255',
+            'question_id' => 'nullable|exists:questions,id'
         ]);
 
         if ($validatedData->fails()) {
@@ -46,6 +48,12 @@ class QuestionTopicController extends Controller
             'name' => $request->name,
             'tag' => $request->tag,
         ]);
+
+        if($request->question_id)
+        {
+            $question = Question::findOrFail($request->question_id);
+            $question->topics()->attach($questionTopic->id);
+        }
 
         return response()->json([
             'id' => $questionTopic->id, 

@@ -14,6 +14,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionOptionController;
 use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
 use Illuminate\Routing\Router;
@@ -55,6 +56,7 @@ Route::group([
         'question_types'    => QuestionTypeController::class,
         'questions'         => QuestionController::class,
         'question_options'  => QuestionOptionController::class,
+        'quizzes'           => QuizController::class,
     ]);
 
     $router->post('/admin/login', [AuthController::class , 'adminLogin']);

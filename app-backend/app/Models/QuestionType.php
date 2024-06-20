@@ -18,4 +18,9 @@ class QuestionType extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function scopeTag($query, $tag)
+    {
+        return $query->where('tag', $tag);
+    }
 }

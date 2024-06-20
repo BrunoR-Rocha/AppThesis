@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  SimpleForm,
-  TextInput,
-  required,
-  BooleanInput
-} from "react-admin";
+import { SimpleForm, TextInput, required, BooleanInput } from "react-admin";
 
 const RichTextInput = React.lazy(() =>
   import("ra-input-rich-text").then((module) => ({

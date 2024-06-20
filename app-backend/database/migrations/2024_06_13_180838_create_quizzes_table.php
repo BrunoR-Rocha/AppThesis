@@ -18,9 +18,13 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->foreignId('topic_id')->nullable()->constrained('question_topics');
+            $table->foreignId('user_id')->constrained('users');
             $table->integer('difficulty')->nullable();
             $table->integer('time_limit')->nullable();
-
+            $table->boolean('is_complete')->default(false)->index();
+            $table->timestamp('start_time')->nullable()->index();
+            $table->timestamp('end_time')->nullable()->index();
+            $table->integer('score')->nullable();
             $table->timestamps();
         });
     }
