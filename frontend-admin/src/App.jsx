@@ -23,6 +23,8 @@ import { QuestionTopicCreate, QuestionTopicEdit, QuestionTopicList, QuestionTopi
 import { QuestionTypeCreate, QuestionTypeEdit, QuestionTypeList, QuestionTypeShow } from "./resources/question_types";
 import { QuestionCreate, QuestionEdit, QuestionList, QuestionShow } from "./resources/questions";
 import { QuizCreate, QuizEdit, QuizList, QuizShow } from "./resources/quizzes";
+import { LibraryPageCreate, LibraryPageEdit, LibraryPageList, LibraryPageShow } from "./resources/library";
+import { LibraryPageModuleCreate, LibraryPageModuleEdit, LibraryPageModuleList, LibraryPageModuleShow } from "./resources/library_modules";
 
 
 export const App = () => (
@@ -144,6 +146,23 @@ export const App = () => (
                 edit={SysConfigEdit}
                 create={SysConfigCreate}
             />
+
+            <Resource
+                name="library_pages"
+                list={LibraryPageList}
+                show={LibraryPageShow}
+                edit={LibraryPageEdit}
+                create={LibraryPageCreate}
+            />
+
+            <Resource
+                name="library_page_modules"
+                list={LibraryPageModuleList}
+                show={LibraryPageModuleShow}
+                edit={LibraryPageModuleEdit}
+                create={LibraryPageModuleCreate}
+            />
+
         </Admin>
     </SidebarProvider>
   

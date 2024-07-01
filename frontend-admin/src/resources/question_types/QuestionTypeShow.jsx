@@ -5,7 +5,7 @@ export default function QuestionTypeShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="name" />
           <TextField source="tag" />
         </Tab>

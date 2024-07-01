@@ -5,14 +5,14 @@ import {
   TabbedShowLayout,
   Tab,
   BooleanField,
-  RichTextField
+  RichTextField,
 } from "react-admin";
 
 export default function FaqShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="title" />
           <RichTextField source="body" />
           <TextField source="section" />

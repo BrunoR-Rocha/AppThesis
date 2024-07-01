@@ -2,7 +2,6 @@ import * as React from "react";
 import { useState } from "react";
 import {
   Menu,
-  DashboardMenuItem,
   MenuItemLink
 } from "react-admin";
 import SubMenu from "./SideBarSubMenu";
@@ -20,9 +19,12 @@ import MailIcon from '@mui/icons-material/Mail';
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import QuizIcon from '@mui/icons-material/Quiz';
 import TopicIcon from '@mui/icons-material/Topic';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+
 const SideMenu = (props) => {
   const [forums, setForums] = useState(true);
   const [quizzes, setQuizzes] = useState(true);
+  const [libraries, setLibraries] = useState(true);
   const [adminAccess, setAdminAccess] = useState(true);
 
   return (
@@ -81,7 +83,7 @@ const SideMenu = (props) => {
 
         <SubMenu
           handleToggle={() => setQuizzes(!quizzes)}
-          isOpen={forums}
+          isOpen={quizzes}
           name="Quizzes"
           dense={true}
           icon={<QuizIcon />}
@@ -115,6 +117,27 @@ const SideMenu = (props) => {
             primaryText="Question Types"
             leftIcon={<ChatBubbleIcon />}
           />
+
+        </SubMenu>
+
+        <SubMenu
+          handleToggle={() => setLibraries(!libraries)}
+          isOpen={libraries}
+          name="Library"
+          dense={true}
+          icon={<LibraryBooksIcon />}
+        >
+            <MenuItemLink
+              to="/library_pages"
+              primaryText="Library Pages"
+              leftIcon={<ArticleIcon />}
+            />
+
+            <MenuItemLink
+              to="/library_page_modules"
+              primaryText="Library Page Modules"
+              leftIcon={<ArticleIcon />}
+            />
 
         </SubMenu>
 

@@ -10,6 +10,12 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
+    "@tiptap/core": "^2.4.0",
+    "@tiptap/extension-heading": "^2.4.0",
+    "@tiptap/extension-image": "^2.4.0",
+    "@tiptap/extension-table": "^2.4.0",
+    "@tiptap/pm": "^2.4.0",
+    "@tiptap/react": "^2.4.0",
     "ra-data-simple-rest": "^4.16.0",
     "ra-input-rich-text": "^4.16.18",
     "react": "^18.2.0",

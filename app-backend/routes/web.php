@@ -7,6 +7,8 @@ use App\Http\Controllers\ForumCategoryController;
 use App\Http\Controllers\ForumPostController;
 use App\Http\Controllers\ForumThreadController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\LibraryPageController;
+use App\Http\Controllers\LibraryPageModuleController;
 use App\Http\Controllers\MailTemplateController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\QuestionOptionController;
 use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
 use Illuminate\Routing\Router;
@@ -42,21 +45,24 @@ Route::group([
     $router->post('questions/{id}', [QuestionController::class, 'update']);
 
     $router->resources([
-        'users'             => UserController::class,
-        'faqs'              => FaqController::class,
-        'news'              => NewsController::class,
-        'contacts'          => ContactController::class,
-        'mail_templates'    => MailTemplateController::class,
-        'forum_categories'  => ForumCategoryController::class, 
-        'forum_threads'     => ForumThreadController::class,
-        'forum_posts'       => ForumPostController::class,
-        'sys_configs'       => SysConfigController::class,
-        'journals'          => JournalController::class,
-        'question_topics'   => QuestionTopicController::class,
-        'question_types'    => QuestionTypeController::class,
-        'questions'         => QuestionController::class,
-        'question_options'  => QuestionOptionController::class,
-        'quizzes'           => QuizController::class,
+        'users'                 => UserController::class,
+        'faqs'                  => FaqController::class,
+        'news'                  => NewsController::class,
+        'contacts'              => ContactController::class,
+        'mail_templates'        => MailTemplateController::class,
+        'forum_categories'      => ForumCategoryController::class, 
+        'forum_threads'         => ForumThreadController::class,
+        'forum_posts'           => ForumPostController::class,
+        'sys_configs'           => SysConfigController::class,
+        'journals'              => JournalController::class,
+        'question_topics'       => QuestionTopicController::class,
+        'question_types'        => QuestionTypeController::class,
+        'questions'             => QuestionController::class,
+        'question_options'      => QuestionOptionController::class,
+        'quizzes'               => QuizController::class,
+        'responses'             => ResponseController::class,
+        'library_pages'         => LibraryPageController::class,
+        'library_page_modules'  => LibraryPageModuleController::class
     ]);
 
     $router->post('/admin/login', [AuthController::class , 'adminLogin']);

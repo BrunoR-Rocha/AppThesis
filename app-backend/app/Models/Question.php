@@ -44,4 +44,9 @@ class Question extends Model
     {
         return $this->hasMany(QuestionOption::class);
     }
+
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
 }

@@ -14,14 +14,13 @@ import {
   Datagrid,
   BooleanField,
   useRecordContext,
-  TopToolbar,
-  CreateButton
+  TopToolbar
 } from "react-admin";
 import { generateDifficultyChoices } from "../../utils/helpers";
 import AddIcon from '@mui/icons-material/Add';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useNotify, useRefresh, useDataProvider } from 'react-admin';
-import { TextField as MuiTextField, Switch } from '@mui/material';
+import { TextField as MuiTextField, Switch, FormControlLabel} from '@mui/material';
 
 const CustomAddOptionButton = (props) => {
   const [open, setOpen] = useState(false);
@@ -69,6 +68,10 @@ const AddOptionDialog = ({ open, handleClose }) => {
           is_correct: isCorrect,
           question_id: record.id,
         },
+      }).then(function(){
+
+        setOptionText('');
+        setIsCorrect(false);
       });
       notify('Option added successfully', { type: 'success' });
       refresh();
@@ -80,7 +83,7 @@ const AddOptionDialog = ({ open, handleClose }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add a New Option</DialogTitle>
+      <DialogTitle>Add new option</DialogTitle>
       <DialogContent>
         <MuiTextField
           label="Text"
@@ -89,11 +92,12 @@ const AddOptionDialog = ({ open, handleClose }) => {
           fullWidth
           margin="dense"
         />
-        <Switch
+        <FormControlLabel control={<Switch
           checked={isCorrect}
           onChange={(e) => setIsCorrect(e.target.checked)}
           inputProps={{ "aria-label": 'controlled' }}
         />
+        } label="Correct?" />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
@@ -199,7 +203,7 @@ export default function QuestionShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <RichTextField source="title" />
 
           <ReferenceField source="type_id" reference="question_types" label="Question Type">
@@ -230,16 +234,16 @@ export default function QuestionShow(props) {
           </ArrayField>
 
         </Tab>
-        <Tab label="Opções">
+        <Tab label="Options">
           <OptionToolbar resource="question_options"/>
           <ArrayField source="options" label="">
             <Datagrid optimized bulkActionButtons={false}>
-              <TextField source="option_text" label="Opção" />
-              <BooleanField source="is_correct" label="Correto?" />
+              <TextField source="option_text" label="Option" />
+              <BooleanField source="is_correct" label="Correct?" />
             </Datagrid>
           </ArrayField>
         </Tab>
-        <Tab label="Tópicos Relacionados">
+        <Tab label="Related Topics">
           <TopicToolbar />
           <ArrayField source="topics" label="">
             <Datagrid bulkActionButtons={false}>

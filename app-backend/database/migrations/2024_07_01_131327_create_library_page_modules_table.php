@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('responses', function (Blueprint $table) {
+        Schema::create('library_page_modules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quiz_id')->constrained('quizzes');
-            $table->foreignId('question_id')->constrained('questions');
-            $table->foreignId('user_id')->constrained('users');
-            $table->text('question_title')->nullable();
-            $table->text('response_text')->nullable();
+            $table->foreignId('library_page_id')->constrained('library_pages');
+            $table->string('title')->nullable();
+            $table->longText('content')->nullable();
+            $table->integer('position')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('responses');
+        Schema::dropIfExists('library_page_modules');
     }
 };

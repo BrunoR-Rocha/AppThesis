@@ -12,7 +12,7 @@ export default function JournalShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="title" />
           <TextField source="publisher" />
           <TextField source="link" />

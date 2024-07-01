@@ -8,8 +8,6 @@ const RichTextInput = React.lazy(() =>
   }))
 );
 
-
-
 export default function ForumThreadForm(props) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

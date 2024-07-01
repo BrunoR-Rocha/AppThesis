@@ -9,7 +9,7 @@ import {
   ReferenceManyField,
   CreateButton,
   TopToolbar,
-  useRecordContext
+  useRecordContext,
 } from "react-admin";
 
 export default function ForumCategoryShow(props) {
@@ -17,10 +17,10 @@ export default function ForumCategoryShow(props) {
     const record = useRecordContext();
     return (
       <CreateButton
-          basePath="/forum_threads"
-          label="Adicionar thread"
-          variant="contained"
-          to={`/forum_threads/create?category_id=${record.id}`}
+        basePath="/forum_threads"
+        label="Adicionar thread"
+        variant="contained"
+        to={`/forum_threads/create?category_id=${record.id}`}
       />
     );
   };
@@ -28,14 +28,18 @@ export default function ForumCategoryShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="tag" />
           <TextField source="name" />
           <BooleanField source="active" />
         </Tab>
 
         <Tab label="Threads">
-          <ReferenceManyField reference="forum_threads" target="forum_category_id" addLabel={false}>
+          <ReferenceManyField
+            reference="forum_threads"
+            target="forum_category_id"
+            addLabel={false}
+          >
             <TopToolbar>
               <ThreadCreateButton />
             </TopToolbar>

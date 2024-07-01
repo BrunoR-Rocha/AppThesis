@@ -5,14 +5,14 @@ import {
   TabbedShowLayout,
   Tab,
   BooleanField,
-  RichTextField
+  RichTextField,
 } from "react-admin";
 
 export default function MailTemplateShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="tag" />
           <TextField source="description" />
           <RichTextField source="content" />

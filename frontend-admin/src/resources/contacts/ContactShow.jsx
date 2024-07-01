@@ -5,14 +5,14 @@ import {
   TabbedShowLayout,
   Tab,
   BooleanField,
-  RichTextField
+  RichTextField,
 } from "react-admin";
 
 export default function NewsShow(props) {
   return (
     <Show {...props}>
       <TabbedShowLayout>
-        <Tab label="Detalhes">
+        <Tab label="Details">
           <TextField source="name" />
           <TextField source="email" />
           <TextField source="subject" />

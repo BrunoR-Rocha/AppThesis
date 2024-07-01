@@ -49,6 +49,15 @@ class QuizController extends Controller
             ], 400);
         }
 
+        $questions = Question::where('difficulty', '<=', $request->difficulty)
+                    ->whereHas('topics', function ($query) use ($request) {
+                        $query->where('question_topics.id', $request->topic_id);
+                    })
+                    ->inRandomOrder()
+                    ->status('active')
+                    ->take(10)
+                    ->get();
+
         $quiz = Quiz::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -58,14 +67,6 @@ class QuizController extends Controller
             'difficulty' => $request->difficulty,
             'start_time' => Carbon::now()
         ]);
-
-        $questions = Question::where('difficulty', '<=', $quiz->difficulty)
-                    ->whereHas('topics', function ($query) use ($quiz) {
-                        $query->where('topics.id', $quiz->topic_id);
-                    })
-                    ->inRandomOrder()
-                    ->take(10)
-                    ->get();
 
         foreach ($questions as $index => $question) {
             $quiz->questions()->attach($question, ['order' => $index + 1]);
