@@ -221,10 +221,8 @@ export default function QuestionShow(props) {
           ]} />
 
           <SelectField source="difficulty" choices={difficultyChoices} />
-
           <RichTextField source="explanation" />
           <RichTextField source="hint" />
-
           <ImageField source="image" label="Imagem descritiva" />
 
           <ArrayField source="tags">

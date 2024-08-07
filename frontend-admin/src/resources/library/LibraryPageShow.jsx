@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Show,
@@ -10,11 +10,22 @@ import {
   NumberField,
   TopToolbar,
   useRecordContext,
+  SimpleForm,
+  EditActions,
+  EditButton,
 } from "react-admin";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useNotify, useRefresh, useDataProvider } from 'react-admin';
 import { TextField as MuiTextField} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Link } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
+
+const RichTextInput = React.lazy(() =>
+  import("ra-input-rich-text").then((module) => ({
+    default: module.RichTextInput,
+  }))
+);
 
 export default function LibraryPageShow(props) {
   const CustomAddOptionButton = (props) => {
@@ -82,21 +93,32 @@ export default function LibraryPageShow(props) {
       <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
         <DialogTitle>Add new module</DialogTitle>
         <DialogContent>
-          <MuiTextField
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            fullWidth
-            margin="dense"
-          />
-          <MuiTextField
-            label="Position"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-            fullWidth
-            margin="dense"
-          />
+          <SimpleForm toolbar={false}>
+            <MuiTextField
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              fullWidth
+              margin="dense"
+            />
+            
+            <MuiTextField
+              label="Position"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              fullWidth
+              margin="dense"
+            />
 
+            <RichTextInput
+              source="content"
+              label="Content"
+              value={content}
+              onChange={(e) => setContent(e)}
+              fullWidth
+              margin="dense"
+            />
+          </SimpleForm>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -110,6 +132,51 @@ export default function LibraryPageShow(props) {
     );
   };
 
+  const ModulesPreview = () => {
+    const record = useRecordContext();
+    const dataProvider = useDataProvider();
+    const [modules, setModules] = useState([]);
+
+    console.log(record);
+    useEffect(() => {
+      const fetchModules = async () => {
+        const { data } = await dataProvider.getList('library_page_modules', {
+          filter: { library_page_id: record.id },
+          sort: { field: 'position', order: 'ASC' },
+          pagination: { page: 1, perPage: 100}
+        });
+        setModules(data);
+      };
+      fetchModules();
+    }, [dataProvider, record.id]);
+
+    return (
+      <div>
+        <h2>{record.title}</h2>
+        {modules.map(module => (
+          <div key={module.id} style={{ marginBottom: '1em' }}>
+            <h3>{module.title}</h3>
+            <div dangerouslySetInnerHTML={{ __html: module.content }} />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const CustomEditButton = () => {
+    const record = useRecordContext();
+    return (
+      <Button
+        component={Link}
+        to={`/library_page_modules/${record.id}`}
+        startIcon={<EditIcon />}
+        label="Edit"
+      >
+        Edit
+      </Button>
+    );
+  };
+
   return (
     <Show {...props}>
       <TabbedShowLayout>
@@ -117,14 +184,18 @@ export default function LibraryPageShow(props) {
           <TextField source="title" />
         </Tab>
         <Tab label="Modules">
-          <OptionToolbar resource="library_page_modules"/>
+          <OptionToolbar/>
           <ArrayField source="modules" label="">
-            <Datagrid optimized bulkActionButtons={false}>
+            <Datagrid bulkActionButtons={false}>
               <TextField source="title" label="Title" />
               <RichTextField source="content" label="Content" />
               <NumberField source="position" label="Position Number" />
+              <CustomEditButton />
             </Datagrid>
           </ArrayField>
+        </Tab>
+        <Tab label="Preview">
+          <ModulesPreview />
         </Tab>
       </TabbedShowLayout>
     </Show>

@@ -25,6 +25,11 @@ import { QuestionCreate, QuestionEdit, QuestionList, QuestionShow } from "./reso
 import { QuizCreate, QuizEdit, QuizList, QuizShow } from "./resources/quizzes";
 import { LibraryPageCreate, LibraryPageEdit, LibraryPageList, LibraryPageShow } from "./resources/library";
 import { LibraryPageModuleCreate, LibraryPageModuleEdit, LibraryPageModuleList, LibraryPageModuleShow } from "./resources/library_modules";
+import { CourseContentTypeEdit, CourseContentTypeShow, CourseContentTypeList, CourseContentTypeCreate } from "./resources/course_content_types";
+import { CourseContentEdit, CourseContentShow, CourseContentList, CourseContentCreate } from "./resources/course_contents";
+import { CourseCreate, CourseEdit, CourseList, CourseShow } from "./resources/courses";
+import { LessonCreate, LessonEdit, LessonList, LessonShow } from "./resources/lessons";
+import { CourseInteractiveElementCreate, CourseInteractiveElementEdit, CourseInteractiveElementList, CourseInteractiveElementShow } from "./resources/course_interactive_elements";
 
 
 export const App = () => (
@@ -161,6 +166,46 @@ export const App = () => (
                 show={LibraryPageModuleShow}
                 edit={LibraryPageModuleEdit}
                 create={LibraryPageModuleCreate}
+            />
+
+            <Resource
+                name="courses"
+                list={CourseList}
+                show={CourseShow}
+                edit={CourseEdit}
+                create={CourseCreate}
+            />
+
+            <Resource
+                name="lessons"
+                list={LessonList}
+                show={LessonShow}
+                edit={LessonEdit}
+                create={LessonCreate}
+            />
+
+            <Resource
+                name="course_content_types"
+                list={CourseContentTypeList}
+                show={CourseContentTypeShow}
+                edit={CourseContentTypeEdit}
+                create={CourseContentTypeCreate}
+            />
+
+            <Resource
+                name="course_contents"
+                list={CourseContentList}
+                show={CourseContentShow}
+                edit={CourseContentEdit}
+                create={CourseContentCreate}
+            />
+
+            <Resource
+                name="course_interactive_elements"
+                list={CourseInteractiveElementList}
+                show={CourseInteractiveElementShow}
+                edit={CourseInteractiveElementEdit}
+                create={CourseInteractiveElementCreate}
             />
 
         </Admin>

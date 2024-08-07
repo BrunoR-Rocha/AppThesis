@@ -25,6 +25,7 @@ const SideMenu = (props) => {
   const [forums, setForums] = useState(true);
   const [quizzes, setQuizzes] = useState(true);
   const [libraries, setLibraries] = useState(true);
+  const [courses, setCourses] = useState(true);
   const [adminAccess, setAdminAccess] = useState(true);
 
   return (
@@ -138,6 +139,47 @@ const SideMenu = (props) => {
               primaryText="Library Page Modules"
               leftIcon={<ArticleIcon />}
             />
+
+        </SubMenu>
+
+        <SubMenu
+          handleToggle={() => setCourses(!courses)}
+          isOpen={courses}
+          name="Courses"
+          dense={true}
+          icon={<LibraryBooksIcon />}
+        >
+            <MenuItemLink
+              to="/courses"
+              primaryText="Courses List"
+              leftIcon={<ArticleIcon />}
+            />
+
+            <MenuItemLink
+              to="/lessons"
+              primaryText="Lessons"
+              leftIcon={<ArticleIcon />}
+            />
+
+            <MenuItemLink
+              to="/course_contents"
+              primaryText="Lesson Contents"
+              leftIcon={<ArticleIcon />}
+            />
+
+            <MenuItemLink
+              to="/course_interactive_elements"
+              primaryText="Interactive Elements"
+              leftIcon={<ArticleIcon />}
+            />
+
+            <MenuItemLink
+              to="/course_content_types"
+              primaryText="Content Types"
+              leftIcon={<ArticleIcon />}
+            />
+
+            
 
         </SubMenu>
 

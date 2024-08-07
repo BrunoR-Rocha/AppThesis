@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Quiz::class);
     }
+
+    public function courses()
+    {
+        return $this->hasManyThrough(Course::class, CourseSubscription::class);
+    }
 }

@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
-    public function showImage($filename)
+    public function showMedia($folderName, $filename)
     {
-        $path = 'public/images/' . $filename;
+        $path = 'public/'.$folderName.'/' . $filename;
 
         if (!Storage::exists($path)) {
             abort(404);
