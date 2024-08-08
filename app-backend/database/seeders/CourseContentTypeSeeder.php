@@ -18,9 +18,9 @@ class CourseContentTypeSeeder extends Seeder
 
         foreach ($types as $type) {
             CourseContentType::firstOrCreate(
-                ['name' => $type],
+                ['tag' => Str::snake(Str::lower($type))],
                 [
-                    'tag' => Str::snake(Str::lower($type)),
+                    'name' => $type,
                     'enabled' => true
                 ]
             );

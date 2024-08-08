@@ -79,7 +79,7 @@ class CourseContentTypeController extends Controller
     {
         $validatedData = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'tag' => 'sometimes|unique:course_content_types|string|max:255',
+            'tag' => 'sometimes|string|max:255',
             'enabled' => 'sometimes|bool',
         ]);
 
