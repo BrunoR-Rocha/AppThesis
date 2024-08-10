@@ -1,12 +1,9 @@
 import styled from "styled-components";
-import HeroBg from "../../../media/landing/hero_img.png";
+import BackgroundBg from "../../../media/landing/background.png";
 
 export const HeroArea = styled("div")`
   width: 100%;
-  /* height: 105vh; */
-  max-height: 1080px;
-  background-image: url(${HeroBg});
-  background-size: cover;
+  height: 75vh;
 `;
 
 export const HeroCaption = styled("div")`
@@ -16,4 +13,21 @@ export const HeroCaption = styled("div")`
   align-items: center;
   justify-content: center;
   text-align: center;
+`;
+
+export const QuoteArea = styled("div")`
+  position: relative;
+  z-index: 1;
+  width: 100%;
+`;
+
+export const LandingArea = styled("div")`
+    width: 100%;
+    background-image: url(${BackgroundBg});
+    background-size: cover;
+`;
+
+export const ProblemArea = styled("div")`
+    width: 100%;
+    height: 75vh;
 `;

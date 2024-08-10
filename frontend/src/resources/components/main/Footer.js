@@ -31,13 +31,13 @@ function Footer() {
 
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl font-semibold">Explore</h4>
-                <Link to="/terms" className="flex justify-start">
+                <Link to="/" className="flex justify-start">
                   Home
                 </Link>
-                <Link to="/privacy" className="flex justify-start">
+                <Link to="/about" className="flex justify-start">
                   About
                 </Link>
-                <Link to="/privacy" className="flex justify-start">
+                <Link to="/about#faq" className="flex justify-start">
                   FAQ's
                 </Link>
               </div>
