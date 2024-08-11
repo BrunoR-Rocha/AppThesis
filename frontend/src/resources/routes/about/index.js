@@ -56,16 +56,19 @@ function About() {
                 <Wrapper className="mt-40 mb-20 md:mt-0 md:mb-0">
                     <div className="flex flex-col items-center justify-items-center gap-5 flex-grow">
                         <div className="flex xl:flex-row flex-col items-center w-full">
-                            <AboutCaption className="basis-3/4 gap-2 sm:gap-5">
-                                <h1 className="text-3xl md:text-4xl lg:text-5xl text-white uppercase font-bold font-sans">
-                                    About <span class="font-bold font-sans text-[#6078DF]">us</span>
+                            <AboutCaption className="basis-3/4 gap-3 sm:gap-10">
+                                <h1 className="text-3xl md:text-4xl lg:text-5xl text-white font-semibold font-sans">
+                                    About us
                                 </h1>
-                                <p className="text-base font-medium text-white">
-                                    Moony is a platform dedicated to e-learning of sleep and its mechanisms. It provides an overview of the basic science, suggests clinical implications from those basic sciences, and delivers a user experience that integrates these two aspects into one cohesive learning package.
-                                </p>
-                                <p className="text-base font-medium text-white">
-                                    The platform provides scientifically-based insights about sleep to the user. The main goal of Moony is to give an easy access to users that want to learn about the topic and also collaborate with experts around the globe.
-                                </p>
+                                <div>
+                                    <p className="text-base font-medium text-white">
+                                        Moony is a platform dedicated to e-learning of sleep and its mechanisms. It provides an overview of the basic science, suggests clinical implications from those basic sciences, and delivers a user experience that integrates these two aspects into one cohesive learning package.
+                                    </p>
+                                    <p className="text-base font-medium text-white">
+                                        The platform provides scientifically-based insights about sleep to the user. The main goal of Moony is to give an easy access to users that want to learn about the topic and also collaborate with experts around the globe.
+                                    </p>
+                                </div>
+                                
                             </AboutCaption>
 
                         </div>
@@ -74,7 +77,7 @@ function About() {
             </AboutHero>
            
             <TeamArea>
-                <TeamCaption>Meet the Team <br/> behind Moony </TeamCaption>
+                <TeamCaption>Meet the Team behind Moony </TeamCaption>
                 <div className="w-11/12 mx-auto md:w-full flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-10">
                     <TeamCard>
                         <TeamMemberInfo>

@@ -49,10 +49,9 @@ export const TeamCard = styled("div")`
   background: rgba(96, 120, 223, 0.15);
   backdrop-filter: blur(30px);
   
-
   :hover {
     background: rgba(96, 120, 223, 0.30);
-    transition: background 800ms ease-in-out;
+    transition: 800ms ease;
   }
 `;
 
@@ -95,6 +94,10 @@ export const TeamMemberSocial = styled("a")`
   border-radius: 69px;
   background: rgba(96, 120, 223, 0.35);
   backdrop-filter: blur(8px);
+
+  &:hover {
+    background: #6078DF;
+  }
 `;
 
 export const FaqArea = styled('div')`

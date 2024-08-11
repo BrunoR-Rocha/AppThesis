@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../media/navbar/logo_moony.svg";
 import Wrapper from "../general/Wrapper";
+import ContactModal from "../contact/modal";
 const NavigationBar = styled("div")`
   width: 100%;
   height: 80px;
@@ -42,7 +43,16 @@ const NavigationBar = styled("div")`
 function NavBar() {
   const [scrolled, setScrolled] = useState();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
   useEffect(() => {
     if (window.location.pathname !== "/") {
       setScrolled(true);
@@ -65,6 +75,7 @@ function NavBar() {
               <Logo
                 className="justify-self-center cursor-pointer"
                 onClick={() => navigate("/")}
+                color="#fff"
               />
               <div className="nav-links flex gap-10 items-center mx-auto">
                 <Link
@@ -99,10 +110,22 @@ function NavBar() {
                   Academy
                 </Link>
                 <Link
-                  to="/contacts"
+                  to="#"
+                  onClick={handleOpenModal}
                   className="uppercase text-sm text-white font-light hover:opacity-100"
                 >
                   Contact Us
+                </Link>
+                <ContactModal open={isModalOpen} handleClose={handleCloseModal} />
+              </div>
+
+              <div className="nav-links flex gap-10 items-center mx-auto">
+
+                <Link
+                  to="/login"
+                  className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
+                >
+                  Sign In
                 </Link>
               </div>
             </div>
