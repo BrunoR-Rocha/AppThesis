@@ -97,7 +97,7 @@ function NavBar() {
                   Library
                 </Link>
                 <Link
-                  to="/forums"
+                  to="/posts"
                   className="uppercase text-sm text-white font-light hover:opacity-100"
                 >
                   Forums

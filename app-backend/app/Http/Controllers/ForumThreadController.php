@@ -34,7 +34,7 @@ class ForumThreadController extends Controller
         $validatedData = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'forum_category_id' => 'required',
+            'forum_category_id' => 'required|exists:forum_categories,id',
         ]);
 
         if ($validatedData->fails()) {

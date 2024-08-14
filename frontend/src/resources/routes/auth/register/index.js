@@ -28,11 +28,11 @@ function Register() {
                                 onClick={() => navigate("/")}
                                 color="black"
                             />
-                            <Link to={location.state?.from || "/"} className="border-[#A5A6CC] hover:border-[#6078DF] border-2 border-solid rounded-full p-3 group">
+                            <Link to={location.state?.from || "/"} className="border-[#A5A6CC] hover:border-[#F4AA5A] border-2 border-solid rounded-full p-3 group">
                                 <CloseIcon sx={{ 
                                     color: "#A5A6CC", 
                                     '.group:hover &': { 
-                                        color: "#6078DF"
+                                        color: "#F4AA5A"
                                     } 
                                 }}/>
                             </Link>

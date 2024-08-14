@@ -11,6 +11,10 @@ class LibraryPage extends Model
 
     protected $fillable = [
         'title', 
+        'description', 
+        'author', 
+        'date', 
+        'tag'
     ];
 
     protected $hidden = ['created_at', 'updated_at'];

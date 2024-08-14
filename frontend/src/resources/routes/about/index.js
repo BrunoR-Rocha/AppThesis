@@ -170,7 +170,7 @@ function About() {
                     
                         <div className="flex flex-col gap-3 justify-center">
                             <p className="text-lg font-normal text-center">Couldn’t find what you were looking for?</p>
-                            <p className="text-[#6078DF] text-lg font-semibold text-center">Contact our team</p>
+                            <p className="text-[#F4AA5A] text-lg font-semibold text-center">Contact our team</p>
                         </div>
                     </div>  
                 </Wrapper>

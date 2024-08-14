@@ -11,6 +11,7 @@ import axiosConfig from "../../../providers/axiosConfig";
 import Wrapper from "../../components/general/Wrapper";
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
+
 function Landing() {
   return (
     <>

@@ -13,6 +13,7 @@ import {
   SimpleForm,
   EditActions,
   EditButton,
+  DateField,
 } from "react-admin";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useNotify, useRefresh, useDataProvider } from 'react-admin';
@@ -137,7 +138,6 @@ export default function LibraryPageShow(props) {
     const dataProvider = useDataProvider();
     const [modules, setModules] = useState([]);
 
-    console.log(record);
     useEffect(() => {
       const fetchModules = async () => {
         const { data } = await dataProvider.getList('library_page_modules', {
@@ -182,6 +182,10 @@ export default function LibraryPageShow(props) {
       <TabbedShowLayout>
         <Tab label="Details">
           <TextField source="title" />
+          <TextField source="description" />
+          <TextField source="author" />
+          <TextField source="tag" />
+          <DateField source="date" />
         </Tab>
         <Tab label="Modules">
           <OptionToolbar/>

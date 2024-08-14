@@ -21,6 +21,10 @@ class LibraryPageController extends Controller
     {
         $validatedData = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'author' => 'nullable|string|max:255',
+            'date' => 'nullable|date',
+            'tag' => 'nullable|string|max:255',
         ]);
 
         if ($validatedData->fails()) {
@@ -32,6 +36,10 @@ class LibraryPageController extends Controller
 
         $page = LibraryPage::create([
             'title' => $request->title,
+            'description' => $request->description,
+            'author' => $request->author,
+            'date' => $request->date,
+            'tag' => $request->tag,
         ]);
 
         return response()->json([
@@ -49,9 +57,30 @@ class LibraryPageController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'author' => 'nullable|string|max:255',
+            'date' => 'nullable|date',
+            'tag' => 'nullable|string|max:255',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'errors' => $validatedData->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
         $page = LibraryPage::findOrFail($id);
         
-        $page->update($request->all());
+        $page->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'author' => $request->author,
+            'date' => $request->date,
+            'tag' => $request->tag,
+        ]);
 
         return $page;
     }
