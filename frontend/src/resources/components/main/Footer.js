@@ -44,13 +44,13 @@ function Footer() {
 
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
                 <br/>
-                <Link to="/privacy" className="flex justify-start">
+                <Link to="/library" className="flex justify-start">
                   Library
                 </Link>
-                <Link to="/terms" className="flex justify-start">
+                <Link to="/posts" className="flex justify-start">
                   Forums
                 </Link>
-                <Link to="/privacy" className="flex justify-start">
+                <Link to="/academy" className="flex justify-start">
                   Academy
                 </Link>
               </div>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import BackgroundBg from "../../../media/landing/background.png";
+import FeatureBg from "../../../media/landing/feature_bg.svg";
 
 export const HeroArea = styled("div")`
   width: 100%;
@@ -27,7 +28,19 @@ export const LandingArea = styled("div")`
     background-size: cover;
 `;
 
-export const ProblemArea = styled("div")`
+export const FeatureArea = styled("div")`
     width: 100%;
-    height: 75vh;
+    padding-top: 60px;
+    padding-bottom: 120px;
+    background-image: url(${FeatureBg});
+    background-repeat: no-repeat;
+    background-position: center;
+`;
+
+export const ToolsArea = styled("div")`
+  width: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding-block: 80px;
 `;

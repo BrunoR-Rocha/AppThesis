@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../media/navbar/logo_moony.svg";
 import Wrapper from "../general/Wrapper";
-import ContactModal from "../contact/modal";
+import ContactModal from "../modals/contact";
+
 const NavigationBar = styled("div")`
   width: 100%;
   height: 80px;

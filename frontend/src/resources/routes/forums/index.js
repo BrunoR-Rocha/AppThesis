@@ -9,6 +9,8 @@ import { ForumPostArea, ForumPostList } from "./styles/forum_styles";
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { useNavigate } from 'react-router-dom';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import PostModal from "../../components/modals/post";
 
 function Threads() {
     const [loading, setLoading] = useState();
@@ -16,6 +18,16 @@ function Threads() {
     const [threads, setThreads] = useState();
     const [categories, setCategories] = useState();
     const navigate = useNavigate();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -47,7 +59,15 @@ function Threads() {
     <ForumPostArea>
         <Wrapper>
             <ForumPostList className="flex flex-col w-full min-h-screen gap-10">
-                <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">Forums</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">Forums</h1>
+                    <button className="rounded-full flex items-center gap-3 bg-white py-3 px-6" onClick={handleOpenModal}>
+                        <AddOutlinedIcon sx={{color: "#6078DF"}} />
+                        <p className="text-[#6078DF] font-semibold">Create post</p>
+                    </button>
+                    <PostModal open={isModalOpen} handleClose={handleCloseModal} />
+                </div>
+                
 
                 <div className='flex gap-4 text-[#AAA]'>
                     {loading2 ? (
@@ -88,11 +108,11 @@ function Threads() {
                                         <div className="flex justify-between gap-6">
                                             <div className="flex gap-3">
                                                 <ThumbUpAltOutlinedIcon />
-                                                <span>111</span>
+                                                <span>{thread.likes_count}</span>
                                             </div>
                                             <div className="flex gap-3">
                                                 <ChatBubbleOutlineRoundedIcon />
-                                                <span>9</span>
+                                                <span>{thread.posts}</span>
                                             </div>
                                         </div>
                                     </div>

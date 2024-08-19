@@ -10,6 +10,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ForumCategoryController;
 use App\Http\Controllers\ForumPostController;
 use App\Http\Controllers\ForumThreadController;
+use App\Http\Controllers\ForumThreadLikeController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LibraryPageController;
@@ -41,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => '/backend',
+    // 'middleware' => 'auth'
 ], function (Router $router) {
 
     Route::get('storage/{folderName}/{filename}', [MediaController::class, 'showMedia']);
@@ -77,6 +79,9 @@ Route::group([
     ]);
 
     $router->post('/admin/login', [AuthController::class , 'adminLogin']);
+
+    $router->post('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'like']);
+    $router->delete('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'unlike']);
 
     
 });
