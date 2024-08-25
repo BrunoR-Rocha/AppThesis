@@ -53,15 +53,44 @@ class ContactController extends Controller
             'archived' => $request->archived,
         ]);
 
-        // Add send function here
-
         return response()->json([
-            'id' => $contact->id, 
+            'id' => $contact->id,
             'message' => __('auth.register'),
         ], 200);
     }
 
+    public function frontStore(Request $request)
+    {
+        $validatedData = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'email' => 'required|email',
+        ]);
 
+        dd($request->all(), $validatedData);
+        
+        if ($validatedData->fails()) {
+            return response()->json([
+                'errors' => $validatedData->errors(),
+                'message' => __('auth.register_fail'),
+            ], 400);
+        }
+
+        Contact::create([
+            'name' => $request->name,
+            'subject' => $request->subject,
+            'email' => $request->email,
+            'message' => $request->message,
+            'archived' => false,
+        ]);
+
+        // Add send function here
+
+        return response()->json(['message' => __('contact.front.success'),], 200);
+    }
+
+    public function contactResponse(Request $request) {}
     /**
      * Display the specified resource.
      *

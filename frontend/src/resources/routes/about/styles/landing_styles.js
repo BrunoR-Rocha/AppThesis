@@ -112,14 +112,14 @@ export const FaqArea = styled('div')`
   color: white;
 `;
 
-export const FaqItem = styled(AccordionSummary)`
+export const AccordionItem = styled(AccordionSummary)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
  
 `;
 
-export const FaqItemDescription = styled(AccordionDetails)`
+export const AccordionItemDescription = styled(AccordionDetails)`
   border-top: 2px solid #1A184C;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

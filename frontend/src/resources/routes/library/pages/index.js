@@ -7,7 +7,9 @@ import {
 } from "../styles/library_styles";
 import Wrapper from "../../../components/general/Wrapper";
 import EastIcon from "@mui/icons-material/East";
-import WestIcon from '@mui/icons-material/West';
+import WestIcon from "@mui/icons-material/West";
+import BackButton from "../../../components/general/BackButton";
+
 const LibraryPage = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -64,24 +66,7 @@ const LibraryPage = () => {
     <>
       <LibraryArea>
         <Wrapper className={"flex items-start gap-14 flex-wrap sm:flex-nowrap"}>
-          <button
-            className="flex items-center gap-3 pt-24 sm:pt-40 group"
-            onClick={() => navigate(-1)}
-          >
-            <div className="rounded-full border-[1px] border-[#272A2E] p-2 group-hover:border-[#F4AA5A]">
-              <WestIcon
-                sx={{
-                  color: "#ECECEC",
-                  transition: "transform 0.3s ease",
-                  ".group:hover &": {
-                    color: "#F4AA5A",
-                  },
-                }}
-              />
-            </div>
-
-            <span className="text-[#ECECEC]">Back</span>
-          </button>
+          <BackButton />
           <PageInfo className="flex flex-col w-full">
             <div className="flex flex-col gap-4 pb-6">
               <div className="flex rounded-full items-center text-white bg-[#FFFFFF1A] px-3 max-w-fit py-1">
@@ -156,7 +141,9 @@ const LibraryPage = () => {
                       </div>
                     </div>
                   </div>
-                ) : ( <div />)}
+                ) : (
+                  <div />
+                )}
                 {hasNextModule ? (
                   <div className="flex justify-end pt-5">
                     <div className="flex gap-4 items-center">
@@ -189,7 +176,9 @@ const LibraryPage = () => {
                       </div>
                     </div>
                   </div>
-                ) : (<div />)}
+                ) : (
+                  <div />
+                )}
               </div>
             </div>
           </PageInfo>

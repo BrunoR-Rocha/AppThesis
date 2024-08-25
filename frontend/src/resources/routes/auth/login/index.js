@@ -18,7 +18,7 @@ function Login() {
         <>
             <AuthArea className="min-h-[900px] md:min-h-max flex">
                 <AuthSideLogo>
-                    <img src={AuthLogo} className="h-full object-cover object-left" />
+                    <img src={AuthLogo} className="h-full object-cover object-left" alt="" />
                 </AuthSideLogo>
                 <div className="flex-1 flex justify-center items-center bg-white h-full">
                     <div className="w-full lg:max-w-screen-md flex flex-col gap-8 lg:gap-20 p-10 lg:p-20">

@@ -78,11 +78,13 @@ Route::group([
         'course_contents'               => CourseContentController::class,
     ]);
 
-    $router->post('/admin/login', [AuthController::class , 'adminLogin']);
+    $router->post('/admin/login',                   [AuthController::class , 'adminLogin']);
 
-    $router->post('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'like']);
-    $router->delete('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'unlike']);
+    $router->post('forum_threads/{thread}/like',    [ForumThreadLikeController::class, 'like']);
+    $router->delete('forum_threads/{thread}/like',  [ForumThreadLikeController::class, 'unlike']);
 
+    // FRONTEND ROUTES
+    $router->post('/front/contacts',                [ContactController::class, 'frontStore']);
     
 });
 

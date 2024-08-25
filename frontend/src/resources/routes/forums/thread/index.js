@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import Wrapper from "../../../components/general/Wrapper";
 import EastIcon from "@mui/icons-material/East";
@@ -7,14 +7,9 @@ import { LibraryItemTitle } from "../../library/styles/library_styles";
 import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import {
-  Tooltip,
-  IconButton,
-  ClickAwayListener,
-  Box,
-  Button,
-} from "@mui/material";
+import { Tooltip, IconButton, Box, Button } from "@mui/material";
 import PostSection from "../post";
+import BackButton from "../../../components/general/BackButton";
 
 const ThreadPage = () => {
   const { id } = useParams();
@@ -58,25 +53,7 @@ const ThreadPage = () => {
     <>
       <ForumPostArea>
         <Wrapper className={"flex items-start gap-14 flex-wrap sm:flex-nowrap"}>
-          <button
-            className="flex items-center gap-3 pt-24 sm:pt-40 group"
-            onClick={() => navigate(-1)}
-          >
-            <div className="rounded-full border-[1px] border-[#272A2E] p-2 group-hover:border-[#F4AA5A]">
-              <EastIcon
-                sx={{
-                  color: "#ECECEC",
-                  transition: "transform 0.3s ease",
-                  rotate: "180deg",
-                  ".group:hover &": {
-                    color: "#F4AA5A",
-                  },
-                }}
-              />
-            </div>
-
-            <span className="text-[#ECECEC]">Back</span>
-          </button>
+          <BackButton />
           <ThreadInfo className="flex flex-col w-full">
             <div className="flex flex-col gap-4 pb-6">
               <div className="flex rounded-full items-center text-white bg-[#FFFFFF1A] px-3 max-w-fit py-1">
@@ -102,7 +79,10 @@ const ThreadPage = () => {
                     <ThumbUpAltOutlinedIcon />
                     <span>{thread?.likes_count}</span>
                   </div>
-                  <div className="flex gap-3 cursor-pointer" onClick={handleCommentIconClick}>
+                  <div
+                    className="flex gap-3 cursor-pointer"
+                    onClick={handleCommentIconClick}
+                  >
                     <ChatBubbleOutlineRoundedIcon />
                     <span>{thread?.posts}</span>
                   </div>
@@ -114,8 +94,11 @@ const ThreadPage = () => {
                     />
                   )}
 
-                  <PostSection isOpen={isCommentSectionOpen} onClose={handleCloseCommentSection} posts={thread?.posts} />
-
+                  <PostSection
+                    isOpen={isCommentSectionOpen}
+                    onClose={handleCloseCommentSection}
+                    posts={thread?.posts}
+                  />
                 </div>
                 <div className="flex gap-3">
                   <Tooltip
@@ -136,7 +119,7 @@ const ThreadPage = () => {
                           justifyContent: "center",
                           border: "1px solid #0000001A",
                           width: "100px",
-                          fontSize: "15px"
+                          fontSize: "15px",
                         }}
                       >
                         <Button
@@ -150,7 +133,7 @@ const ThreadPage = () => {
                             fontStyle: "normal",
                             fontFamily: "Montserrat",
                             fontWeight: "500",
-                            textTransform: 'none',
+                            textTransform: "none",
                             "&:hover": {
                               color: "#6078DF",
                               backgroundColor: "#E9F0FF",
@@ -170,7 +153,7 @@ const ThreadPage = () => {
                             fontStyle: "normal",
                             fontFamily: "Montserrat",
                             fontWeight: "500",
-                            textTransform: 'none',
+                            textTransform: "none",
                             "&:hover": {
                               color: "#6078DF",
                               backgroundColor: "#E9F0FF",

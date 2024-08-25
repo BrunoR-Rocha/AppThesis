@@ -1,11 +1,18 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import NavBar from '../../components/main/NavBar';
-import Footer from '../../components/main/Footer';
+import React from "react";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
+import NavBar from "../../components/main/NavBar";
+import Footer from "../../components/main/Footer";
 
 const CustomLayout = () => {
   const location = useLocation();
-  const hideNavAndFooter = location.pathname === '/login' || location.pathname === '/register' ;
+  const hiddenRoutes = [
+    "/login",
+    "/register",
+  ];
+
+  const hideNavAndFooter = hiddenRoutes.some((route) =>
+    matchPath(route, location.pathname)
+  );
 
   return (
     <>

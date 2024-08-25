@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   FeatureArea,
   HeroArea,
   HeroCaption,
   LandingArea,
-  ProblemArea,
   QuoteArea,
   ToolsArea,
 } from "./styles/landing_styles";
-import axiosConfig from "../../../providers/axiosConfig";
 import Wrapper from "../../components/general/Wrapper";
 import AboutImg from "../../media/landing/about.svg";
 import { Feature } from "./feature";
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
-import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import MemoryOutlinedIcon from '@mui/icons-material/MemoryOutlined';
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
+import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import MemoryOutlinedIcon from "@mui/icons-material/MemoryOutlined";
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
+import { HashLink } from "react-router-hash-link";
 
 function Landing() {
   return (
@@ -41,16 +41,26 @@ function Landing() {
                     <br />
                     Knowledge
                   </h1>
+                  <HashLink
+                    className="flex gap-2 items-center"
+                    to={"/#about"}
+                    smooth
+                  >
+                    <p className="text-base font-medium text-white">
+                      Learn More
+                    </p>
+                    <ArrowDownwardRoundedIcon sx={{ color: "#AAAAAA" }} />
+                  </HashLink>
                 </HeroCaption>
               </div>
             </div>
           </Wrapper>
         </HeroArea>
-        <QuoteArea>
+        <QuoteArea id="about">
           <Wrapper>
             <div className="flex">
               <div className="basis-1/2 flex flex-col text-start font-cormorant text-white">
-                <img src={AboutImg} className="scale-125" />
+                <img src={AboutImg} className="scale-125" alt="" />
               </div>
               <div className="basis-1/2 flex flex-col gap-5 text-white font-sans justify-center items-center">
                 <div className="text-center flex flex-col gap-7 md:max-w-96">
@@ -70,7 +80,7 @@ function Landing() {
                   <div className="flex flex-1 justify-center">
                     <Link
                       to="/about"
-                      className="text-sm text-white font-light hover:opacity-100 rounded-3xl px-5 py-3 border-2 border-solid border-[#ECECEC] max-w-fit"
+                      className="text-sm text-white font-light hover:opacity-100 rounded-3xl px-5 py-3 border-2 border-solid border-[#ECECEC] max-w-fit hover:text-[#F4AA5A] hover:border-[#F4AA5A]"
                     >
                       Learn more
                     </Link>
@@ -86,17 +96,71 @@ function Landing() {
               Our features
             </h3>
             <div className="flex flex-wrap gap-12 items-center justify-center">
-              <Feature text={"Discussions et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."} icon={<ForumOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
-              <Feature text={"Quizzes eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."} icon={<LiveHelpOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
-              <Feature text={"Courses eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."} icon={<SchoolOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
-              <Feature text={"Learning et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."} icon={<AutoStoriesOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
-              <Feature text={"AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."} icon={<MemoryOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
-              <Feature text={"AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."} icon={<MemoryOutlinedIcon sx={{color: '#6078DF', height: '54px', width: '54px'}}/>}/>
+              <Feature
+                text={
+                  "Discussions et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                }
+                icon={
+                  <ForumOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
+              <Feature
+                text={
+                  "Quizzes eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                }
+                icon={
+                  <LiveHelpOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
+              <Feature
+                text={
+                  "Courses eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                }
+                icon={
+                  <SchoolOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
+              <Feature
+                text={
+                  "Learning et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                }
+                icon={
+                  <AutoStoriesOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
+              <Feature
+                text={
+                  "AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."
+                }
+                icon={
+                  <MemoryOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
+              <Feature
+                text={
+                  "AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."
+                }
+                icon={
+                  <MemoryOutlinedIcon
+                    sx={{ color: "#6078DF", height: "54px", width: "54px" }}
+                  />
+                }
+              />
             </div>
           </div>
         </FeatureArea>
         <ToolsArea>
-            <p className="text-[#FFFFFFCC] text-lg">Tools used in this project</p>
+          <p className="text-[#FFFFFFCC] text-lg">Tools used in this project</p>
         </ToolsArea>
       </LandingArea>
     </>

@@ -2,20 +2,13 @@ import React from "react";
 import {
   Dialog,
   DialogContent,
-  DialogActions,
-  Button,
-  TextField,
 } from "@mui/material";
-import PlaceIcon from "@mui/icons-material/Place";
-import EmailIcon from "@mui/icons-material/Email";
-import { ReactComponent as Flower } from "../../media/general/flower.svg";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../styles/contact";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 
 function PostModal({ open, handleClose }) {
-  const location = useLocation();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const onSubmit = (data) => {

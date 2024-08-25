@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Wrapper from "../general/Wrapper";
+import { HashLink } from "react-router-hash-link";
 
 const FooterWrapper = styled("div")`
   position: relative;
@@ -25,7 +26,9 @@ function Footer() {
             <div className="flex flex-col md:flex-row items-center gap-10 w-full justify-center">
               <div className="md:basis-2/5 flex justify-end flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl md:text-3xl text-white uppercase font-bold font-cormorant ">
-                  Awaken your <br/><span class="font-bold font-sans">sleep & Health</span><br/> Knowledge
+                  Awaken your <br />
+                  <span class="font-bold font-sans">sleep & Health</span>
+                  <br /> Knowledge
                 </h4>
               </div>
 
@@ -37,13 +40,13 @@ function Footer() {
                 <Link to="/about" className="flex justify-start">
                   About
                 </Link>
-                <Link to="/about#faq" className="flex justify-start">
+                <HashLink to="/about#faq" smooth className="flex justify-start">
                   FAQ's
-                </Link>
+                </HashLink>
               </div>
 
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
-                <br/>
+                <br />
                 <Link to="/library" className="flex justify-start">
                   Library
                 </Link>
@@ -60,7 +63,7 @@ function Footer() {
                 <Link to="/terms" className="flex justify-start">
                   Termos de Serviço
                 </Link>
-                
+
                 <a
                   href="https://www.livroreclamacoes.pt/Inicio/"
                   target={"_blank"}
@@ -69,7 +72,7 @@ function Footer() {
                 >
                   Elogios, Sugestões e Reclamações
                 </a>
-                
+
                 <Link to="/privacy" className="flex justify-start">
                   Política de Privacidade
                 </Link>

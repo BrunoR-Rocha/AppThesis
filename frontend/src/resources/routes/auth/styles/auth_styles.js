@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import AuthLogo from "../../../media/auth/auth_moony.svg";
 
 export const AuthArea = styled("div")`
   width: 100%;
