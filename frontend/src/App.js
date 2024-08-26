@@ -17,7 +17,7 @@ import ThreadPage from "./resources/routes/forums/thread";
 import Academy from "./resources/routes/academy";
 import CoursePage from "./resources/routes/academy/course/page";
 import ScrollToTop from "./resources/components/general/ScrollTop";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   // const [isLoading, setIsLoading] = useState(true);
 
@@ -56,6 +56,13 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        theme="light"
+      />
     </>
   );
 }

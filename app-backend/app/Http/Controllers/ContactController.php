@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -68,26 +69,24 @@ class ContactController extends Controller
             'email' => 'required|email',
         ]);
 
-        dd($request->all(), $validatedData);
-        
         if ($validatedData->fails()) {
             return response()->json([
                 'errors' => $validatedData->errors(),
-                'message' => __('auth.register_fail'),
+                'message' => __('contact.front.insuccess'),
             ], 400);
         }
 
-        Contact::create([
-            'name' => $request->name,
-            'subject' => $request->subject,
-            'email' => $request->email,
-            'message' => $request->message,
-            'archived' => false,
-        ]);
+        try {
+            $data = array_merge($validatedData->validated(), ['archived' => false]);
+            
+            $contact = new Contact($data);  
+            $contact->save();
 
-        // Add send function here
-
-        return response()->json(['message' => __('contact.front.success'),], 200);
+            return response()->json(['message' => __('contact.front.success')], 200);
+        } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['message' => __('contact.front.insuccess')], 400);
+        }
     }
 
     public function contactResponse(Request $request) {}
