@@ -8,7 +8,7 @@ import { TextInput } from "../styles/contact";
 import { useLocation, Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import axiosConfig from "../../../providers/axiosConfig";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CircularProgress } from "@mui/material";
 
@@ -186,12 +186,6 @@ function ContactModal({ open, handleClose }) {
                 )}
               </TextInput>
 
-              {/* <input
-                type="submit"
-                className={`bg-[#6078DF] rounded-full p-3 text-white cursor-pointer`}
-                disabled={loading}
-                value={!loading ? "Submit" : ""} 
-              /> */}
               <button
                 type="submit"
                 className="bg-[#6078DF] rounded-full p-3 text-white cursor-pointer flex justify-center items-center"

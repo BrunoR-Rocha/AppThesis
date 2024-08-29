@@ -26,6 +26,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
+use App\Models\ForumCategory;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -85,6 +86,7 @@ Route::group([
 
     // FRONTEND ROUTES
     $router->post('/front/contacts',                [ContactController::class, 'frontStore']);
+    $router->get('/front/post/category',            [ForumCategoryController::class, 'getAll']);
     
 });
 

@@ -18,6 +18,7 @@ import Academy from "./resources/routes/academy";
 import CoursePage from "./resources/routes/academy/course/page";
 import ScrollToTop from "./resources/components/general/ScrollTop";
 import { ToastContainer } from "react-toastify";
+import Profile from "./resources/routes/profile";
 function App() {
   // const [isLoading, setIsLoading] = useState(true);
 
@@ -52,6 +53,9 @@ function App() {
 
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+
+            <Route path="profile" element={<Profile />} />
+
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

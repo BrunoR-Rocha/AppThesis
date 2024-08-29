@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import GeneralBg from "../../../media/about/background.png";
-import CourseShowBg from "../../../media/academy/courses/course_show_bg.png";
+import CourseShowBg from "../../../media/general/bg_gradient.png";
 
 export const AcademyArea = styled("div")`
   width: 100%;

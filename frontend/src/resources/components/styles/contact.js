@@ -9,10 +9,10 @@ export const TextInput = styled("div")`
     padding-block: 10px;
 
     & label{
-        color: #575757;
-        font-size: 10px;
+        color: #4B5057;
+        font-size: 12px;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 600;
         text-transform: uppercase;
         padding-bottom: 5px;
     }

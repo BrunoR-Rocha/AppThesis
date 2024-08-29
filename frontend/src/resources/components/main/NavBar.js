@@ -145,6 +145,12 @@ function NavBar() {
               >
                 Sign In
               </Link>
+              <Link
+                to="/profile"
+                className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
+              >
+                Profile
+              </Link>
             </div>
           </div>
         </Wrapper>

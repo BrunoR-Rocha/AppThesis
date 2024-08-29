@@ -50,7 +50,7 @@ class ForumCategoryController extends Controller
         ]);
 
         return response()->json([
-            'id' => $forumCategory->id, 
+            'id' => $forumCategory->id,
             'message' => __('validator.success'),
         ], 200);
     }
@@ -82,5 +82,10 @@ class ForumCategoryController extends Controller
         $forumCategory->update($request->all());
 
         return $forumCategory;
+    }
+
+    public function getAll()
+    {
+        return ForumCategory::active()->select('id', 'name')->get();
     }
 }

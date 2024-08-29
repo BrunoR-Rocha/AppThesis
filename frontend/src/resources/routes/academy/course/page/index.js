@@ -30,8 +30,6 @@ const CoursePage = ({ id }) => {
   };
   const index = 1;
 
-  console.log(id);
-
   function LinearProgressWithLabel({ value }) {
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
