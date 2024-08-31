@@ -33,7 +33,7 @@ class UserController extends Controller
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'nullable|string', 
+            'password' => 'nullable|string',
             'phone_number' => 'nullable|digits:9',
             'birth_date' => 'required|date',
             'role' => 'required|string'
@@ -64,7 +64,48 @@ class UserController extends Controller
         $user->assignRole($role);
 
         return response()->json([
-            'id' => $user->id, 
+            'id' => $user->id,
+            'message' => __('auth.register'),
+        ], 200);
+    }
+
+    public function frontRegister(Request $request)
+    {
+        $requestData = $request->all();
+
+        if (isset($requestData['remember'])) {
+            $requestData['remember'] = filter_var($requestData['remember'], FILTER_VALIDATE_BOOLEAN);
+        }
+        
+        $validator = Validator::make($requestData, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|confirmed|string',
+            'remember' => 'nullable|boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => __('auth.register_fail'),
+            ], 400);
+        }
+
+        $validatedData = $validator->validated();
+
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        $role = Role::firstOrCreate(['name' => 'user']);
+        $user->assignRole($role);
+
+        // Auth::login($user, $validatedData['remember'] ?? false);
+
+        // TODO - deve redirecionar para uma pagina de validação de email
+        return response()->json([
             'message' => __('auth.register'),
         ], 200);
     }
@@ -83,7 +124,8 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('forum_category_id');
 
             $table->string('title');
-            $table->text('description');
+            $table->longText('description');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

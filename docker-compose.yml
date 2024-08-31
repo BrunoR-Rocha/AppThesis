@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   app-backend:
+    user: root
     build:
       context: ./app-backend
     container_name: app-backend

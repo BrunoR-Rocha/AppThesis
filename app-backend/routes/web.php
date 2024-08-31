@@ -85,8 +85,10 @@ Route::group([
     $router->delete('forum_threads/{thread}/like',  [ForumThreadLikeController::class, 'unlike']);
 
     // FRONTEND ROUTES
+    $router->post('/front/register',                [UserController::class, 'frontRegister']);
     $router->post('/front/contacts',                [ContactController::class, 'frontStore']);
     $router->get('/front/post/category',            [ForumCategoryController::class, 'getAll']);
+    $router->post('/front/post/create',             [ForumThreadController::class, 'frontStore']);
     
 });
 

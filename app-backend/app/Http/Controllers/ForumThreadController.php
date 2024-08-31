@@ -52,7 +52,44 @@ class ForumThreadController extends Controller
         ]);
 
         return response()->json([
-            'id' => $forumThread->id, 
+            'id' => $forumThread->id,
+            'message' => __('validator.success'),
+        ], 200);
+    }
+
+    public function frontStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'topic' => 'required|exists:forum_categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        $validatedData = $validator->validated();
+        $validatedData['forum_category_id'] = $validatedData['topic'];
+        unset($validatedData['topic']);
+
+        if (isset($validatedData['image'])) {
+            $validatedData['image_path'] = $validatedData['image']->store('forum_images', 'public');
+            unset($validatedData['image']);
+        } else {
+            $validatedData['image_path'] = null;
+        }
+
+        $validatedData['user_id'] = Auth::user()->id ?? 1;
+
+        $forumThread = ForumThread::create($validatedData);
+
+        return response()->json([
+            'thread' => new ForumThreadResource($forumThread),
             'message' => __('validator.success'),
         ], 200);
     }
@@ -99,7 +136,8 @@ class ForumThreadController extends Controller
         $forumThread->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
     }
 }

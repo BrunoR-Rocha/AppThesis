@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ReactComponent as Flower } from "../../media/general/flower.svg";
 import Wrapper from "../../components/general/Wrapper";
 import { ProfileArea, ProfileDisplay } from "./style";
-import Courses from "../academy/course";
 import ProfileDashboard from "./dashboard";
 
 const Profile = () => {
@@ -46,8 +45,7 @@ const Profile = () => {
                   {renderButton("tab1", "Dashboard")}
                   {renderButton("tab2", "Courses")}
                   {renderButton("tab3", "Quizzes")}
-                  {renderButton("tab4", "Saved")}
-                  {renderButton("tab5", "Settings")}
+                  {renderButton("tab4", "Settings")}
                 </div>
               </div>
             </div>
@@ -60,7 +58,6 @@ const Profile = () => {
               {activeTab === "tab2" && <></>}
               {activeTab === "tab3" && <></>}
               {activeTab === "tab4" && <></>}
-              {activeTab === "tab5" && <></>}
             </div>
           </Wrapper>
         </div>

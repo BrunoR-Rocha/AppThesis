@@ -13,12 +13,35 @@ import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import axiosConfig from "../../../../providers/axiosConfig";
 
 function Register() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { register, handleSubmit, getValues } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    getValues,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axiosConfig.post("/front/register", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success(response.data.message);
+      reset();
+      console.log("Registado com sucesso");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -93,6 +116,11 @@ function Register() {
                       placeholder="Name"
                       {...register("name", { required: true })}
                     />
+                    {errors.name && (
+                      <span className="text-xs text-red-500">
+                        This field is required
+                      </span>
+                    )}
                   </AuthInput>
                   <AuthInput className="flex-1">
                     <label htmlFor="register_email">Email</label>
@@ -105,6 +133,11 @@ function Register() {
                         pattern: /^\S+@\S+$/i,
                       })}
                     />
+                    {errors.email && (
+                      <span className="text-xs text-red-500">
+                        This field is required
+                      </span>
+                    )}
                   </AuthInput>
                 </div>
 
@@ -117,6 +150,11 @@ function Register() {
                       placeholder="Password"
                       {...register("password", { required: true })}
                     />
+                    {errors.password && (
+                      <span className="text-xs text-red-500">
+                        This field is required
+                      </span>
+                    )}
                   </AuthInput>
                   <AuthInput className="flex-1">
                     <label htmlFor="register_c_password">
@@ -136,6 +174,11 @@ function Register() {
                         },
                       })}
                     />
+                    {errors.password_confirmation && (
+                      <span className="text-xs text-red-500">
+                        The passwords should match
+                      </span>
+                    )}
                   </AuthInput>
                 </div>
 
@@ -144,7 +187,7 @@ function Register() {
                     id="rememberMe"
                     type="checkbox"
                     className="mr-2"
-                    {...register("rememberMe")}
+                    {...register("remember")}
                   />
                   <label
                     htmlFor="rememberMe"

@@ -13,7 +13,8 @@ class ForumThread extends Model
         'title', 
         'description',
         'forum_category_id',
-        'user_id'
+        'user_id',
+        'image_path'
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
