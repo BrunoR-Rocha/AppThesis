@@ -14,6 +14,15 @@ class ForumPostResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'body' => $this->body,
+            'forum_thread_id' => $this->forum_thread_id,
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'author' => $this->user->name,
+            // 'likes_count' => $this->likes()->count(),
+        ];
     }
 }

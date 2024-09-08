@@ -17,16 +17,16 @@ class ForumThreadResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title, 
-            'description' => $this->description, 
-            'forum_category_id' => $this->forum_category_id, 
-            'user_id' => $this->user_id, 
-            'created_at' => $this->created_at, 
-            'updated_at' => $this->updated_at, 
+            'title' => $this->title,
+            'description' => $this->description,
+            'forum_category_id' => $this->forum_category_id,
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'category' => $this->forumCategory,
             'author' => $this->user->name,
             'data' => Carbon::parse($this->created_at)->format('d/m/Y'),
-            'posts' => $this->forumPosts()->count(),
+            'posts_count' => $this->forumPosts()->count(),
             'likes_count' => $this->likes()->count(),
             'is_liked_by_user' => $request->user() ? $this->isLikedBy($request->user()) : null,
         ];

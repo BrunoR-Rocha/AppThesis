@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Http\Resources\ForumPostResource;
 use App\Http\Resources\ForumThreadResource;
 use App\Models\ForumThread;
 use Illuminate\Http\Request;
@@ -106,6 +107,16 @@ class ForumThreadController extends Controller
 
         return new ForumThreadResource($forumThread);
     }
+
+    public function showComments($id)
+    {
+        $forumThread = ForumThread::findOrFail($id);
+
+        $posts = $forumThread->forumPosts;
+
+        return ForumPostResource::collection($posts);
+    }
+
 
     /**
      * Update the specified resource in storage.

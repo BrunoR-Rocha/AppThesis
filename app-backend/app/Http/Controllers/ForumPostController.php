@@ -55,6 +55,33 @@ class ForumPostController extends Controller
         ], 200);
     }
 
+    public function frontStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comment' => 'required|string|max:255',
+            'forum_thread_id' => 'required|exists:forum_threads,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        // TODO - add antispam mechanism
+        
+        $validatedData = $validator->validated();
+        $validatedData['user_id'] = Auth::user()->id ?? 1;
+        $validatedData['body'] = $validatedData['comment'];
+        $forumPost = ForumPost::create($validatedData);
+
+        return response()->json([
+            'comment' => new ForumPostResource($forumPost),
+            'message' => __('validator.success'),
+        ], 200);
+    }
+
     /**
      * Display the specified resource.
      *

@@ -21,4 +21,10 @@ class SysConfig extends Model
     {
         return $query->where('tag', $tag);
     }
+
+    public static function getValueByTag($tag)
+    {
+        return self::where('tag', $tag)->first()->value ?? null;
+    }
+
 }

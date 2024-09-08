@@ -28,6 +28,9 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
 
+# Install PHP dependencies using Composer
+RUN composer install
+
 # Change current user to www
 USER www-data
 

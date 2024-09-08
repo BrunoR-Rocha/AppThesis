@@ -20,6 +20,11 @@ import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import { HashLink } from "react-router-hash-link";
 
 function Landing() {
+  const imageCount = 6;
+  const imageNames = Array.from(
+    { length: imageCount },
+    (_, i) => `Frame_${i + 1}.svg`
+  );
   return (
     <>
       <LandingArea>
@@ -160,7 +165,24 @@ function Landing() {
           </div>
         </FeatureArea>
         <ToolsArea>
-          <p className="text-[#FFFFFFCC] text-lg">Tools used in this project</p>
+          <Wrapper>
+            <div className="flex flex-col gap-10">
+              <p className="text-[#FFFFFFCC] text-lg text-center">
+                Tools used in this project
+              </p>
+
+              <div className="flex items-center justify-evenly flex-1 w-full gap-12">
+                {imageNames.map((imageName, index) => (
+                  <img
+                    key={index}
+                    src={require(`../../media/landing/tech/${imageName}`)} // Use the correct relative path
+                    alt={`Frame ${index + 1}`}
+                    className="w-32 h-16" // Adjust the size as needed
+                  />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
         </ToolsArea>
       </LandingArea>
     </>

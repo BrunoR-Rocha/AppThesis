@@ -186,7 +186,7 @@ function Threads() {
                             </div>
                             <div className="flex gap-3">
                               <ChatBubbleOutlineRoundedIcon />
-                              <span>{thread.posts}</span>
+                              <span>{thread.posts_count}</span>
                             </div>
                           </div>
                         </div>

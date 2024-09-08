@@ -84,7 +84,7 @@ const ThreadPage = () => {
                     onClick={handleCommentIconClick}
                   >
                     <ChatBubbleOutlineRoundedIcon />
-                    <span>{thread?.posts}</span>
+                    <span>{thread?.posts_count}</span>
                   </div>
 
                   {isCommentSectionOpen && (
@@ -97,7 +97,8 @@ const ThreadPage = () => {
                   <PostSection
                     isOpen={isCommentSectionOpen}
                     onClose={handleCloseCommentSection}
-                    posts={thread?.posts}
+                    posts_count={thread?.posts_count}
+                    thread={thread}
                   />
                 </div>
                 <div className="flex gap-3">

@@ -67,6 +67,7 @@ services:
       - frontend
       - frontend-admin
       - postgres
+      - langchain
     networks:
       - app-network
 
@@ -81,6 +82,26 @@ services:
       - "54320:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  langchain:
+    build:
+      context: ./langchain
+      dockerfile: Dockerfile
+    container_name: langchain
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LANGCHAIN_TRACING_V2=true
+      - LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+      - LANGCHAIN_API_KEY=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
+      - LANGCHAIN_PROJECT=pr-smug-warfare-80
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./langchain:/app
+    depends_on:
+      - app-backend
     networks:
       - app-network
 networks:

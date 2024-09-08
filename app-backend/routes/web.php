@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseContentController;
 use App\Http\Controllers\CourseContentTypeController;
@@ -59,7 +60,7 @@ Route::group([
         'news'                          => NewsController::class,
         'contacts'                      => ContactController::class,
         'mail_templates'                => MailTemplateController::class,
-        'forum_categories'              => ForumCategoryController::class, 
+        'forum_categories'              => ForumCategoryController::class,
         'forum_threads'                 => ForumThreadController::class,
         'forum_posts'                   => ForumPostController::class,
         'sys_configs'                   => SysConfigController::class,
@@ -73,23 +74,29 @@ Route::group([
         'library_pages'                 => LibraryPageController::class,
         'library_page_modules'          => LibraryPageModuleController::class,
         'courses'                       => CourseController::class,
-        'lessons'                       => LessonController::class, 
+        'lessons'                       => LessonController::class,
         'course_content_types'          => CourseContentTypeController::class,
         'course_interactive_elements'   => CourseInteractiveElementController::class,
         'course_contents'               => CourseContentController::class,
     ]);
 
-    $router->post('/admin/login',                   [AuthController::class , 'adminLogin']);
+    $router->post('/admin/login',                   [AuthController::class, 'adminLogin']);
 
     $router->post('forum_threads/{thread}/like',    [ForumThreadLikeController::class, 'like']);
     $router->delete('forum_threads/{thread}/like',  [ForumThreadLikeController::class, 'unlike']);
 
+    // HEALTHCHECK
+    $router->get('/llm/health',                     [ChatbotController::class, 'health']);
+    
     // FRONTEND ROUTES
+    $router->post('/chatbot',                       [ChatbotController::class, 'chat']);
+
+    $router->get('/front/comments/{id}',            [ForumThreadController::class, 'showComments']);
     $router->post('/front/register',                [UserController::class, 'frontRegister']);
     $router->post('/front/contacts',                [ContactController::class, 'frontStore']);
     $router->get('/front/post/category',            [ForumCategoryController::class, 'getAll']);
     $router->post('/front/post/create',             [ForumThreadController::class, 'frontStore']);
-    
+    $router->post('/front/post/comment',            [ForumPostController::class, 'frontStore']);
 });
 
 Route::redirect('/', '/backend');
