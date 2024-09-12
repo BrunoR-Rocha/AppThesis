@@ -10,6 +10,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import PostModal from "../../components/modals/post";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import moment from "moment";
+import ChatBox from "../../components/chat/Chatbox";
 
 function Threads() {
   const [loading, setLoading] = useState();
@@ -198,6 +199,7 @@ function Threads() {
           </ForumPostList>
         </Wrapper>
       </ForumPostArea>
+      <ChatBox />
     </>
   );
 }
