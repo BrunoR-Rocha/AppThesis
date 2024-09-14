@@ -24,7 +24,7 @@ class QuestionResource extends JsonResource
             'status' => $this->status,
             'type_id' => $this->type_id,
             'user_id' => $this->user_id,
-            'tags' => json_decode($this->tags),
+            'tags' => json_decode(json_encode($this->tags)),
             'image' => Storage::disk('public')->url($this->image_path),
             'image_path' => $this->image_path,
             'options' => $this->options,

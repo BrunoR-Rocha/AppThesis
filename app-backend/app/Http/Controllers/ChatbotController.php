@@ -28,6 +28,9 @@ class ChatbotController extends Controller
             if ($response->successful()) {
                 $flaskResponse = $response->json();
 
+                // add chat message to session or other storage
+                // send the message to the user.
+
                 dd($flaskResponse);
             } else {
                 return back()->withErrors(['error' => 'There was a problem gathering information']);
@@ -35,8 +38,6 @@ class ChatbotController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
         }
-        
-        
 
         return response()->json($response);
     }

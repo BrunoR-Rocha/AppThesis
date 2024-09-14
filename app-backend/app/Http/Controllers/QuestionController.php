@@ -6,8 +6,12 @@ use App\Helpers\ApiResponse;
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuestionShowResource;
 use App\Models\Question;
+use App\Models\QuestionOption;
+use App\Models\QuestionType;
+use App\Models\SysConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +22,7 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request )
+    public function index(Request $request)
     {
         $data = new ApiResponse($request, Question::class);
 
@@ -50,7 +54,7 @@ class QuestionController extends Controller
                 'message' => __('errors.validator_fail'),
             ], 400);
         }
-        
+
         $image = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images', 'public');
@@ -70,7 +74,7 @@ class QuestionController extends Controller
         ]);
 
         return response()->json([
-            'id' => $question->id, 
+            'id' => $question->id,
             'message' => __('validator.success'),
         ], 200);
     }
@@ -154,7 +158,76 @@ class QuestionController extends Controller
         $question->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function generateRandom(Request $request)
+    {
+        $theme = SysConfig::tag('theme')->first()->value;
+
+        $data = [
+            'theme' => $theme,
+        ];
+
+        try {
+            $llmUrl = config('llm.url');
+            $response = Http::post($llmUrl . '/random-questions', $data);
+
+            if ($response->successful()) {
+                $flaskResponse = $response->json();
+                $questionsJson = $flaskResponse['response'];
+                $questions = json_decode($questionsJson, true);
+
+                if (!is_array($questions)) {
+                    return response()->json(['error' => 'Invalid response format from the API']);
+                }
+
+                foreach ($questions as $question) {
+                    $questionType = QuestionType::tag($question['type'])->first();
+
+                    // If question type doesn't exist or there's already the same question with same type skips
+                    if (!$questionType) {
+                        continue;
+                    }
+                    
+                    $existingQuestion = Question::where('title', $question['title'])
+                        ->where('type_id', $questionType->id)
+                        ->first();
+
+                    if ($existingQuestion) {
+                        continue;
+                    }
+
+                    $newQuestion = Question::create([
+                        'title' => $question['title'],
+                        'user_id' => 1,
+                        'type_id' => $questionType->id,
+                        'status' => 'active',
+                        'difficulty' => $question['difficulty'],
+                        'tags' => $question['tags'],
+                    ]);
+
+                    if ($questionType->tag === 'multiple_choice' || $questionType->tag === 'yes_no') {
+                        foreach ($question['options'] as $option) {
+                            QuestionOption::create([
+                                'question_id' => $newQuestion->id,
+                                'option_text' => $option['option_text'],
+                                'is_correct' => $option['is_correct'],
+                            ]);
+                        }
+                    }
+                }
+
+                return response()->json(['message' => 'Questions generated and saved successfully!', 'result' => $questions]);
+            } else {
+                return response()->json(['error' => 'There was a problem gathering information']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()]);
+        }
+
+        return response()->json($response);
     }
 }

@@ -21,6 +21,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useNotify, useRefresh, useDataProvider } from 'react-admin';
 import { TextField as MuiTextField, Switch, FormControlLabel} from '@mui/material';
+import DifficultySelectField from "../../components/general/DifficultySelectField";
 
 const CustomAddOptionButton = (props) => {
   const [open, setOpen] = useState(false);
@@ -198,7 +199,7 @@ const AddTopicDialog = ({ open, handleClose }) => {
 };
 
 export default function QuestionShow(props) {
-  const difficultyChoices = generateDifficultyChoices(1, 10);
+  // const difficultyChoices = generateDifficultyChoices(1, 10);
 
   return (
     <Show {...props}>
@@ -220,7 +221,8 @@ export default function QuestionShow(props) {
               { id: 'pending', name: 'Pending' },
           ]} />
 
-          <SelectField source="difficulty" choices={difficultyChoices} />
+          {/* <SelectField source="difficulty" choices={difficultyChoices} /> */}
+          <DifficultySelectField source="difficulty" />
           <RichTextField source="explanation" />
           <RichTextField source="hint" />
           <ImageField source="image" label="Imagem descritiva" />

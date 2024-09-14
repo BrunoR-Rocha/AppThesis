@@ -6,7 +6,9 @@ use App\Helpers\ApiResponse;
 use App\Http\Resources\QuestionTopicResource;
 use App\Models\Question;
 use App\Models\QuestionTopic;
+use App\Models\SysConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class QuestionTopicController extends Controller
@@ -105,5 +107,44 @@ class QuestionTopicController extends Controller
         return response()->json([
             'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function generate(Request $request)
+    {
+        $theme = SysConfig::tag('theme')->first()->value;
+
+        $data = [
+            'theme' => $theme,
+        ];
+
+        try {
+            $llmUrl = config('llm.url');
+            $response = Http::post($llmUrl . '/question-topic', $data);
+
+            if ($response->successful()) {
+                $flaskResponse = $response->json();
+                $topicsJson = $flaskResponse['response'];
+                $topics = json_decode($topicsJson, true);
+
+                if (!is_array($topics)) {
+                    return back()->withErrors(['error' => 'Invalid response format from the API']);
+                }
+
+                foreach ($topics as $topic) {
+                    QuestionTopic::updateOrCreate(
+                        ['tag' => $topic['tag']], 
+                        ['name' => $topic['name']]
+                    );
+                }
+
+                return response()->json(['message', 'Question topics generated and saved successfully!']);
+            } else {
+                return back()->withErrors(['error' => 'There was a problem gathering information']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+        }
+
+        return response()->json($response);
     }
 }

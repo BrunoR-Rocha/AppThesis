@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class, 
             NewsSeeder::class,
             ForumCategoriesSeeder::class,
-            // QuestionSeeder::class
+            QuestionTypeSeeder::class
        ]);
     }
 }

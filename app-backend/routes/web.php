@@ -47,12 +47,13 @@ Route::group([
     // 'middleware' => 'auth'
 ], function (Router $router) {
 
-    Route::get('storage/{folderName}/{filename}', [MediaController::class, 'showMedia']);
+    Route::get('storage/{folderName}/{filename}',   [MediaController::class, 'showMedia']);
 
-    $router->get('/journals/autoUpdate', [JournalController::class, 'autoUpdateJournalData']);
+    $router->get('/journals/autoUpdate',            [JournalController::class, 'autoUpdateJournalData']);
+    // $router->get('/question/topics/generate',            [QuestionTopicController::class, 'generate']);
 
-    $router->post('questions/{id}', [QuestionController::class, 'update']);
-    $router->post('courses/{id}',   [CourseController::class, 'update']);
+    $router->post('questions/{id}',                 [QuestionController::class, 'update']);
+    $router->post('courses/{id}',                   [CourseController::class, 'update']);
 
     $router->resources([
         'users'                         => UserController::class,
@@ -87,6 +88,8 @@ Route::group([
 
     // HEALTHCHECK
     $router->get('/llm/health',                     [ChatbotController::class, 'health']);
+    $router->get('/llm/topic',                      [QuestionTopicController::class, 'generate']);
+    $router->get('/llm/question',                   [QuestionController::class, 'generateRandom']);
     
     // FRONTEND ROUTES
     $router->post('/chatbot',                       [ChatbotController::class, 'chat']);
