@@ -13,7 +13,6 @@ import {
   useNotify,
   useRedirect,
 } from "react-admin";
-import { generateDifficultyChoices } from "../../utils/helpers";
 import apiUrl from "../../providers/apiUrl";
 import { httpClient } from "../../providers/dataProvider";
 
@@ -22,8 +21,6 @@ const RichTextInput = React.lazy(() =>
     default: module.RichTextInput,
   }))
 );
-
-const difficultyChoices = generateDifficultyChoices();
 
 export default function QuestionForm(props) {
   const redirect = useRedirect();
@@ -37,8 +34,13 @@ export default function QuestionForm(props) {
     }
 
     for (let key in data) {
-      if (key === "tags") formData.append(key, JSON.stringify(data[key]));
-      else if (key !== "image") formData.append(key, data[key]);
+      if (key === "tags") {
+        data[key].forEach((tag, index) => {
+          formData.append(`tags[${index}]`, tag);
+        });
+      } else if (key !== "image") {
+        formData.append(key, data[key]);
+      }
     }
     let requestUrl = apiUrl + "/questions";
 
@@ -90,7 +92,7 @@ export default function QuestionForm(props) {
 
       <ArrayInput source="tags">
         <SimpleFormIterator inline>
-          <TextInput source="title" helperText={false} />
+          <TextInput source="" helperText={false} />
         </SimpleFormIterator>
       </ArrayInput>
     </SimpleForm>

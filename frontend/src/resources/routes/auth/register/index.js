@@ -14,6 +14,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axiosConfig from "../../../../providers/axiosConfig";
 
 function Register() {

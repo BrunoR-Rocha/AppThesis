@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuestionShowResource;
+use App\Models\Difficulty;
 use App\Models\Question;
 use App\Models\QuestionOption;
+use App\Models\QuestionTopic;
 use App\Models\QuestionType;
 use App\Models\SysConfig;
 use Illuminate\Http\Request;
@@ -108,7 +110,8 @@ class QuestionController extends Controller
             'hint' => 'nullable|string',
             'difficulty' => 'nullable|integer',
             'status' => 'nullable|string',
-            'tags' => 'nullable',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string',
             'image' => 'nullable|image',
         ]);
 
@@ -137,7 +140,7 @@ class QuestionController extends Controller
             'tags' => $request->tags,
             'image_path' => $image,
             'type_id' => $request->type_id,
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->id ?? 1,
         ]);
 
         return $question;
@@ -166,10 +169,20 @@ class QuestionController extends Controller
     public function generateRandom(Request $request)
     {
         $theme = SysConfig::tag('theme')->first()->value;
+        $topic = QuestionTopic::inRandomOrder()->first();
 
-        $data = [
-            'theme' => $theme,
-        ];
+        if ($topic) {
+            $data = [
+                'theme' => $theme,
+                'topic_tag' => $topic->tag,
+                'topic_name' => $topic->name
+            ];
+        } else {
+            // Generate a question without associated Topic
+            $data = [
+                'theme' => $theme,
+            ];
+        }
 
         try {
             $llmUrl = config('llm.url');
@@ -209,6 +222,10 @@ class QuestionController extends Controller
                         'tags' => $question['tags'],
                     ]);
 
+                    if ($topic) {
+                        $newQuestion->topics()->attach($topic->id);
+                    }
+
                     if ($questionType->tag === 'multiple_choice' || $questionType->tag === 'yes_no') {
                         foreach ($question['options'] as $option) {
                             QuestionOption::create([
@@ -229,5 +246,16 @@ class QuestionController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function params(Request $request)
+    {
+        $topics = QuestionTopic::all();
+        $difficulty = Difficulty::getStandardDifficulty();
+        
+        return response()->json([
+            'topics' => $topics,
+            'difficulty' => $difficulty
+        ]);
     }
 }

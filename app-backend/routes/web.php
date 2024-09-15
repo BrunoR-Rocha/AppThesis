@@ -100,6 +100,8 @@ Route::group([
     $router->get('/front/post/category',            [ForumCategoryController::class, 'getAll']);
     $router->post('/front/post/create',             [ForumThreadController::class, 'frontStore']);
     $router->post('/front/post/comment',            [ForumPostController::class, 'frontStore']);
+
+    $router->get('/params/questions',               [QuestionController::class, 'params']);
 });
 
 Route::redirect('/', '/backend');

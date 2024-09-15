@@ -5,9 +5,43 @@ import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
 import Courses from "./course";
+import axiosConfig from "../../../providers/axiosConfig";
+import CustomDropdown from "../../components/general/Dropdown";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Academy() {
   const [activeTab, setActiveTab] = useState("tab1");
+  const [loading, setLoading] = useState(false);
+
+  const [topicOptions, setTopicOptions] = useState([]);
+  const [difficultyOptions, setDifficultyOptions] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    axiosConfig
+      .get(`/params/questions`)
+      .then((res) => {
+        setTopicOptions(res.data.topics);
+        setDifficultyOptions(res.data.difficulty);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const handleStartQuiz = () => {
+    if (!selectedTopic || !selectedDifficulty) {
+      toast.error("Please select both a topic and a difficulty.");
+      return;
+    }
+
+    console.log("Selected Topic:", selectedTopic);
+    console.log("Selected Difficulty:", selectedDifficulty);
+
+    // You can now make an API call or navigate to another page with these values
+  };
 
   const renderButton = (tabId, label) => (
     <button
@@ -67,48 +101,24 @@ function Academy() {
                       <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
                     </p>
 
-                    <div className="w-full bg-[#1A184C40] px-10 py-4 rounded-lg border-2 border-[#1A184C]">
-                      <div className="flex justify-between w-full items-center">
-                        <div className="flex flex-col gap-2 justify-start">
-                          <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
-                            Topic
-                          </span>
-                          <span className="text-[#AAA] font-normal text-base">
-                            Choose an option
-                          </span>
-                        </div>
-                        <ExpandMoreRoundedIcon
-                          sx={{
-                            color: "#6078DF",
-                            width: "24px",
-                            height: "24px",
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="w-full bg-[#1A184C40] px-10 py-4 rounded-lg border-2 border-[#1A184C]">
-                      <div className="flex justify-between w-full items-center">
-                        <div className="flex flex-col gap-2 justify-start">
-                          <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
-                            Difficulty
-                          </span>
-                          <span className="text-[#AAA] font-normal text-base">
-                            Choose an option
-                          </span>
-                        </div>
-                        <ExpandMoreRoundedIcon
-                          sx={{
-                            color: "#6078DF",
-                            width: "24px",
-                            height: "24px",
-                          }}
-                        />
-                      </div>
-                    </div>
+                    <CustomDropdown
+                      options={topicOptions}
+                      label="Topic"
+                      selectedOption={selectedTopic}
+                      setSelectedOption={setSelectedTopic}
+                    />
+                    <CustomDropdown
+                      options={difficultyOptions}
+                      label="Difficulty"
+                      selectedOption={selectedDifficulty}
+                      setSelectedOption={setSelectedDifficulty}
+                    />
 
                     <div className="flex items-center justify-center pt-5">
-                      <button className="bg-white px-10 py-4 text-[#F4AA5A] rounded-full">
+                      <button
+                        className="bg-white px-10 py-4 text-[#F4AA5A] rounded-full"
+                        onClick={handleStartQuiz}
+                      >
                         <p className="text-base font-semibold capitalize">
                           Start Quiz{" "}
                           <EastRoundedIcon sx={{ color: "#F4AA5A" }} />{" "}

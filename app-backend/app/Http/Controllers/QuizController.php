@@ -35,7 +35,7 @@ class QuizController extends Controller
     public function store(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
-            'title' => 'required|string',
+            'title' => 'nullable|string',
             'topic_id' => 'required|exists:question_topics,id',
             'description' => 'nullable|string',
             'time_limit' => 'nullable|integer|min:1',
@@ -123,6 +123,35 @@ class QuizController extends Controller
         $quiz = Quiz::findOrFail($id);
 
         return new QuizResource($quiz);
+    }
+
+    public function assemble(Request $request)
+    {
+        $validatedData = Validator::make($request->all(), [
+            'topic_id' => 'nullable|exists:question_topics,id',
+            'difficulty' => 'nullable|integer',
+            'is_random' => 'required|boolean'
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'errors' => $validatedData->errors(),
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        if($request->isRandom)
+        {
+            // Generate a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
+        }
+        else{
+            // check if difficulty and topic is set
+            // select a number of questions from a specific topic with the difficulty between the range
+            // need to do the parsing from the difficulty and the array values
+            
+            // If there's not enough questions generate more
+
+        }
     }
 
     /**

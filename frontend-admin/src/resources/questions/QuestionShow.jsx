@@ -14,7 +14,8 @@ import {
   Datagrid,
   BooleanField,
   useRecordContext,
-  TopToolbar
+  TopToolbar,
+  FunctionField
 } from "react-admin";
 import { generateDifficultyChoices } from "../../utils/helpers";
 import AddIcon from '@mui/icons-material/Add';
@@ -199,7 +200,6 @@ const AddTopicDialog = ({ open, handleClose }) => {
 };
 
 export default function QuestionShow(props) {
-  // const difficultyChoices = generateDifficultyChoices(1, 10);
 
   return (
     <Show {...props}>
@@ -229,7 +229,9 @@ export default function QuestionShow(props) {
 
           <ArrayField source="tags">
             <SingleFieldList linkType={false}>
-              <ChipField source="title" size="small" />
+              <FunctionField render={(record) => (
+                 <ChipField record={{ title: record }} source="title" size="small" />
+              )} />
             </SingleFieldList>
           </ArrayField>
 

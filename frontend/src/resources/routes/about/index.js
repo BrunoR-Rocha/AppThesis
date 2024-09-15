@@ -55,6 +55,7 @@ function About() {
       })
       .catch(() => setLoading(false));
   }, []);
+  
   return (
     <>
       <AboutArea className="min-h-[900px] md:min-h-max pb-20">
