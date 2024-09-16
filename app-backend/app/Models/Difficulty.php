@@ -25,4 +25,23 @@ class Difficulty extends Model
             ['id' => 5, 'name' => self::VERY_HARD],
         ];
     }
+
+    public static function getDifficultyRange($difficultyLevel)
+    {
+        switch ($difficultyLevel) {
+            case 1: 
+                return [1, 20];
+            case 2:
+                return [21, 40];
+            case 3:
+                return [41, 60];
+            case 4:
+                return [61, 80];
+            case 5:
+                return [81, 100];
+            default:
+                return [1, 100];
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\QuizResource;
+use App\Models\Difficulty;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\Response;
@@ -140,18 +141,48 @@ class QuizController extends Controller
             ], 400);
         }
 
-        if($request->isRandom)
+        $userId = Auth::user()->id ?? 1;
+        
+        if($request->is_random)
         {
-            // Generate a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
+            // Get a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
+            $questions = Question::inRandomOrder()->take(20)->get();
         }
         else{
             // check if difficulty and topic is set
-            // select a number of questions from a specific topic with the difficulty between the range
-            // need to do the parsing from the difficulty and the array values
-            
-            // If there's not enough questions generate more
+            if(!$request->has('topic_id') || !$request->has('difficulty')) {
+                return response()->json([
+                    'message' => 'No topic provided',
+                ], 400);
+            }
 
+            // need to do the parsing from the difficulty and the array values
+            $difficultyRange = Difficulty::getDifficultyRange($request->difficulty);
+
+            // select a number of questions from a specific topic with the difficulty between the range
+            $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
+                            ->whereHas('topics', function($query) use ($request) {
+                                $query->where('id', $request->topic_id);
+                            })
+                            ->take(10)
+                            ->get();
+            
+            // TODO: If there's not enough questions generate more
         }
+
+        $quiz = Quiz::create([
+            'user_id' => $userId,
+        ]);
+
+        foreach ($questions as $index => $question) {
+            $quiz->questions()->attach($question->id, ['order' => $index + 1]);
+        }
+
+        return response()->json([
+            'message' => 'Quiz created',
+            'quiz_id' => $quiz->id,
+            'questions' => $questions
+        ], 200);
     }
 
     /**

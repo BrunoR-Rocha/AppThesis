@@ -31,16 +31,35 @@ function Academy() {
       .catch(() => setLoading(false));
   }, []);
 
-  const handleStartQuiz = () => {
-    if (!selectedTopic || !selectedDifficulty) {
-      toast.error("Please select both a topic and a difficulty.");
-      return;
+  const handleStartQuiz = (isRandom = true) => {
+    let formData = {};
+    if (!isRandom) {
+      if (!selectedTopic || !selectedDifficulty) {
+        toast.error("Please select both a topic and a difficulty.");
+        return;
+      }
+
+      console.log("Selected Topic:", selectedTopic);
+      console.log("Selected Difficulty:", selectedDifficulty);
+
+      formData = {
+        topic_id: selectedTopic,
+        difficulty: selectedDifficulty,
+        is_random: isRandom,
+      };
+    } else {
+      formData = {
+        is_random: isRandom,
+      };
     }
 
-    console.log("Selected Topic:", selectedTopic);
-    console.log("Selected Difficulty:", selectedDifficulty);
-
-    // You can now make an API call or navigate to another page with these values
+    axiosConfig
+      .post(`/front/quiz/create`, formData)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   };
 
   const renderButton = (tabId, label) => (
@@ -82,7 +101,10 @@ function Academy() {
 
                 <div className="flex flex-grow w-full max-w-xl">
                   <div className="flex flex-col gap-5 w-full">
-                    <button className="w-full bg-[#6078DF] px-10 py-4 rounded-full backdrop-blur-2xl">
+                    <button
+                      className="w-full bg-[#6078DF] px-10 py-4 rounded-full backdrop-blur-2xl"
+                      onClick={() => handleStartQuiz(true)}
+                    >
                       <div className="flex justify-between w-full items-center">
                         <div className="flex flex-col gap-2 justify-start">
                           <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
@@ -117,7 +139,7 @@ function Academy() {
                     <div className="flex items-center justify-center pt-5">
                       <button
                         className="bg-white px-10 py-4 text-[#F4AA5A] rounded-full"
-                        onClick={handleStartQuiz}
+                        onClick={() => handleStartQuiz(false)}
                       >
                         <p className="text-base font-semibold capitalize">
                           Start Quiz{" "}

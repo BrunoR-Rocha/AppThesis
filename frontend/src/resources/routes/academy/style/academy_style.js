@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import GeneralBg from "../../../media/about/background.png";
 import CourseShowBg from "../../../media/general/bg_gradient.png";
+import QuizBg from "../../../media/academy/quizzes/quiz_bg.svg";
 
 export const AcademyArea = styled("div")`
   width: 100%;
@@ -24,4 +25,29 @@ export const CourseDisplay = styled("div")`
   width: 100%;
   background-image: url(${CourseShowBg});
   background-size: cover;
+`;
+
+export const QuizArea = styled("div")`
+  width: 100%;
+  height: 100vh;
+  background-image: url(${QuizBg});
+  background-color: #040a15;
+  background-size: cover;
+  background-position: center;
+`;
+
+export const QuizOption = styled("div")`
+  border-radius: 10px;
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid #6078df;
+  background-color: #6078df26;
+  backdrop-filter: blur(40px);
+  padding: 24px;
+  align-items: center;
+  gap: 24px;
+  &:hover {
+    border: 1px solid #6078df;
+    background-color: #6078df;
+  }
 `;

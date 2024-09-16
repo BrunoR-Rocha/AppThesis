@@ -47,61 +47,60 @@ Route::group([
     // 'middleware' => 'auth'
 ], function (Router $router) {
 
-    Route::get('storage/{folderName}/{filename}',   [MediaController::class, 'showMedia']);
+    $router->get('storage/{folderName}/{filename}',     [MediaController::class, 'showMedia']);
+    $router->get('/journals/autoUpdate',                [JournalController::class, 'autoUpdateJournalData']);
 
-    $router->get('/journals/autoUpdate',            [JournalController::class, 'autoUpdateJournalData']);
-    // $router->get('/question/topics/generate',            [QuestionTopicController::class, 'generate']);
-
-    $router->post('questions/{id}',                 [QuestionController::class, 'update']);
-    $router->post('courses/{id}',                   [CourseController::class, 'update']);
+    $router->post('questions/{id}',                     [QuestionController::class, 'update']);
+    $router->post('courses/{id}',                       [CourseController::class, 'update']);
 
     $router->resources([
-        'users'                         => UserController::class,
-        'faqs'                          => FaqController::class,
-        'news'                          => NewsController::class,
-        'contacts'                      => ContactController::class,
-        'mail_templates'                => MailTemplateController::class,
-        'forum_categories'              => ForumCategoryController::class,
-        'forum_threads'                 => ForumThreadController::class,
-        'forum_posts'                   => ForumPostController::class,
-        'sys_configs'                   => SysConfigController::class,
-        'journals'                      => JournalController::class,
-        'question_topics'               => QuestionTopicController::class,
-        'question_types'                => QuestionTypeController::class,
-        'questions'                     => QuestionController::class,
-        'question_options'              => QuestionOptionController::class,
-        'quizzes'                       => QuizController::class,
-        'responses'                     => ResponseController::class,
-        'library_pages'                 => LibraryPageController::class,
-        'library_page_modules'          => LibraryPageModuleController::class,
-        'courses'                       => CourseController::class,
-        'lessons'                       => LessonController::class,
-        'course_content_types'          => CourseContentTypeController::class,
-        'course_interactive_elements'   => CourseInteractiveElementController::class,
-        'course_contents'               => CourseContentController::class,
+        'users'                                         => UserController::class,
+        'faqs'                                          => FaqController::class,
+        'news'                                          => NewsController::class,
+        'contacts'                                      => ContactController::class,
+        'mail_templates'                                => MailTemplateController::class,
+        'forum_categories'                              => ForumCategoryController::class,
+        'forum_threads'                                 => ForumThreadController::class,
+        'forum_posts'                                   => ForumPostController::class,
+        'sys_configs'                                   => SysConfigController::class,
+        'journals'                                      => JournalController::class,
+        'question_topics'                               => QuestionTopicController::class,
+        'question_types'                                => QuestionTypeController::class,
+        'questions'                                     => QuestionController::class,
+        'question_options'                              => QuestionOptionController::class,
+        'quizzes'                                       => QuizController::class,
+        'responses'                                     => ResponseController::class,
+        'library_pages'                                 => LibraryPageController::class,
+        'library_page_modules'                          => LibraryPageModuleController::class,
+        'courses'                                       => CourseController::class,
+        'lessons'                                       => LessonController::class,
+        'course_content_types'                          => CourseContentTypeController::class,
+        'course_interactive_elements'                   => CourseInteractiveElementController::class,
+        'course_contents'                               => CourseContentController::class,
     ]);
 
-    $router->post('/admin/login',                   [AuthController::class, 'adminLogin']);
+    $router->post('/admin/login',                       [AuthController::class, 'adminLogin']);
 
-    $router->post('forum_threads/{thread}/like',    [ForumThreadLikeController::class, 'like']);
-    $router->delete('forum_threads/{thread}/like',  [ForumThreadLikeController::class, 'unlike']);
+    $router->post('forum_threads/{thread}/like',        [ForumThreadLikeController::class, 'like']);
+    $router->delete('forum_threads/{thread}/like',      [ForumThreadLikeController::class, 'unlike']);
 
-    // HEALTHCHECK
-    $router->get('/llm/health',                     [ChatbotController::class, 'health']);
-    $router->get('/llm/topic',                      [QuestionTopicController::class, 'generate']);
-    $router->get('/llm/question',                   [QuestionController::class, 'generateRandom']);
+    // LLM
+    $router->get('/llm/health',                         [ChatbotController::class, 'health']);
+    $router->get('/llm/topic',                          [QuestionTopicController::class, 'generate']);
+    $router->get('/llm/question',                       [QuestionController::class, 'generateRandom']);
     
     // FRONTEND ROUTES
-    $router->post('/chatbot',                       [ChatbotController::class, 'chat']);
+    $router->post('/chatbot',                           [ChatbotController::class, 'chat']);
+    $router->get('/front/comments/{id}',                [ForumThreadController::class, 'showComments']);
+    $router->post('/front/register',                    [UserController::class, 'frontRegister']);
+    $router->post('/front/contacts',                    [ContactController::class, 'frontStore']);
+    $router->get('/front/post/category',                [ForumCategoryController::class, 'getAll']);
+    $router->post('/front/post/create',                 [ForumThreadController::class, 'frontStore']);
+    $router->post('/front/post/comment',                [ForumPostController::class, 'frontStore']);
+    $router->post('/front/quiz/create',                 [QuizController::class, 'assemble']);
 
-    $router->get('/front/comments/{id}',            [ForumThreadController::class, 'showComments']);
-    $router->post('/front/register',                [UserController::class, 'frontRegister']);
-    $router->post('/front/contacts',                [ContactController::class, 'frontStore']);
-    $router->get('/front/post/category',            [ForumCategoryController::class, 'getAll']);
-    $router->post('/front/post/create',             [ForumThreadController::class, 'frontStore']);
-    $router->post('/front/post/comment',            [ForumPostController::class, 'frontStore']);
-
-    $router->get('/params/questions',               [QuestionController::class, 'params']);
+    // PARAMS
+    $router->get('/params/questions',                   [QuestionController::class, 'params']);
 });
 
 Route::redirect('/', '/backend');

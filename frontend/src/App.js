@@ -19,6 +19,8 @@ import CoursePage from "./resources/routes/academy/course/page";
 import ScrollToTop from "./resources/components/general/ScrollTop";
 import { ToastContainer } from "react-toastify";
 import Profile from "./resources/routes/profile";
+import QuizPage from "./resources/routes/academy/quiz";
+
 function App() {
   // const [isLoading, setIsLoading] = useState(true);
 
@@ -50,6 +52,7 @@ function App() {
 
             <Route path="academy" element={<Academy />} />
             <Route path="academy/course/:id" element={<CoursePage />} />
+            <Route path="academy/quiz/:id" element={<QuizPage />} />
 
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
