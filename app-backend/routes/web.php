@@ -27,7 +27,6 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
-use App\Models\ForumCategory;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -47,8 +46,14 @@ Route::group([
     // 'middleware' => 'auth'
 ], function (Router $router) {
 
+    $router->post('/register',                          [AuthController::class, 'register']);
+    $router->post('/login',                             [AuthController::class, 'login']);
+    $router->post('/logout',                            [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
     $router->get('storage/{folderName}/{filename}',     [MediaController::class, 'showMedia']);
     $router->get('/journals/autoUpdate',                [JournalController::class, 'autoUpdateJournalData']);
+
+    $router->post('quiz/{id}/questions',                [QuizController::class, 'getQuizInfo']);
 
     $router->post('questions/{id}',                     [QuestionController::class, 'update']);
     $router->post('courses/{id}',                       [CourseController::class, 'update']);
@@ -88,7 +93,7 @@ Route::group([
     $router->get('/llm/health',                         [ChatbotController::class, 'health']);
     $router->get('/llm/topic',                          [QuestionTopicController::class, 'generate']);
     $router->get('/llm/question',                       [QuestionController::class, 'generateRandom']);
-    
+
     // FRONTEND ROUTES
     $router->post('/chatbot',                           [ChatbotController::class, 'chat']);
     $router->get('/front/comments/{id}',                [ForumThreadController::class, 'showComments']);

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useNavigate, matchPath } from "react-router-dom";
 import { ReactComponent as Logo } from "../../media/navbar/logo_moony.svg";
 import Wrapper from "../general/Wrapper";
 import ContactModal from "../modals/contact";
+import authProvider from "../../../providers/authProvider";
 
 const NavigationBar = styled("div")`
   width: 100%;
@@ -74,6 +75,28 @@ function NavBar() {
     return matchPath({ path, end: false }, location.pathname);
   };
 
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("auth")
+  );
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setIsAuthenticated(!!localStorage.getItem("auth"));
+    };
+
+    window.addEventListener("storage", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("storage", handleAuthChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    authProvider.logout();
+    setIsAuthenticated(false);
+    navigate("/");
+  };
+
   return (
     <NavigationBar className={scrolled && "scrolled"}>
       <>
@@ -139,18 +162,29 @@ function NavBar() {
             </div>
 
             <div className="nav-links flex gap-10 items-center mx-auto">
-              <Link
-                to="/login"
-                className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/profile"
-                className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
-              >
-                Profile
-              </Link>
+              {!isAuthenticated ? (
+                <Link
+                  to="/login"
+                  className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
+                >
+                  Sign In
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/profile"
+                    className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </Wrapper>

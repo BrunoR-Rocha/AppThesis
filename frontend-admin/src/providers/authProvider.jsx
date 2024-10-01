@@ -14,7 +14,7 @@ const login = ({ email, password }) => {
       return response.json();
     })
     .then((auth) => {
-      localStorage.setItem("auth", JSON.stringify(auth));
+      localStorage.setItem("admin_auth", JSON.stringify(auth));
     })
     .catch(() => {
       throw new Error("Erro de rede");
@@ -22,12 +22,12 @@ const login = ({ email, password }) => {
 };
 
 const logout = () => {
-  localStorage.removeItem("auth");
+  localStorage.removeItem("admin_auth");
   return Promise.resolve();
 };
 
 const checkAuth = () => {
-  let token = localStorage.getItem("auth");
+  let token = localStorage.getItem("admin_auth");
   return token
     ? Promise.resolve()
     : Promise.reject({ message: "Login necessário" });
@@ -36,7 +36,7 @@ const checkAuth = () => {
 const checkError = (error) => {
   const status = error.status;
   if (status === 401 || status === 403) {
-    localStorage.removeItem("auth");
+    localStorage.removeItem("admin_auth");
     return Promise.reject();
   }
 
@@ -45,7 +45,7 @@ const checkError = (error) => {
 
 const getIdentity = () => {
   try {
-    const identity = localStorage.getItem("auth");
+    const identity = localStorage.getItem("admin_auth");
     return Promise.resolve(JSON.parse(identity));
   } catch {
     return Promise.reject();

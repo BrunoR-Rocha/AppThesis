@@ -1,10 +1,10 @@
 import apiUrl from "./apiUrl";
 
 const authProvider = {
-  login: async ({ username, password }) => {
+  login: async ({ email, password }) => {
     const request = new Request(apiUrl + "/login", {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
       headers: new Headers({ "Content-Type": "application/json" }),
     });
     return fetch(request)

@@ -20,7 +20,7 @@ import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import { HashLink } from "react-router-hash-link";
 
 function Landing() {
-  const imageCount = 6;
+  const imageCount = 8;
   const imageNames = Array.from(
     { length: imageCount },
     (_, i) => `Frame_${i + 1}.svg`
@@ -175,9 +175,9 @@ function Landing() {
                 {imageNames.map((imageName, index) => (
                   <img
                     key={index}
-                    src={require(`../../media/landing/tech/${imageName}`)} // Use the correct relative path
+                    src={require(`../../media/landing/tech/${imageName}`)}
                     alt={`Frame ${index + 1}`}
-                    className="w-32 h-16" // Adjust the size as needed
+                    className="w-32 h-16" 
                   />
                 ))}
               </div>

@@ -16,6 +16,7 @@ const FooterWrapper = styled("div")`
   padding: 20px 0;
   margin: 5px;
   border-radius: 8px;
+  padding-top: 60px;
 `;
 function Footer() {
   return (
@@ -23,16 +24,26 @@ function Footer() {
       <Wrapper>
         <div className="flex flex-col h-full w-full justify-between gap-5">
           <div className="flex flex-col md:flex-row w-full items-center justify-between text-white mt-auto">
-            <div className="flex flex-col md:flex-row items-center gap-10 w-full justify-center">
+            <div className="flex flex-col md:flex-row items-start gap-10 w-full justify-center">
               <div className="md:basis-2/5 flex justify-end flex-wrap flex-col gap-3 text-start">
-                <h4 className="text-2xl md:text-3xl text-white uppercase font-bold font-cormorant ">
-                  Awaken your <br />
-                  <span class="font-bold font-sans">sleep & Health</span>
-                  <br /> Knowledge
+                <h4 className="text-2xl md:text-3xl text-white font-semibold font-sans">
+                  Awaken your{" "}
+                  <span class="font-medium text-5xl font-cormorant italic">
+                    sleep <br />
+                    <span className="font-sans text-2xl md:text-3xl">
+                      &
+                    </span>{" "}
+                    health
+                  </span>{" "}
+                  Knowledge
                 </h4>
+
+                <p className="text-white font-normal text-base">
+                  Join us now and learn something new today!
+                </p>
               </div>
 
-              <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
+              <div className="md:basis-2/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl font-semibold">Explore</h4>
                 <Link to="/" className="flex justify-start">
                   Home
@@ -40,13 +51,6 @@ function Footer() {
                 <Link to="/about" className="flex justify-start">
                   About
                 </Link>
-                <HashLink to="/about#faq" smooth className="flex justify-start">
-                  FAQ's
-                </HashLink>
-              </div>
-
-              <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
-                <br />
                 <Link to="/library" className="flex justify-start">
                   Library
                 </Link>
@@ -60,6 +64,11 @@ function Footer() {
 
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl font-semibold">Moony</h4>
+
+                <Link to="/privacy" className="flex justify-start">
+                  Política de Privacidade
+                </Link>
+
                 <Link to="/terms" className="flex justify-start">
                   Termos de Serviço
                 </Link>
@@ -70,12 +79,8 @@ function Footer() {
                   rel={"noopener noreferrer"}
                   className="flex justify-start"
                 >
-                  Elogios, Sugestões e Reclamações
+                  Compliments, suggestions and complaints
                 </a>
-
-                <Link to="/privacy" className="flex justify-start">
-                  Política de Privacidade
-                </Link>
               </div>
             </div>
           </div>

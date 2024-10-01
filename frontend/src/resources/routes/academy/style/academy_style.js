@@ -34,6 +34,7 @@ export const QuizArea = styled("div")`
   background-color: #040a15;
   background-size: cover;
   background-position: center;
+  position: relative;
 `;
 
 export const QuizOption = styled("div")`
@@ -41,7 +42,7 @@ export const QuizOption = styled("div")`
   display: flex;
   flex-grow: 1;
   border: 1px solid #6078df;
-  background-color: #6078df26;
+  background-color: ${({ selected }) => (selected ? "#6078df" : "#6078DF26")};
   backdrop-filter: blur(40px);
   padding: 24px;
   align-items: center;
@@ -49,5 +50,6 @@ export const QuizOption = styled("div")`
   &:hover {
     border: 1px solid #6078df;
     background-color: #6078df;
+    cursor: pointer;
   }
 `;

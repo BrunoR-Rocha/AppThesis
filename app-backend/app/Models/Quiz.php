@@ -42,4 +42,16 @@ class Quiz extends Model
         return $this->hasMany(Response::class);
     }
 
+    public function estimatedCompletionTime() : int
+    {
+        $totalTime = 0;
+
+        foreach ($this->questions as $question) {
+            $totalTime += Difficulty::getEstimatedTime($question->difficulty);
+        }
+
+        // $totalMinutes = ceil($totalTime / 60);
+
+        return $totalTime;
+    }
 }

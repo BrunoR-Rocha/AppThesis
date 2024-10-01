@@ -3,12 +3,13 @@ import simpleRestProvider from "ra-data-simple-rest";
 import apiUrl from "./apiUrl";
 import exportProvider from "./exportProvider";
 
-const httpClient = (url, options = {}) => {
+async function httpClient(url, options = {}) {
   if (!options.headers) {
     options.headers = new Headers({ Accept: "application/json" });
   }
-  // const { access_token } = JSON.parse(localStorage.getItem("auth"));
-  // options.headers.set("Authorization", `Bearer ${access_token}`);
+
+  const { access_token } = JSON.parse(localStorage.getItem("admin_auth"));
+  options.headers.set("Authorization", `Bearer ${access_token}`);
 
   return fetchUtils.fetchJson(url, options).catch((err) => {
     const { error, message } = err.body;
@@ -28,7 +29,7 @@ const httpClient = (url, options = {}) => {
 
     throw response;
   });
-};
+}
 
 let dataProvider = simpleRestProvider(apiUrl, httpClient);
 let exportDataProvider = exportProvider(apiUrl, httpClient);

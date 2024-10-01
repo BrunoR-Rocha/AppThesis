@@ -44,4 +44,35 @@ class Difficulty extends Model
         }
     }
 
+    public static function mapDifficultyToLevel(int $difficultyValue): int
+    {
+        if ($difficultyValue >= 1 && $difficultyValue <= 20) {
+            return 1;
+        } elseif ($difficultyValue >= 21 && $difficultyValue <= 40) {
+            return 2;
+        } elseif ($difficultyValue >= 41 && $difficultyValue <= 60) {
+            return 3; 
+        } elseif ($difficultyValue >= 61 && $difficultyValue <= 80) {
+            return 4; 
+        } elseif ($difficultyValue >= 81 && $difficultyValue <= 100) {
+            return 5;
+        }
+
+        return 3;
+    }
+
+
+    public static function getEstimatedTime(int $difficultyValue): int
+    {
+        $difficultyLevel = self::mapDifficultyToLevel($difficultyValue);
+        $difficultyTimes = [
+            1 => 20,   // Very Easy -> 20 seconds
+            2 => 40,   // Easy -> 40 seconds
+            3 => 60,   // Normal -> 60 seconds
+            4 => 90,   // Hard -> 90 seconds
+            5 => 120,  // Very Hard -> 120 seconds
+        ];
+
+        return $difficultyTimes[$difficultyLevel] ?? $difficultyTimes[3];
+    }
 }
