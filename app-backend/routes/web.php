@@ -27,6 +27,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +90,8 @@ Route::group([
     $router->post('forum_threads/{thread}/like',        [ForumThreadLikeController::class, 'like']);
     $router->delete('forum_threads/{thread}/like',      [ForumThreadLikeController::class, 'unlike']);
 
+    $router->get('/email/verify',                       [VerificationController::class, 'verify'])->name('verification.verify');
+
     // LLM
     $router->get('/llm/health',                         [ChatbotController::class, 'health']);
     $router->get('/llm/topic',                          [QuestionTopicController::class, 'generate']);
@@ -103,6 +106,9 @@ Route::group([
     $router->post('/front/post/create',                 [ForumThreadController::class, 'frontStore']);
     $router->post('/front/post/comment',                [ForumPostController::class, 'frontStore']);
     $router->post('/front/quiz/create',                 [QuizController::class, 'assemble']);
+
+    $router->post('/front/profile',                     [UserController::class, 'profileUpdate'])->middleware('auth:api');
+    $router->post('/front/profile/password',            [UserController::class, 'changePassword'])->middleware('auth:api');
 
     // PARAMS
     $router->get('/params/questions',                   [QuestionController::class, 'params']);

@@ -8,10 +8,9 @@ import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosConfig from "../../../providers/axiosConfig";
-import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import UploadInput from "../forms/UploadInput";
 
-function PostModal({ open, handleClose, onAddThread}) {
+function PostModal({ open, handleClose, onAddThread }) {
   const [loading, setLoading] = useState();
   const [topics, setTopics] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -26,7 +25,6 @@ function PostModal({ open, handleClose, onAddThread}) {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-
     const formData = new FormData();
 
     for (const key in data) {
@@ -51,7 +49,6 @@ function PostModal({ open, handleClose, onAddThread}) {
       reset();
       handleClose();
       setSelectedImage(null);
-    
     } catch (error) {
       toast.error(error.message);
     }
@@ -68,15 +65,9 @@ function PostModal({ open, handleClose, onAddThread}) {
       });
   }, []);
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
-      setValue("image", e.target.files);
-    }
-  };
-
-  const triggerFileInput = () => {
-    document.getElementById("image_upload").click();
+  const handleImageSelected = (imageFile) => {
+    setSelectedImage(imageFile);
+    setValue("image", imageFile);
   };
 
   return (
@@ -170,65 +161,14 @@ function PostModal({ open, handleClose, onAddThread}) {
               </div>
               <div className="flex flex-col basis-full lg:basis-1/2 gap-6">
                 <div className="flex flex-col flex-1">
-                  <div className="flex gap-4 bg-white py-6 items-center flex-wrap-reverse lg:flex-nowrap rounded-lg flex-1 px-12">
-                    <div className="flex basis-1/2 flex-wrap lg:flex-nowrap">
-                      {selectedImage ? (
-                        <div className="mt-2">
-                          <img
-                            src={URL.createObjectURL(selectedImage)}
-                            alt="Preview"
-                            className="bg-[#F5F7FA] min-w-40 min-h-40 flex items-center justify-center rounded-lg"
-                          />
-                        </div>
-                      ) : (
-                        <div className="mt-2 bg-[#F5F7FA] min-w-40 min-h-40 flex items-center justify-center rounded-lg">
-                          <InsertPhotoOutlinedIcon
-                            sx={{ height: "80px", width: "80px" }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col basis-1/2 lg:h-full justify-around">
-                      <div>
-                        <label
-                          htmlFor="image_upload"
-                          className="font-medium text-[#4B5057]"
-                        >
-                          Add an image (optional)
-                        </label>
-                        <p className="text-[#AAA] font-medium">
-                          Supported format:{" "}
-                          <span className="text-[#4B5057]">
-                            .jpg, .jpeg, or .png
-                          </span>
-                        </p>
-                      </div>
 
-                      <input
-                        id="image_upload"
-                        type="file"
-                        accept=".jpg,.jpeg,.png" // Restrict to .jpg, .jpeg, and .png files
-                        onInput={handleImageChange}
-                        className="hidden"
-                        {...register("image")}
-                      />
-
-                      <button
-                        type="button"
-                        onClick={triggerFileInput}
-                        className="mt-2 text-[#AAA] p-2 rounded-full flex items-center justify-center cursor-pointer border-[1px] border-[#ECECEC] hover:text-[#F4AA5A] hover:border-[#F4AA5A]"
-                      >
-                        <FileUploadOutlinedIcon />
-                        Upload Image
-                      </button>
-
-                      {errors.image && (
-                        <span className="text-xs text-red-500">
-                          Error when uploading image
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  <UploadInput
+                    onImageSelected={handleImageSelected}
+                    error={errors.image && "Error when uploading image"}
+                    label="Add an image (optional)"
+                    secondaryLabel="Supported Formats: .jpg, .jpeg, or .png"
+                    accept=".jpg,.jpeg,.png"
+                  />
                 </div>
                 <button
                   type="submit"

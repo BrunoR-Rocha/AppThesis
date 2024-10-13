@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Wrapper from "../general/Wrapper";
-import { HashLink } from "react-router-hash-link";
 
 const FooterWrapper = styled("div")`
   position: relative;
@@ -65,12 +64,12 @@ function Footer() {
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl font-semibold">Moony</h4>
 
-                <Link to="/privacy" className="flex justify-start">
-                  Política de Privacidade
+                <Link to="/privacy-policy" className="flex justify-start">
+                  Privacy Policy
                 </Link>
 
-                <Link to="/terms" className="flex justify-start">
-                  Termos de Serviço
+                <Link to="/terms-conditions" className="flex justify-start">
+                  Terms and conditions
                 </Link>
 
                 <a

@@ -38,7 +38,8 @@ function Register() {
 
       toast.success(response.data.message);
       reset();
-      console.log("Registado com sucesso");
+
+      navigate('/email-confirmation');
     } catch (error) {
       toast.error(error.message);
     }

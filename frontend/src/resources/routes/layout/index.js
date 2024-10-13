@@ -8,7 +8,8 @@ const CustomLayout = () => {
   const hiddenRoutes = [
     "/login",
     "/register",
-    "/academy/quiz/*"
+    "/academy/quiz/*",
+    "/email-confirmation/*"
   ];
 
   const hideNavAndFooter = hiddenRoutes.some((route) =>

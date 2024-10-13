@@ -13,6 +13,22 @@ if (localStorage.getItem("auth")) {
   };
 }
 
+axiosConfig.interceptors.request.use(
+  (config) => {
+    const auth = localStorage.getItem("auth");
+    const accessToken = auth ? JSON.parse(auth).access_token : null;
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    } else {
+      console.log("No access token found.");
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 axiosConfig.interceptors.response.use(
   (response) => {
     return response;

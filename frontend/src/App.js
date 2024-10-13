@@ -20,6 +20,8 @@ import ScrollToTop from "./resources/components/general/ScrollTop";
 import { ToastContainer } from "react-toastify";
 import Profile from "./resources/routes/profile";
 import QuizPage from "./resources/routes/academy/quiz";
+import EmailConfirmation from "./resources/routes/auth/confirmation";
+import Policy from "./resources/routes/policies/policy";
 
 function App() {
   // const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +60,16 @@ function App() {
             <Route path="register" element={<Register />} />
 
             <Route path="profile" element={<Profile />} />
+            <Route path="email-confirmation" element={<EmailConfirmation />} />
+
+            <Route
+              path="privacy-policy"
+              element={<Policy label={"Privacy Policy"} />}
+            />
+            <Route
+              path="terms-conditions"
+              element={<Policy label={"Terms and conditions"} />}
+            />
 
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

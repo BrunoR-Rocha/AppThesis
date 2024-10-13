@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -76,7 +79,7 @@ class UserController extends Controller
         if (isset($requestData['remember'])) {
             $requestData['remember'] = filter_var($requestData['remember'], FILTER_VALIDATE_BOOLEAN);
         }
-        
+
         $validator = Validator::make($requestData, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -101,6 +104,9 @@ class UserController extends Controller
 
         $role = Role::firstOrCreate(['name' => 'user']);
         $user->assignRole($role);
+
+
+        event(new Registered($user));
 
         // Auth::login($user, $validatedData['remember'] ?? false);
 
@@ -127,5 +133,93 @@ class UserController extends Controller
             'error' => 'successfully_deleted',
             'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $user = Auth::user();
+
+
+        $validator = Validator::make($request->all(), [
+            'name'  => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            // 'image' => 'nullable|image|mimes:jpg,jpeg,png|dimensions:ratio=1/1|max:1024',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Profile update failed.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        if ($user->name != $request->input('name')) {
+            $user->name  = $request->input('name');
+        }
+
+        if ($user->email != $request->input('email')) {
+            $user->email = $request->input('email');
+        }
+
+        // if ($request->hasFile('image')) {
+
+        //     if ($user->profile_image) {
+        //         Storage::disk('public')->delete($user->profile_image);
+        //     }
+
+        //     $path = $request->file('image')->store('profile_images', 'public');
+        //     $user->profile_image = $path;
+        // }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'user'         => [
+                'name'     => $user->name,
+                'email'    => $user->email,
+            ]
+        ], 200);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'current_password'  => 'required|string',
+            'new_password'      => 'required|string|min:8|confirmed',
+        ], [
+            'new_password.confirmed' => 'The new password confirmation does not match.',
+        ]);
+
+        // Check validation failures
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Password change failed.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+        
+        // Check if current password matches
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect.',
+                'errors'  => ['current_password' => ['Current password is incorrect.']],
+            ], 422);
+        }
+        
+        // Update password
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+
+        return response()->json([
+            'message' => 'Password changed successfully.',
+        ], 200);
     }
 }

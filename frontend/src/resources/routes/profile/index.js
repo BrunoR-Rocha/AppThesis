@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { ReactComponent as Flower } from "../../media/general/flower.svg";
 import Wrapper from "../../components/general/Wrapper";
-import { ProfileArea, ProfileDisplay } from "./style";
+import { BannerArea, BannerDisplay } from "./style";
 import ProfileDashboard from "./dashboard";
+import { useContext } from "react";
+import AuthContext from "../../../context/AuthContext";
+import ProfileSettings from "./settings";
+import QuizDashboard from "./quiz";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("tab1");
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   const renderButton = (tabId, label) => (
     <button
@@ -21,8 +26,8 @@ const Profile = () => {
   );
   return (
     <>
-      <ProfileArea>
-        <ProfileDisplay className="relative overflow-hidden">
+      <BannerArea>
+        <BannerDisplay className="relative overflow-hidden">
           <Flower className="absolute mix-blend-screen -right-1/3 -top-3/4 object-cover z-0 -rotate-[160deg]" />
           <Wrapper>
             <div className="flex flex-col gap-11 pb-10 pt-24 sm:pt-40 ">
@@ -32,10 +37,10 @@ const Profile = () => {
                 </div>
                 <div className="flex flex-col gap-3 w-full lg:w-1/2">
                   <h3 className="text-3xl font-semibold text-[#ECECEC] capitalize">
-                    User Name
+                    {user.name}
                   </h3>
                   <p className="text-base font-medium text-white self-stretch">
-                    useremail@email.com
+                    {user.email}
                   </p>
                 </div>
               </div>
@@ -45,23 +50,25 @@ const Profile = () => {
                   {renderButton("tab1", "Dashboard")}
                   {renderButton("tab2", "Courses")}
                   {renderButton("tab3", "Quizzes")}
-                  {renderButton("tab4", "Settings")}
+                  {renderButton("tab4", "Saved")}
+                  {renderButton("tab5", "Settings")}
                 </div>
               </div>
             </div>
           </Wrapper>
-        </ProfileDisplay>
+        </BannerDisplay>
         <div>
           <Wrapper>
             <div className="flex">
               {activeTab === "tab1" && <ProfileDashboard />}
               {activeTab === "tab2" && <></>}
-              {activeTab === "tab3" && <></>}
+              {activeTab === "tab3" && <QuizDashboard />}
               {activeTab === "tab4" && <></>}
+              {activeTab === "tab5" && <ProfileSettings />}
             </div>
           </Wrapper>
         </div>
-      </ProfileArea>
+      </BannerArea>
     </>
   );
 };
