@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('responses', function (Blueprint $table) {
+        Schema::create('user_difficulty_progressions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quiz_id')->constrained('quizzes');
-            $table->foreignId('question_id')->constrained('questions');
-            $table->foreignId('user_id')->constrained('users');
-            $table->text('question_title')->nullable();
-            $table->text('response_text')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('difficulty_level');
+            $table->decimal('average_score', 5, 2)->nullable();
+            $table->decimal('accuracy_rate', 5, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('responses');
+        Schema::dropIfExists('user_difficulty_progressions');
     }
 };

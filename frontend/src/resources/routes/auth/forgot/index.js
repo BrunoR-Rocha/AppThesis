@@ -9,33 +9,35 @@ import {
   AuthInput,
   AuthSideLogo,
 } from "../styles/auth_styles";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../../../../context/AuthContext";
+import axiosConfig from "../../../../providers/axiosConfig";
 
-function Login() {
+function Forgot() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
-  const onSubmit = async (data) => {
-    const result = await login({
-      email: data.email,
-      password: data.password,
-    });
 
-    if (result.success) {
-      navigate("/profile");
-    } else {
-      toast.error("Invalid email or password");
+  const onSubmit = async (data) => {
+    try {
+      await axiosConfig.post("/forgot/email", {
+        email: data.email,
+      });
+      toast.success("Password reset link sent to your email.");
+      navigate("/login");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to send password reset link."
+      );
     }
   };
 
@@ -74,39 +76,20 @@ function Login() {
 
             <div className="flex flex-col gap-5">
               <p className="uppercase text-[#44456A] font-medium text-sm">
-                Welcome Back
+                Oh...
               </p>
               <h2 className="text-xl md:text-2xl lg:text-3xl text-[#1A184C] font-bold font-sans">
-                Continue to your account
+                Forgot your password?
               </h2>
-              <div className="flex flex-wrap gap-3">
-                <AuthButton>
-                  <AuthIcon>
-                    <GoogleIcon />
-                  </AuthIcon>
-                  <span>Continue with Google</span>
-                </AuthButton>
-                <AuthButton>
-                  <AuthIcon>
-                    <FacebookIcon />
-                  </AuthIcon>
-                  <span>Continue with Facebook</span>
-                </AuthButton>
-              </div>
-              <p className="text-center flex items-center uppercase font-medium text-sm">
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-                Or
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-              </p>
 
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col w-full gap-4"
               >
                 <AuthInput>
-                  <label htmlFor="login_email">Email</label>
+                  <label htmlFor="forgot_email">Email</label>
                   <input
-                    id="login_email"
+                    id="forgot_email"
                     type="text"
                     placeholder="Email"
                     {...register("email", {
@@ -120,34 +103,6 @@ function Login() {
                     </span>
                   )}
                 </AuthInput>
-                <AuthInput>
-                  <label htmlFor="login_password">Password</label>
-                  <input
-                    id="login_password"
-                    type="password"
-                    placeholder="Password"
-                    {...register("password", { required: true })}
-                  />
-                  {errors.password && (
-                    <span className="text-xs text-red-500">
-                      This field is required
-                    </span>
-                  )}
-                </AuthInput>
-                <div className="mb-4 flex items-center">
-                  <input
-                    id="rememberMe"
-                    type="checkbox"
-                    className="mr-2"
-                    {...register("rememberMe")}
-                  />
-                  <label
-                    htmlFor="rememberMe"
-                    className="text-[#575757] text-sm"
-                  >
-                    Remember Password
-                  </label>
-                </div>
                 <input
                   type="submit"
                   className="bg-[#6078DF] rounded-full p-3 text-white cursor-pointer"
@@ -155,21 +110,12 @@ function Login() {
               </form>
 
               <p className="text-center font-medium text-md">
-                Are you a Newbie?{" "}
+                Already registered?{" "}
                 <Link
-                  to={"/register"}
+                  to={"/login"}
                   className="uppercase text-[#6078DF] underline"
                 >
-                  Get Started
-                </Link>
-              </p>
-
-              <p className="text-center font-medium text-md">
-                <Link
-                  to={"/forgot"}
-                  className="uppercase text-[#6078DF] underline"
-                >
-                  Forgot the password? 
+                  Login
                 </Link>
               </p>
             </div>
@@ -180,4 +126,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Forgot;

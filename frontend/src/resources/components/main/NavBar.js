@@ -5,6 +5,7 @@ import { ReactComponent as Logo } from "../../media/navbar/logo_moony.svg";
 import Wrapper from "../general/Wrapper";
 import ContactModal from "../modals/contact";
 import authProvider from "../../../providers/authProvider";
+import AuthContext from "../../../context/AuthContext";
 
 const NavigationBar = styled("div")`
   width: 100%;
@@ -75,25 +76,10 @@ function NavBar() {
     return matchPath({ path, end: false }, location.pathname);
   };
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("auth")
-  );
-
-  useEffect(() => {
-    const handleAuthChange = () => {
-      setIsAuthenticated(!!localStorage.getItem("auth"));
-    };
-
-    window.addEventListener("storage", handleAuthChange);
-
-    return () => {
-      window.removeEventListener("storage", handleAuthChange);
-    };
-  }, []);
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    authProvider.logout();
-    setIsAuthenticated(false);
+    logout();
     navigate("/");
   };
 
@@ -126,31 +112,35 @@ function NavBar() {
               >
                 About
               </Link>
-              <Link
-                to="/library"
-                className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
-                  isActive("/library") ? "opacity-100 font-semibold" : ""
-                }`}
-              >
-                Library
-              </Link>
-              <Link
-                to="/posts"
-                className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
-                  isActive("/posts") ? "opacity-100 font-semibold" : ""
-                }`}
-              >
-                Forums
-              </Link>
+              {isAuthenticated && (
+                <>
+                  <Link
+                    to="/library"
+                    className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
+                      isActive("/library") ? "opacity-100 font-semibold" : ""
+                    }`}
+                  >
+                    Library
+                  </Link>
+                  <Link
+                    to="/posts"
+                    className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
+                      isActive("/posts") ? "opacity-100 font-semibold" : ""
+                    }`}
+                  >
+                    Forums
+                  </Link>
+                  <Link
+                    to="/academy"
+                    className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
+                      isActive("/academy") ? "opacity-100 font-semibold" : ""
+                    }`}
+                  >
+                    Academy
+                  </Link>
+                </>
+              )}
 
-              <Link
-                to="/academy"
-                className={`uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold ${
-                  isActive("/academy") ? "opacity-100 font-semibold" : ""
-                }`}
-              >
-                Academy
-              </Link>
               <Link
                 to="#"
                 onClick={handleOpenModal}

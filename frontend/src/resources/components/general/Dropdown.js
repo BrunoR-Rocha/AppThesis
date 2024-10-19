@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 
-const CustomDropdown = ({ options, label, selectedOption, setSelectedOption}) => {
+const CustomDropdown = ({ options, label, selectedOption, setSelectedOption, optionLabelKey}) => {
   const [isOpen, setIsOpen] = useState(false);
-//   const [selectedOption, setSelectedOption] = useState("");
 
   const handleSelect = (option) => {
-    setSelectedOption(option.name);
+    setSelectedOption(option);
     setIsOpen(false);
   };
 
@@ -26,7 +25,7 @@ const CustomDropdown = ({ options, label, selectedOption, setSelectedOption}) =>
                 selectedOption ? "text-[#FFF]" : "text-[#AAA]"
               }`}
             >
-              {selectedOption || "Choose an option"}
+              {selectedOption ? selectedOption[optionLabelKey] : "Choose an option"}
               <ExpandMoreRoundedIcon
                 sx={{
                   color: "#6078DF",

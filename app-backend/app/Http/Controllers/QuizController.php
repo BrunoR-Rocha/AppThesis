@@ -8,11 +8,18 @@ use App\Http\Resources\QuizResource;
 use App\Models\Difficulty;
 use App\Models\Question;
 use App\Models\QuestionOption;
+use App\Models\QuestionResponse;
+use App\Models\QuestionTopic;
 use App\Models\Quiz;
 use App\Models\Response;
+use App\Models\SysConfig;
+use App\Models\UserDifficultyProgression;
+use App\Models\UserMetric;
+use App\Models\UserQuiz;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class QuizController extends Controller
@@ -143,7 +150,7 @@ class QuizController extends Controller
             ], 400);
         }
 
-        $userId = Auth::user()->id ?? 1;
+        $userId = Auth::user()->id;
 
         if ($request->is_random) {
             // Get a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
@@ -156,27 +163,70 @@ class QuizController extends Controller
                 ], 400);
             }
 
-            // need to do the parsing from the difficulty and the array values
-            $difficultyRange = Difficulty::getDifficultyRange($request->difficulty);
+            $difficultyLevel = $request->difficulty;
 
-            // select a number of questions from a specific topic with the difficulty between the range
+            if (is_null($request->difficulty)) {
+                $maxDifficulty = Difficulty::count();
+
+                $difficultyLevel = rand(1, $maxDifficulty);
+            } 
+
+            $topicId = $request->topic_id;
+            if (is_null($request->topic_id))
+            {
+                $topicCollection = QuestionTopic::count();
+
+                $topicId = rand(1, $topicCollection);
+            }
+
+            $difficultyRange = Difficulty::getDifficultyRange($difficultyLevel);
+           
             $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
-                ->whereHas('topics', function ($query) use ($request) {
-                    $query->where('id', $request->topic_id);
+                ->whereHas('topics', function ($query) use ($request, $topicId) {
+                    $query->where('question_topics.id', $topicId);
                 })
                 ->take(10)
                 ->get();
 
-            // TODO: If there's not enough questions generate more
+            if(count($questions) < 10)
+            {
+                $questionController = new QuestionController();
+                $questionTopic = QuestionTopic::whereId($topicId)->first();
+
+                if($questionTopic)
+                {
+                    $response = $questionController->generateRandom($request, $questionTopic);
+
+                    $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
+                            ->whereHas('topics', function ($query) use ($request, $topicId) {
+                                $query->where('question_topics.id', $topicId);
+                            })
+                            ->take(10)
+                            ->get();
+                }
+            }
         }
 
-        $quiz = Quiz::create([
-            'user_id' => $userId,
-        ]);
+        try {
+            $quiz = Quiz::create([
+                'user_id' => $userId,
+                'topic_id' => $topicId,
+                'difficulty' => $difficultyLevel,
+            ]);
 
-        foreach ($questions as $index => $question) {
-            $quiz->questions()->attach($question->id, ['order' => $index + 1]);
+            UserQuiz::create([
+                'user_id' => $userId,
+                'quiz_id' => $quiz->id
+            ]);
+
+            foreach ($questions as $index => $question) {
+                $quiz->questions()->attach($question->id, ['order' => $index + 1]);
+            }
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
         }
+
 
         return response()->json([
             'message' => 'Quiz created',
@@ -226,14 +276,21 @@ class QuizController extends Controller
         ]);
     }
 
-    public function evaluateQuiz(Request $request, $quizId): float
+    public function evaluateQuiz(Request $request, $quizId)
     {
+        $request->validate([
+            'answers' => 'required|array',
+        ]);
 
-        dd($request->all());
-        $answers = $request->answers;
-
+        $user = Auth::user();
         $quiz = Quiz::findOrFail($quizId);
         $questions = $quiz->questions;
+        $answers = $request->answers;
+        $userQuiz = UserQuiz::where(['user_id' => $user->id, 'quiz_id' => $quiz->id])->first();
+
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $userQuiz->created_at);
+        $endTime = now();
+        $timeTaken = $endTime->diffInSeconds($startTime);
 
         if ($questions->isEmpty()) {
             throw new \Exception('Please Try to submit again. If the error persists contact the support');
@@ -241,47 +298,69 @@ class QuizController extends Controller
 
         $totalQuestions = count($questions);
         $correctAnswers = 0;
+        $questionResponses = [];
 
         foreach ($answers as $questionId => $answer) {
-            // Ensure the question belongs to the quiz
-            if (!isset($questions[$questionId])) {
+            $question = $questions->firstWhere('id', $questionId);
+
+            if (!$question) {
                 continue;
             }
 
-            $question = $questions[$questionId];
+            if ($question->type->tag === 'free_text') {
+                $evaluationResult = $this->evaluateWithLangChain($question, $answer);
+            } else {
 
-            dump($question);
-            // // Mixed Evaluation
-            // if ($evaluationType === 'mixed') {
-            //     if ($question->type === 'free_text') {
-            //         // Evaluate free_text using LangChain
-            //         if ($this->evaluateWithLangChain($question, $answer)) {
-            //             $correctAnswers++;
-            //         }
-            //     } else {
-            //         // Evaluate using predefined options
-            //         if ($this->evaluatePredefinedAnswer($question, $answer)) {
-            //             $correctAnswers++;
-            //         }
-            //     }
-            // }
+                $isCorrect = $this->evaluatePredefinedAnswer($question, $answer);
+                $evaluationResult = [
+                    'is_correct' => $isCorrect,
+                    'response_quality_score' => null,
+                    'time_taken' => null,
+                ];
+            }
 
-            // // Unique Evaluation
-            // elseif ($evaluationType === 'unique') {
-            //     // Evaluate all answers using LangChain
-            //     if ($this->evaluateWithLangChain($question, $answer)) {
-            //         $correctAnswers++;
-            //     }
-            // }
+            if ($evaluationResult['is_correct']) {
+                $correctAnswers++;
+            }
+
+            $questionResponses[] = [
+                'question_id' => $questionId,
+                'is_correct' => $evaluationResult['is_correct'],
+                'response_quality_score' => $evaluationResult['response_quality_score'],
+                'time_taken' => $evaluationResult['time_taken'] ?? null,
+            ];
         }
 
-        // Calculate the score as a percentage
         $score = ($correctAnswers / $totalQuestions) * 100;
 
-        // Calculate the user metrics after the score
+        $userQuiz = UserQuiz::updateOrCreate(
+        [
+            'user_id' => $user->id,
+            'quiz_id' => $quiz->id
+        ],[
+            'score' => round($score, 2),
+            'time_taken' => $timeTaken,
+            'completed_at' => $endTime,
+            'is_completed' => true,
+        ]);
 
+        foreach ($questionResponses as $response) {
+            QuestionResponse::updateOrCreate([
+                'user_quiz_id' => $userQuiz->id,
+                'question_id' => $response['question_id']
+            ],[
+                'is_correct' => $response['is_correct'],
+                'response_quality_score' => $response['response_quality_score'],
+                'time_taken' => $response['time_taken'],
+            ]);
+        }
 
-        return round($score, 2); // Return score rounded to 2 decimal places
+        $this->updateUserMetrics($user->id);
+
+        return response()->json([
+            'message' => 'Quiz submitted successfully.',
+            'score' => round($score, 2),
+        ], 200);
     }
 
     /**
@@ -293,13 +372,11 @@ class QuizController extends Controller
      */
     private function evaluatePredefinedAnswer(Question $question, $answer): bool
     {
-        // Fetch the correct options for the question
         $correctOptions = QuestionOption::where('question_id', $question->id)
             ->where('is_correct', true)
             ->pluck('option_text')
             ->toArray();
 
-        // Security Validation: Ensure the submitted answer is valid
         $allOptions = QuestionOption::where('question_id', $question->id)
             ->pluck('option_text')
             ->toArray();
@@ -312,6 +389,7 @@ class QuizController extends Controller
                         return false; // Invalid option selected
                     }
                 }
+                // Check if all selected options are correct and no extra options are selected
                 return empty(array_diff($correctOptions, $answer)) && empty(array_diff($answer, $correctOptions));
             } else {
                 return in_array($answer, $correctOptions);
@@ -330,32 +408,31 @@ class QuizController extends Controller
      * @param mixed    $answer   The submitted answer.
      * @return bool              True if the answer is correct, false otherwise.
      */
-    // private function evaluateWithLangChain(Question $question, $answer): bool
-    // {
-    //     // Prepare the data for LangChain
-    //     $prompt = $this->generateLangChainPrompt($question, $answer);
+    private function evaluateWithLangChain(Question $question, $answer)
+    {
+        $data = [
+            'theme' => SysConfig::tag('theme')->first()->value,
+            'question' => $question->title,
+            'answer' => $answer
+        ];
 
-    //     // Security Validation: Sanitize inputs
-    //     $sanitizedPrompt = htmlspecialchars($prompt, ENT_QUOTES, 'UTF-8');
+        $responseLangchain = $this->callLangChainAPI($data);
+        $response = json_decode($responseLangchain['response'], true);
 
-    //     // Send the prompt to the LangChain API
-    //     $response = $this->callLangChainAPI($sanitizedPrompt);
-
-    //     // Process the response (assuming the API returns a boolean for correctness)
-    //     return $response['is_correct'] ?? false;
-    // }
-
-    /**
-     * Generate a prompt for LangChain based on the question and answer.
-     *
-     * @param Question $question The question model.
-     * @param mixed    $answer   The submitted answer.
-     * @return string            The generated prompt.
-     */
-    // private function generateLangChainPrompt(Question $question, $answer): string
-    // {
-    //     return "Question: {$question->title}\nAnswer: {$answer}\nEvaluate the correctness of the answer.";
-    // }
+        if ($response) {
+            return [
+                'is_correct' => $response[0]['is_correct'],
+                'response_quality_score' => $response[0]['response_quality_score'],
+                'time_taken' => null,
+            ];
+        } else {
+            return [
+                'is_correct' => false,
+                'response_quality_score' => 0,
+                'time_taken' => null,
+            ];
+        }
+    }
 
     /**
      * Call the LangChain API to evaluate the answer.
@@ -363,19 +440,125 @@ class QuizController extends Controller
      * @param string $prompt The prompt to send to LangChain.
      * @return array         The API response.
      */
-    // private function callLangChainAPI(string $prompt): array
-    // {
-    //     // Replace with your actual LangChain API endpoint and parameters
-    //     $apiUrl = 'https://your-langchain-api-endpoint.com/evaluate';
+    private function callLangChainAPI($data)
+    {
+        $llmUrl = config('llm.url');
+        $response = Http::post($llmUrl . '/question-evaluate', $data);
 
-    //     $response = Http::post($apiUrl, [
-    //         'prompt' => $prompt,
-    //     ]);
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            throw new \Exception('Error communicating with the LangChain API.');
+        }
+    }
 
-    //     if ($response->successful()) {
-    //         return $response->json();
-    //     } else {
-    //         throw new \Exception('Error communicating with the LangChain API.');
-    //     }
-    // }
+    protected function updateUserMetrics($userId)
+    {
+        // Overall Score
+        $overallScore = UserQuiz::where('user_id', $userId)->avg('score');
+
+        // Accuracy Rate
+        $correctAnswers = QuestionResponse::whereHas('userQuiz', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->where('is_correct', true)->count();
+
+        $totalQuestions = QuestionResponse::whereHas('userQuiz', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->count();
+
+        $accuracyRate = ($totalQuestions > 0) ? ($correctAnswers / $totalQuestions) * 100 : 0;
+
+        // Time Efficiency
+        $averageTimePerQuiz = UserQuiz::where('user_id', $userId)->avg('time_taken');
+
+        // Score Standard Deviation
+        $scores = UserQuiz::where('user_id', $userId)->pluck('score')->toArray();
+        $scoreStandardDeviation = $this->calculateStandardDeviation($scores);
+
+        // Completion Rate
+        // Assuming you track quizzes started in a 'quiz_starts' table
+        $quizzesStarted = UserQuiz::where('user_id', $userId)->count(); // Implement this as needed
+        $quizzesCompleted = UserQuiz::where('user_id', $userId)->where('is_completed', true)->count();
+        $completionRate = ($quizzesStarted > 0) ? ($quizzesCompleted / $quizzesStarted) * 100 : 0;
+
+        // Improvement Rate
+        $improvementRate = $this->calculateImprovementRate($scores);
+
+        // Learning Curve Efficiency (using improvement rate)
+        $learningCurveEfficiency = $improvementRate;
+
+        // Update or create the user metrics record
+        UserMetric::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'overall_score' => round($overallScore, 2),
+                'accuracy_rate' => round($accuracyRate, 2),
+                'time_efficiency' => round($averageTimePerQuiz, 2),
+                'score_standard_deviation' => round($scoreStandardDeviation, 2),
+                'improvement_rate' => round($improvementRate, 2),
+                'learning_curve_efficiency' => round($learningCurveEfficiency, 2),
+                'completion_rate' => round($completionRate, 2),
+            ]
+        );
+
+        // Update Difficulty Progression
+        $this->updateUserDifficultyProgression($userId);
+    }
+
+    protected function calculateStandardDeviation($scores)
+    {
+        $n = count($scores);
+        if ($n === 0) {
+            return 0;
+        }
+        $mean = array_sum($scores) / $n;
+        $sumSquaredDifferences = array_reduce($scores, function ($carry, $item) use ($mean) {
+            return $carry + pow($item - $mean, 2);
+        }, 0);
+        return sqrt($sumSquaredDifferences / $n);
+    }
+
+    protected function calculateImprovementRate($scores)
+    {
+        $numScores = count($scores);
+        if ($numScores < 2) {
+            return 0;
+        }
+
+        $initialScore = $scores[0];
+        $latestScore = $scores[$numScores - 1];
+
+        $improvementRate = ($initialScore != 0) ? (($latestScore - $initialScore) / $initialScore) * 100 : 0;
+
+        return $improvementRate;
+    }
+
+    protected function updateUserDifficultyProgression($userId)
+    {
+        $userQuizzes = UserQuiz::where('user_id', $userId)->with('quiz')->get();
+
+        $quizzesByDifficulty = $userQuizzes->groupBy('quiz.difficulty');
+
+        foreach ($quizzesByDifficulty as $difficultyLevel => $userQuizzesGroup) {
+            $averageScore = $userQuizzesGroup->avg('score');
+            $quizIds = $userQuizzesGroup->pluck('id');
+
+            $correctAnswers = QuestionResponse::whereIn('user_quiz_id', $quizIds)
+                ->where('is_correct', true)
+                ->count();
+
+            $totalResponses = QuestionResponse::whereIn('user_quiz_id', $quizIds)
+                ->count();
+
+            $accuracyRate = ($totalResponses > 0) ? ($correctAnswers / $totalResponses) * 100 : 0;
+
+            UserDifficultyProgression::updateOrCreate(
+                ['user_id' => $userId, 'difficulty_level' => $difficultyLevel],
+                [
+                    'average_score' => round($averageScore, 2),
+                    'accuracy_rate' => round($accuracyRate, 2),
+                ]
+            );
+        }
+    }
 }

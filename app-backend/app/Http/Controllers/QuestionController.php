@@ -166,10 +166,10 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function generateRandom(Request $request)
+    public function generateRandom(Request $request, QuestionTopic $questionTopic = null)
     {
         $theme = SysConfig::tag('theme')->first()->value;
-        $topic = QuestionTopic::inRandomOrder()->first();
+        $topic = isset($questionTopic) ? $questionTopic : QuestionTopic::inRandomOrder()->first();
 
         if ($topic) {
             $data = [
@@ -187,7 +187,6 @@ class QuestionController extends Controller
         try {
             $llmUrl = config('llm.url');
             $response = Http::post($llmUrl . '/random-questions', $data);
-
             if ($response->successful()) {
                 $flaskResponse = $response->json();
                 $questionsJson = $flaskResponse['response'];

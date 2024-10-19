@@ -9,15 +9,16 @@ import axiosConfig from "../../../providers/axiosConfig";
 import CustomDropdown from "../../components/general/Dropdown";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function Academy() {
   const [activeTab, setActiveTab] = useState("tab1");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [topicOptions, setTopicOptions] = useState([]);
   const [difficultyOptions, setDifficultyOptions] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -32,6 +33,7 @@ function Academy() {
   }, []);
 
   const handleStartQuiz = (isRandom = true) => {
+    setLoading(true);
     let formData = {};
     if (!isRandom) {
       if (!selectedTopic || !selectedDifficulty) {
@@ -39,12 +41,9 @@ function Academy() {
         return;
       }
 
-      console.log("Selected Topic:", selectedTopic);
-      console.log("Selected Difficulty:", selectedDifficulty);
-
       formData = {
-        topic_id: selectedTopic,
-        difficulty: selectedDifficulty,
+        topic_id: selectedTopic.id,
+        difficulty: selectedDifficulty.id,
         is_random: isRandom,
       };
     } else {
@@ -56,8 +55,10 @@ function Academy() {
     axiosConfig
       .post(`/front/quiz/create`, formData)
       .then((res) => {
-        console.log(res);
         setLoading(false);
+        navigate("/academy/quiz/" + res.data.quiz_id, {
+          state: { quiz_id: res.data.quiz_id },
+        });
       })
       .catch(() => setLoading(false));
   };
@@ -100,54 +101,63 @@ function Academy() {
                 </div>
 
                 <div className="flex flex-grow w-full max-w-xl">
-                  <div className="flex flex-col gap-5 w-full">
-                    <button
-                      className="w-full bg-[#6078DF] px-10 py-4 rounded-full backdrop-blur-2xl"
-                      onClick={() => handleStartQuiz(true)}
-                    >
-                      <div className="flex justify-between w-full items-center">
-                        <div className="flex flex-col gap-2 justify-start">
-                          <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
-                            Randomize
-                          </span>
-                          <span className="text-white font-semibold text-lg">
-                            General Sleep
-                          </span>
-                        </div>
-                        <RepeatRoundedIcon sx={{ color: "#FFFFFF" }} />
-                      </div>
-                    </button>
-                    <p className="text-center flex items-center uppercase font-medium text-sm text-[#AAA]">
-                      <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
-                      Or
-                      <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
-                    </p>
-
-                    <CustomDropdown
-                      options={topicOptions}
-                      label="Topic"
-                      selectedOption={selectedTopic}
-                      setSelectedOption={setSelectedTopic}
-                    />
-                    <CustomDropdown
-                      options={difficultyOptions}
-                      label="Difficulty"
-                      selectedOption={selectedDifficulty}
-                      setSelectedOption={setSelectedDifficulty}
-                    />
-
-                    <div className="flex items-center justify-center pt-5">
-                      <button
-                        className="bg-white px-10 py-4 text-[#F4AA5A] rounded-full"
-                        onClick={() => handleStartQuiz(false)}
-                      >
-                        <p className="text-base font-semibold capitalize">
-                          Start Quiz{" "}
-                          <EastRoundedIcon sx={{ color: "#F4AA5A" }} />{" "}
-                        </p>
-                      </button>
+                  {loading ? (
+                    <div className="flex flex-col gap-5 w-full">
+                      <p>Please wait!</p>
+                      <p>We're building your quiz</p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex flex-col gap-5 w-full">
+                      <button
+                        className="w-full bg-[#6078DF] px-10 py-4 rounded-full backdrop-blur-2xl"
+                        onClick={() => handleStartQuiz(true)}
+                      >
+                        <div className="flex justify-between w-full items-center">
+                          <div className="flex flex-col gap-2 justify-start">
+                            <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
+                              Randomize
+                            </span>
+                            <span className="text-white font-semibold text-lg">
+                              General Sleep
+                            </span>
+                          </div>
+                          <RepeatRoundedIcon sx={{ color: "#FFFFFF" }} />
+                        </div>
+                      </button>
+                      <p className="text-center flex items-center uppercase font-medium text-sm text-[#AAA]">
+                        <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
+                        Or
+                        <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
+                      </p>
+
+                      <CustomDropdown
+                        options={topicOptions}
+                        label="Topic"
+                        selectedOption={selectedTopic}
+                        setSelectedOption={setSelectedTopic}
+                        optionLabelKey="name"
+                      />
+                      <CustomDropdown
+                        options={difficultyOptions}
+                        label="Difficulty"
+                        selectedOption={selectedDifficulty}
+                        setSelectedOption={setSelectedDifficulty}
+                        optionLabelKey="name"
+                      />
+
+                      <div className="flex items-center justify-center pt-5">
+                        <button
+                          className="bg-white px-10 py-4 text-[#F4AA5A] rounded-full"
+                          onClick={() => handleStartQuiz(false)}
+                        >
+                          <p className="text-base font-semibold capitalize">
+                            Start Quiz{" "}
+                            <EastRoundedIcon sx={{ color: "#F4AA5A" }} />{" "}
+                          </p>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

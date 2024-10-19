@@ -9,7 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -83,7 +83,16 @@ class UserController extends Controller
         $validator = Validator::make($requestData, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|confirmed|string',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
+            ],
             'remember' => 'nullable|boolean'
         ]);
 
@@ -193,7 +202,17 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'current_password'  => 'required|string',
-            'new_password'      => 'required|string|min:8|confirmed',
+            // 'new_password'      => 'required|string|min:8|confirmed',
+            'new_password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
+            ],
         ], [
             'new_password.confirmed' => 'The new password confirmation does not match.',
         ]);

@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseContentController;
@@ -27,7 +30,6 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\VerificationController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -44,16 +46,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => '/backend',
-    // 'middleware' => 'auth'
+    'middleware' => 'auth:api'
 ], function (Router $router) {
 
-    $router->post('/register',                          [AuthController::class, 'register']);
-    $router->post('/login',                             [AuthController::class, 'login']);
-    $router->post('/logout',                            [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    // Auth Routes
+    $router->post('/register',                         [AuthController::class, 'register']);
+    $router->post('/login',                            [AuthController::class, 'login']);
+    $router->post('/logout',                           [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    $router->get('/email/verify',                      [VerificationController::class, 'verify'])->name('verification.verify');
+    $router->post('/forgot/email',                     [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    $router->post('/forgot/reset',                     [ResetPasswordController::class, 'reset']);
 
     $router->get('storage/{folderName}/{filename}',     [MediaController::class, 'showMedia']);
     $router->get('/journals/autoUpdate',                [JournalController::class, 'autoUpdateJournalData']);
 
+    $router->post('quiz/{id}/submit',                   [QuizController::class, 'evaluateQuiz']);
     $router->post('quiz/{id}/questions',                [QuizController::class, 'getQuizInfo']);
 
     $router->post('questions/{id}',                     [QuestionController::class, 'update']);
@@ -90,7 +97,6 @@ Route::group([
     $router->post('forum_threads/{thread}/like',        [ForumThreadLikeController::class, 'like']);
     $router->delete('forum_threads/{thread}/like',      [ForumThreadLikeController::class, 'unlike']);
 
-    $router->get('/email/verify',                       [VerificationController::class, 'verify'])->name('verification.verify');
 
     // LLM
     $router->get('/llm/health',                         [ChatbotController::class, 'health']);
@@ -107,8 +113,8 @@ Route::group([
     $router->post('/front/post/comment',                [ForumPostController::class, 'frontStore']);
     $router->post('/front/quiz/create',                 [QuizController::class, 'assemble']);
 
-    $router->post('/front/profile',                     [UserController::class, 'profileUpdate'])->middleware('auth:api');
-    $router->post('/front/profile/password',            [UserController::class, 'changePassword'])->middleware('auth:api');
+    $router->post('/front/profile',                     [UserController::class, 'profileUpdate']);
+    $router->post('/front/profile/password',            [UserController::class, 'changePassword']);
 
     // PARAMS
     $router->get('/params/questions',                   [QuestionController::class, 'params']);

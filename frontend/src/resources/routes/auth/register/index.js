@@ -30,7 +30,7 @@ function Register() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axiosConfig.post("/front/register", data, {
+      const response = await axiosConfig.post("/register", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

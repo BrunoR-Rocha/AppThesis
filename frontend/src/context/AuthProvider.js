@@ -22,24 +22,10 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const handleAuthChange = () => {
-      const auth = localStorage.getItem('auth');
-
-      setIsAuthenticated(!!auth);
-      setUserState(auth ? JSON.parse(auth).user : null);
-    };
-
-    window.addEventListener('storage', handleAuthChange);
-
-    return () => {
-      window.removeEventListener('storage', handleAuthChange);
-    };
-  }, []);
-
   // Wrap authProvider methods to update state
   const login = async ({ email, password }) => {
     try {
+      setIsLoading(true);
       await authProvider.login({ email, password });
 
       const auth = localStorage.getItem('auth');
@@ -50,6 +36,8 @@ const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
+      setIsAuthenticated(false);
+      setIsLoading(false);
       return { success: false, error };
     }
   };

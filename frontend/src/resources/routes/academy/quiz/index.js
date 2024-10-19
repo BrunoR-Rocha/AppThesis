@@ -5,7 +5,7 @@ import { QuizArea, QuizOption } from "../style/academy_style";
 import axiosConfig from "../../../../providers/axiosConfig";
 import Wrapper from "../../../components/general/Wrapper";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import LinearProgress from "@mui/material/LinearProgress";
 import Modal from "@mui/material/Modal";
@@ -16,6 +16,7 @@ import {
   YesNoQuestion,
 } from "./components/QuizInputs";
 import ProgressCircle from "./components/Progress";
+import { useRef } from "react";
 
 function QuizPage() {
   const [loading, setLoading] = useState(false);
@@ -31,13 +32,17 @@ function QuizPage() {
     unansweredQuestions: [],
   });
 
+  const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [results, setResults] = useState(false);
+  const [resultsScore, setResultsScore] = useState(false);
+  const timerIntervalRef = useRef(null);
+  const { quiz_id } = location.state || {};
 
   useEffect(() => {
     setLoading(true);
     axiosConfig
-      .post(`/quiz/1/questions`)
+      .post(`/quiz/${quiz_id}/questions`)
       .then((res) => {
         setQuestions(res.data.questions);
         setQuizParams(res.data.params);
@@ -82,30 +87,40 @@ function QuizPage() {
   };
 
   const hideConfirmationModal = () => {
-    console.log("here");
     setConfirmationModal({ show: false, unansweredQuestions: [] });
   };
 
   const handleSubmitQuiz = async () => {
-    // hideConfirmationModal();
-    // setIsSubmitting(true);
+    clearInterval(timerIntervalRef.current);
+
     try {
-      console.log(answers);
       // Make the POST request to submit the quiz answers
-      // const response = await axiosConfig.post('/quiz/1/submit', {
-      //   answers: answers, // Pass the user's answers
-      // }).then((res) => {
-      //    toast.success("Quiz submitted successfully!");
-      //    setTimeout(() => {
-      //      setIsSubmitting(false);
-      //      setResults(true);
-      //    }, 3000);
-      // });
+      const response = await axiosConfig
+        .post(`/quiz/${quiz_id}/submit`, {
+          answers: answers,
+          time: timer,
+        })
+        .then((res) => {
+          toast.success("Quiz submitted successfully!");
+
+          hideConfirmationModal();
+          setIsSubmitting(false);
+          setResults(true);
+          setResultsScore(res.data.score);
+        });
     } catch (error) {
       toast.error("There was an error submitting your quiz. Please try again.");
       setIsSubmitting(false);
     }
   };
+
+  const handleQuizClose = () => {
+    // if there's pending questions to answer and timer not finished
+    // updated the tables with current answers
+    // if answers are empty, ask if wish to delete the quiz
+
+    navigate('/academy');
+  }
 
   const modalStyle = {
     position: "absolute",
@@ -124,12 +139,16 @@ function QuizPage() {
 
   useEffect(() => {
     if (timer > 0) {
-      const countdown = setInterval(() => {
+      timerIntervalRef.current = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
-
-      return () => clearInterval(countdown);
+    } else if (timer === 0) {
+      clearInterval(timerIntervalRef.current);
     }
+
+    return () => {
+      clearInterval(timerIntervalRef.current);
+    };
   }, [timer]);
 
   const formatTime = (seconds) => {
@@ -157,9 +176,9 @@ function QuizPage() {
             <div className="flex flex-1 justify-between">
               {/* Close Button */}
               <div className="flex items-center">
-                <Link
-                  to={() => navigate(-1)}
-                  className="p-3 group flex items-center gap-2 text-[#ECECEC] hover:text-[#F4AA5A]"
+                <div
+                  onClick={handleQuizClose}
+                  className="p-3 group flex items-center gap-2 text-[#ECECEC] hover:text-[#F4AA5A] hover:cursor-pointer"
                 >
                   <CloseIcon
                     sx={{
@@ -170,7 +189,7 @@ function QuizPage() {
                     }}
                   />
                   <p className="font-medium">Close</p>
-                </Link>
+                </div>
               </div>
               {/* Timer */}
               {!isSubmitting && !results && (
@@ -192,7 +211,7 @@ function QuizPage() {
                   </p>
 
                   {/* Question Component */}
-                  <div className="flex-1 flex justify-center items-center">
+                  <div className="flex-1 flex justify-center items-center w-3/4">
                     {QuestionComponent && (
                       <QuestionComponent
                         question={currentQuestion}
@@ -217,9 +236,8 @@ function QuizPage() {
                   <p className="text-3xl font-semibold text-[#ECECEC] text-center">
                     You finished the quiz!
                   </p>
-                  {/* Animation with correct score from 1-100 */}
                   <div>
-                    <ProgressCircle result={75} />
+                    <ProgressCircle result={resultsScore} />
                   </div>
                   <div>
                     <p className="text-lg text-white text-center">

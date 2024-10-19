@@ -29,6 +29,11 @@ class QuestionAndAnswersRequest(BaseModel):
     topic_name: str # question topic title
     topic_tag: str 
 
+class EvaluationRequest(BaseModel):
+    theme: str      # The theme from SysConfig in Laravel
+    question: str
+    answer: str
+
 api_key = os.getenv('OPENAI_API_KEY')
 temperature = float(os.getenv('TEMPERATURE', 0.7))  # Default to 0.7 if not set
 
@@ -201,6 +206,67 @@ def randomQuestions():
         'response': generated_text
     })
 
+@app.route('/question-evaluate', methods=['POST'])
+def questionEvaluate():
+    try:
+        if not request.is_json:
+            return jsonify({'error': 'Request body must be JSON'}), 400
+        
+        # Manually validate and parse the incoming request using Pydantic
+        evaluation = EvaluationRequest(**request.get_json())
+    except ValidationError as e:
+        return jsonify({
+            'error': 'Invalid input data',
+            'details': e.errors()
+        }), 400
+    
+    # Get the theme from the validated request
+    theme = evaluation.theme
+    question = evaluation.question
+    answer = evaluation.answer
+    
+    if not theme:
+        return jsonify({
+            'error': 'Theme is required.'
+        }), 400
+    
+    # Optionally, modify the message based on the theme before sending it to the LLM
+    full_prompt = f"""You are an expert teacher on {theme}.
+    Evaluate the student's answer to the question below.
+    
+    Question: {question}
+
+    Answer: {answer}
+
+    Evaluate the student's answer and provide the following:
+
+    1. Is the student's answer correct? Respond with 'Yes' or 'No'.
+    2. Provide a response quality score between 0 and 1, where 1 means the answer is completely correct, and 0 means it is incorrect.
+    3. Provide feedback to the student on their answer.
+
+    Your response should be in the following JSON format:
+    [
+        {{
+            "is_correct": true or false,
+            "response_quality_score": float between 0 and 1,
+            "feedback": 1, "Your feedback here."
+        }}
+    ]
+    """
+
+    # Process the message with Langchain/OpenAI
+    try:
+        response = llm([full_prompt])
+        generated_text = response.content
+    except Exception as e:
+        return jsonify({
+            'error': f"An error occurred while generating the response: {str(e)}"
+        }), 500
+    
+    return jsonify({
+        'theme': theme,
+        'response': generated_text
+    })
 
 
 @app.route('/healthcheck', methods=['GET'])

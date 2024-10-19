@@ -17,6 +17,8 @@ const FooterWrapper = styled("div")`
   border-radius: 8px;
   padding-top: 60px;
 `;
+
+
 function Footer() {
   return (
     <FooterWrapper>

@@ -2,40 +2,49 @@ import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../media/navbar/logo_moony.svg";
 import AuthLogo from "../../../media/auth/auth_moony.svg";
-import {
-  AuthArea,
-  AuthButton,
-  AuthIcon,
-  AuthInput,
-  AuthSideLogo,
-} from "../styles/auth_styles";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
+import { AuthArea, AuthInput, AuthSideLogo } from "../styles/auth_styles";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthContext from "../../../../context/AuthContext";
+import axiosConfig from "../../../../providers/axiosConfig";
 
-function Login() {
+function ResetPassword() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useContext(AuthContext);
+
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
+  const email = queryParams.get("email");
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm();
-  const onSubmit = async (data) => {
-    const result = await login({
-      email: data.email,
-      password: data.password,
-    });
+    reset,
+  } = useForm({
+    defaultValues: {
+      email: email || "",
+    },
+  });
 
-    if (result.success) {
-      navigate("/profile");
-    } else {
-      toast.error("Invalid email or password");
+  const onSubmit = async (data) => {
+    try {
+      await axiosConfig.post("/forgot/reset", {
+        token: token,
+        email: data.email,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+      });
+
+      toast.success("Password has been reset successfully.");
+
+      navigate("/login");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to reset password."
+      );
     }
   };
 
@@ -74,45 +83,27 @@ function Login() {
 
             <div className="flex flex-col gap-5">
               <p className="uppercase text-[#44456A] font-medium text-sm">
-                Welcome Back
+                One step closer
               </p>
               <h2 className="text-xl md:text-2xl lg:text-3xl text-[#1A184C] font-bold font-sans">
-                Continue to your account
+                Reset Password
               </h2>
-              <div className="flex flex-wrap gap-3">
-                <AuthButton>
-                  <AuthIcon>
-                    <GoogleIcon />
-                  </AuthIcon>
-                  <span>Continue with Google</span>
-                </AuthButton>
-                <AuthButton>
-                  <AuthIcon>
-                    <FacebookIcon />
-                  </AuthIcon>
-                  <span>Continue with Facebook</span>
-                </AuthButton>
-              </div>
-              <p className="text-center flex items-center uppercase font-medium text-sm">
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-                Or
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-              </p>
 
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col w-full gap-4"
               >
                 <AuthInput>
-                  <label htmlFor="login_email">Email</label>
+                  <label htmlFor="reset_email">Email</label>
                   <input
-                    id="login_email"
+                    id="reset_email"
                     type="text"
                     placeholder="Email"
                     {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
                     })}
+                    readOnly
                   />
                   {errors.email && (
                     <span className="text-xs text-red-500">
@@ -121,33 +112,43 @@ function Login() {
                   )}
                 </AuthInput>
                 <AuthInput>
-                  <label htmlFor="login_password">Password</label>
+                  <label htmlFor="reset_password">Password</label>
                   <input
-                    id="login_password"
+                    id="reset_password"
                     type="password"
                     placeholder="Password"
-                    {...register("password", { required: true })}
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                    })}
                   />
                   {errors.password && (
                     <span className="text-xs text-red-500">
-                      This field is required
+                      {errors.password.message}
                     </span>
                   )}
                 </AuthInput>
-                <div className="mb-4 flex items-center">
+                <AuthInput>
+                  <label htmlFor="reset_password_confirm">Password Confirmation</label>
                   <input
-                    id="rememberMe"
-                    type="checkbox"
-                    className="mr-2"
-                    {...register("rememberMe")}
+                    id="reset_password_confirm"
+                    type="password"
+                    placeholder="Confirm new Password"
+                    {...register("password_confirmation", {
+                      required: "Please confirm your password",
+                      validate: (value) =>
+                        value === watch("password") || "Passwords do not match",
+                    })}
                   />
-                  <label
-                    htmlFor="rememberMe"
-                    className="text-[#575757] text-sm"
-                  >
-                    Remember Password
-                  </label>
-                </div>
+                  {errors.password_confirmation && (
+                    <span className="text-xs text-red-500">
+                      {errors.password_confirmation.message}
+                    </span>
+                  )}
+                </AuthInput>
                 <input
                   type="submit"
                   className="bg-[#6078DF] rounded-full p-3 text-white cursor-pointer"
@@ -155,21 +156,12 @@ function Login() {
               </form>
 
               <p className="text-center font-medium text-md">
-                Are you a Newbie?{" "}
+                Already registered?{" "}
                 <Link
-                  to={"/register"}
+                  to={"/login"}
                   className="uppercase text-[#6078DF] underline"
                 >
-                  Get Started
-                </Link>
-              </p>
-
-              <p className="text-center font-medium text-md">
-                <Link
-                  to={"/forgot"}
-                  className="uppercase text-[#6078DF] underline"
-                >
-                  Forgot the password? 
+                  Login
                 </Link>
               </p>
             </div>
@@ -180,4 +172,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;

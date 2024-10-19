@@ -9,7 +9,8 @@ const CustomLayout = () => {
     "/login",
     "/register",
     "/academy/quiz/*",
-    "/email-confirmation/*"
+    "/email-confirmation/*",
+    "/forgot*"
   ];
 
   const hideNavAndFooter = hiddenRoutes.some((route) =>
@@ -19,7 +20,7 @@ const CustomLayout = () => {
   return (
     <>
       {!hideNavAndFooter && <NavBar />}
-      <Outlet />
+        <Outlet />
       {!hideNavAndFooter && <Footer />}
     </>
   );

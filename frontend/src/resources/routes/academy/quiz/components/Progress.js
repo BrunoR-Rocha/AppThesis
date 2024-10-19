@@ -13,7 +13,7 @@ const ProgressCircle = ({ result }) => {
     if (progress < result) {
       const interval = setInterval(() => {
         setProgress((prev) => Math.min(prev + 1, result));
-      }, 40); // Adjust speed as needed
+      }, 40);
 
       return () => clearInterval(interval);
     } else {
