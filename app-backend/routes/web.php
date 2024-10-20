@@ -46,78 +46,74 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => '/backend',
-    'middleware' => 'auth:api'
 ], function (Router $router) {
 
-    // Auth Routes
-    $router->post('/register',                         [AuthController::class, 'register']);
-    $router->post('/login',                            [AuthController::class, 'login']);
-    $router->post('/logout',                           [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    $router->get('/email/verify',                      [VerificationController::class, 'verify'])->name('verification.verify');
-    $router->post('/forgot/email',                     [ForgotPasswordController::class, 'sendResetLinkEmail']);
-    $router->post('/forgot/reset',                     [ResetPasswordController::class, 'reset']);
+    // Non-Authenticated Routes
+    $router->post('/register', [AuthController::class, 'register']);
+    $router->post('/login', [AuthController::class, 'login']);
+    $router->post('/forgot/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    $router->post('/forgot/reset', [ResetPasswordController::class, 'reset']);
 
-    $router->get('storage/{folderName}/{filename}',     [MediaController::class, 'showMedia']);
-    $router->get('/journals/autoUpdate',                [JournalController::class, 'autoUpdateJournalData']);
+    $router->get('storage/{folderName}/{filename}', [MediaController::class, 'showMedia']);
 
-    $router->post('quiz/{id}/submit',                   [QuizController::class, 'evaluateQuiz']);
-    $router->post('quiz/{id}/questions',                [QuizController::class, 'getQuizInfo']);
+    $router->get('/journals/autoUpdate', [JournalController::class, 'autoUpdateJournalData']);
 
-    $router->post('questions/{id}',                     [QuestionController::class, 'update']);
-    $router->post('courses/{id}',                       [CourseController::class, 'update']);
+    $router->post('/admin/login', [AuthController::class, 'adminLogin']);
 
-    $router->resources([
-        'users'                                         => UserController::class,
-        'faqs'                                          => FaqController::class,
-        'news'                                          => NewsController::class,
-        'contacts'                                      => ContactController::class,
-        'mail_templates'                                => MailTemplateController::class,
-        'forum_categories'                              => ForumCategoryController::class,
-        'forum_threads'                                 => ForumThreadController::class,
-        'forum_posts'                                   => ForumPostController::class,
-        'sys_configs'                                   => SysConfigController::class,
-        'journals'                                      => JournalController::class,
-        'question_topics'                               => QuestionTopicController::class,
-        'question_types'                                => QuestionTypeController::class,
-        'questions'                                     => QuestionController::class,
-        'question_options'                              => QuestionOptionController::class,
-        'quizzes'                                       => QuizController::class,
-        'responses'                                     => ResponseController::class,
-        'library_pages'                                 => LibraryPageController::class,
-        'library_page_modules'                          => LibraryPageModuleController::class,
-        'courses'                                       => CourseController::class,
-        'lessons'                                       => LessonController::class,
-        'course_content_types'                          => CourseContentTypeController::class,
-        'course_interactive_elements'                   => CourseInteractiveElementController::class,
-        'course_contents'                               => CourseContentController::class,
-    ]);
+    $router->get('/llm/health', [ChatbotController::class, 'health']);
+    $router->get('/llm/topic', [QuestionTopicController::class, 'generate']);
+    $router->get('/llm/question', [QuestionController::class, 'generateRandom']);
+    $router->post('/chatbot', [ChatbotController::class, 'chat']);
 
-    $router->post('/admin/login',                       [AuthController::class, 'adminLogin']);
+    $router->get('/front/comments/{id}', [ForumThreadController::class, 'showComments']);
+    $router->post('/front/register', [UserController::class, 'frontRegister']);
+    $router->post('/front/contacts', [ContactController::class, 'frontStore']);
+    $router->get('/front/faqs', [FaqController::class, 'getAll']);
+    $router->get('/front/post/category', [ForumCategoryController::class, 'getAll']);
+    $router->post('/front/post/create', [ForumThreadController::class, 'frontStore']);
+    $router->post('/front/post/comment', [ForumPostController::class, 'frontStore']);
+    $router->post('/front/quiz/create', [QuizController::class, 'assemble']);
+    $router->post('/front/profile/password', [UserController::class, 'changePassword']);
 
-    $router->post('forum_threads/{thread}/like',        [ForumThreadLikeController::class, 'like']);
-    $router->delete('forum_threads/{thread}/like',      [ForumThreadLikeController::class, 'unlike']);
-
-
-    // LLM
-    $router->get('/llm/health',                         [ChatbotController::class, 'health']);
-    $router->get('/llm/topic',                          [QuestionTopicController::class, 'generate']);
-    $router->get('/llm/question',                       [QuestionController::class, 'generateRandom']);
-
-    // FRONTEND ROUTES
-    $router->post('/chatbot',                           [ChatbotController::class, 'chat']);
-    $router->get('/front/comments/{id}',                [ForumThreadController::class, 'showComments']);
-    $router->post('/front/register',                    [UserController::class, 'frontRegister']);
-    $router->post('/front/contacts',                    [ContactController::class, 'frontStore']);
-    $router->get('/front/post/category',                [ForumCategoryController::class, 'getAll']);
-    $router->post('/front/post/create',                 [ForumThreadController::class, 'frontStore']);
-    $router->post('/front/post/comment',                [ForumPostController::class, 'frontStore']);
-    $router->post('/front/quiz/create',                 [QuizController::class, 'assemble']);
-
-    $router->post('/front/profile',                     [UserController::class, 'profileUpdate']);
-    $router->post('/front/profile/password',            [UserController::class, 'changePassword']);
-
-    // PARAMS
-    $router->get('/params/questions',                   [QuestionController::class, 'params']);
+    // Authenticated Routes
+    $router->group(['middleware' => 'auth:api'], function (Router $router) {
+        // Authenticated Routes
+        $router->post('/logout', [AuthController::class, 'logout']);
+        $router->get('/email/verify', [VerificationController::class, 'verify'])->name('verification.verify');
+        $router->post('quiz/{id}/submit', [QuizController::class, 'evaluateQuiz']);
+        $router->post('quiz/{id}/save-progress', [QuizController::class, 'saveProgress']);
+        $router->post('quiz/{id}/questions', [QuizController::class, 'getQuizInfo']);
+        $router->get('profile/quizzes', [QuizController::class, 'getUserQuizDashboard']);
+        $router->post('questions/{id}', [QuestionController::class, 'update']);
+        $router->post('courses/{id}', [CourseController::class, 'update']);
+        $router->resources([
+            'users' => UserController::class,
+            'faqs' => FaqController::class,
+            'news' => NewsController::class,
+            'contacts' => ContactController::class,
+            'mail_templates' => MailTemplateController::class,
+            'forum_categories' => ForumCategoryController::class,
+            'forum_threads' => ForumThreadController::class,
+            'forum_posts' => ForumPostController::class,
+            'sys_configs' => SysConfigController::class,
+            'journals' => JournalController::class,
+            'question_topics' => QuestionTopicController::class,
+            'question_types' => QuestionTypeController::class,
+            'questions' => QuestionController::class,
+            'question_options' => QuestionOptionController::class,
+            'quizzes' => QuizController::class,
+            'responses' => ResponseController::class,
+            'library_pages' => LibraryPageController::class,
+            'library_page_modules' => LibraryPageModuleController::class,
+            'courses' => CourseController::class,
+            'lessons' => LessonController::class,
+            'course_content_types' => CourseContentTypeController::class,
+            'course_interactive_elements' => CourseInteractiveElementController::class,
+            'course_contents' => CourseContentController::class,
+        ]);
+        $router->post('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'like']);
+        $router->delete('forum_threads/{thread}/like', [ForumThreadLikeController::class, 'unlike']);
+    });
 });
 
 Route::redirect('/', '/backend');

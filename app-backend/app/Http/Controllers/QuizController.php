@@ -11,6 +11,7 @@ use App\Models\QuestionOption;
 use App\Models\QuestionResponse;
 use App\Models\QuestionTopic;
 use App\Models\Quiz;
+use App\Models\QuizProgress;
 use App\Models\Response;
 use App\Models\SysConfig;
 use App\Models\UserDifficultyProgression;
@@ -169,18 +170,17 @@ class QuizController extends Controller
                 $maxDifficulty = Difficulty::count();
 
                 $difficultyLevel = rand(1, $maxDifficulty);
-            } 
+            }
 
             $topicId = $request->topic_id;
-            if (is_null($request->topic_id))
-            {
+            if (is_null($request->topic_id)) {
                 $topicCollection = QuestionTopic::count();
 
                 $topicId = rand(1, $topicCollection);
             }
 
             $difficultyRange = Difficulty::getDifficultyRange($difficultyLevel);
-           
+
             $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
                 ->whereHas('topics', function ($query) use ($request, $topicId) {
                     $query->where('question_topics.id', $topicId);
@@ -188,21 +188,19 @@ class QuizController extends Controller
                 ->take(10)
                 ->get();
 
-            if(count($questions) < 10)
-            {
+            if (count($questions) < 10) {
                 $questionController = new QuestionController();
                 $questionTopic = QuestionTopic::whereId($topicId)->first();
 
-                if($questionTopic)
-                {
+                if ($questionTopic) {
                     $response = $questionController->generateRandom($request, $questionTopic);
 
                     $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
-                            ->whereHas('topics', function ($query) use ($request, $topicId) {
-                                $query->where('question_topics.id', $topicId);
-                            })
-                            ->take(10)
-                            ->get();
+                        ->whereHas('topics', function ($query) use ($request, $topicId) {
+                            $query->where('question_topics.id', $topicId);
+                        })
+                        ->take(10)
+                        ->get();
                 }
             }
         }
@@ -222,7 +220,6 @@ class QuizController extends Controller
             foreach ($questions as $index => $question) {
                 $quiz->questions()->attach($question->id, ['order' => $index + 1]);
             }
-
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -274,6 +271,39 @@ class QuizController extends Controller
             'error' => 'successfully_deleted',
             'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function saveProgress(Request $request, $quizId)
+    {
+        $validated = $request->validate([
+            'answers' => 'required|array',
+        ]);
+
+        $user = $request->user();
+
+        $userQuiz = UserQuiz::where(['user_id' => $user->id, 'quiz_id' => $quizId])->first();
+        $progress = QuizProgress::where('user_quiz_id', $userQuiz->id)->first();
+
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $userQuiz->created_at);
+        $endTime = now();
+        $timeTaken = $endTime->diffInSeconds($startTime);
+
+        if ($progress) {
+            $progress->update([
+                'answers' => $validated['answers'],
+                'remaining_time' => $timeTaken,
+            ]);
+        } else {
+            $progress = QuizProgress::create([
+                'user_quiz_id' => $userQuiz->id,
+                'answers' => $validated['answers'],
+                'remaining_time' => $timeTaken,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Progress saved successfully',
+        ], 200);
     }
 
     public function evaluateQuiz(Request $request, $quizId)
@@ -334,21 +364,23 @@ class QuizController extends Controller
         $score = ($correctAnswers / $totalQuestions) * 100;
 
         $userQuiz = UserQuiz::updateOrCreate(
-        [
-            'user_id' => $user->id,
-            'quiz_id' => $quiz->id
-        ],[
-            'score' => round($score, 2),
-            'time_taken' => $timeTaken,
-            'completed_at' => $endTime,
-            'is_completed' => true,
-        ]);
+            [
+                'user_id' => $user->id,
+                'quiz_id' => $quiz->id
+            ],
+            [
+                'score' => round($score, 2),
+                'time_taken' => $timeTaken,
+                'completed_at' => $endTime,
+                'is_completed' => true,
+            ]
+        );
 
         foreach ($questionResponses as $response) {
             QuestionResponse::updateOrCreate([
                 'user_quiz_id' => $userQuiz->id,
                 'question_id' => $response['question_id']
-            ],[
+            ], [
                 'is_correct' => $response['is_correct'],
                 'response_quality_score' => $response['response_quality_score'],
                 'time_taken' => $response['time_taken'],
@@ -560,5 +592,49 @@ class QuizController extends Controller
                 ]
             );
         }
+    }
+
+    public function getUserQuizDashboard(Request $request)
+    {
+        $user = $request->user();
+
+        $userQuizzes = UserQuiz::where('user_id', $user->id)->get();
+
+        $totalScore = $userQuizzes->sum('score');
+        $userMetrics = UserMetric::where('user_id', $user->id)->first();
+
+        $finished = $userQuizzes->filter(function ($quiz) {
+            return $quiz->is_completed;
+        })->count();
+
+        $unfinished = $userQuizzes->count() - $finished;
+
+        $totalQuizzes = $userQuizzes->count();
+        
+        $percentageFinished = $totalQuizzes > 0 ? ($finished / $totalQuizzes) * 100 : 0;
+        $percentageUnfinished = $totalQuizzes > 0 ? ($unfinished / $totalQuizzes) * 100 : 0;
+    
+        $metrics = $userMetrics ? $userMetrics->toArray() : [];
+        $metrics = array_merge($metrics, [
+            'totalScore' => $totalScore,
+            'finished_quizzes' => $finished,
+            'percentage_finished_quizzes' => $percentageFinished,
+            'unfinished_quizzes' => $unfinished,
+            'percentage_unfinished_quizzes' => $percentageUnfinished,
+        ]);
+
+        return response()->json([
+            'metrics' => $metrics,
+            'quizzes' => $userQuizzes->map(function ($quiz) {
+                return [
+                    'quiz_id' => $quiz->quiz_id,
+                    'quiz_difficulty' => Difficulty::getStandardDifficulty($quiz->quiz->difficulty),
+                    'title' => $quiz->quiz->title,
+                    'score' => $quiz->score,
+                    'completed_at' => Carbon::parse($quiz->completed_at)->format('d/m/Y'),
+                    'is_completed' => $quiz->is_completed,
+                ];
+            })
+        ], 200);
     }
 }

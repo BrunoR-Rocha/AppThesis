@@ -15,15 +15,25 @@ class Difficulty extends Model
     public const HARD = 'Hard';
     public const VERY_HARD = 'Very Hard';
 
-    public static function getStandardDifficulty(): array
+    public static function getStandardDifficulty($id = null): array
     {
-        return [
+        $difficulties = [
             ['id' => 1, 'name' => self::VERY_EASY],
             ['id' => 2, 'name' => self::EASY],
             ['id' => 3, 'name' => self::NORMAL],
             ['id' => 4, 'name' => self::HARD],
             ['id' => 5, 'name' => self::VERY_HARD],
         ];
+
+        if ($id !== null) {
+            $filtered = array_filter($difficulties, function($difficulty) use ($id) {
+                return $difficulty['id'] == $id;
+            });
+
+            return array_values($filtered)[0] ?? [];
+        }
+        
+        return $difficulties;
     }
 
     public static function getDifficultyRange($difficultyLevel)

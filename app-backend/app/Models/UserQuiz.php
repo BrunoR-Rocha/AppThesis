@@ -32,5 +32,10 @@ class UserQuiz extends Model
     public function questionResponses()
     {
         return $this->hasMany(QuestionResponse::class, 'user_quiz_id');
-    } 
+    }
+
+    public function scopeIsFinished($query, $bool = true)
+    {
+        return $query->where('is_completed', $bool);
+    }
 }

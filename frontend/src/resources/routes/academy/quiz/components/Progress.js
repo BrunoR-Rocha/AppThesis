@@ -1,18 +1,27 @@
-
-
 import React, { useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/CancelOutlined";
 
-const ProgressCircle = ({ result }) => {
+const ProgressCircle = ({
+  result,
+  referenceValue = 100,
+  radiusAngle = 120,
+  circleStartAngle = 135,
+  circleAngleRange = 270,
+  outsideQuiz = false,
+  outsideQuizComponent = null,
+  progressColor = "#F4AA5A",
+  bgColor = "#ddd",
+}) => {
   const [progress, setProgress] = useState(0);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [showFinalText, setShowFinalText] = useState(false);
 
+  const resultPercentage = Math.min((result / referenceValue) * 100, 100);
   useEffect(() => {
-    if (progress < result) {
+    if (progress < resultPercentage) {
       const interval = setInterval(() => {
-        setProgress((prev) => Math.min(prev + 1, result));
+        setProgress((prev) => Math.min(prev + 1, resultPercentage));
       }, 40);
 
       return () => clearInterval(interval);
@@ -22,15 +31,15 @@ const ProgressCircle = ({ result }) => {
         setShowFinalText(true);
       }, 1500);
     }
-  }, [progress, result]);
+  }, [progress, resultPercentage]);
 
   // Constants for the circle
-  const radius = 120;
+  const radius = radiusAngle;
   const cx = 150;
   const cy = 150;
 
-  const startAngle = 135; // Starting angle in degrees
-  const angleRange = 270; // Total angle range for progress (75% of circle)
+  const startAngle = circleStartAngle; // Starting angle in degrees
+  const angleRange = circleAngleRange; // Total angle range for progress (75% of circle)
   const endAngleMax = startAngle + angleRange; // Maximum ending angle (405 degrees)
 
   // Current end angle based on progress
@@ -83,7 +92,7 @@ const ProgressCircle = ({ result }) => {
         <path
           d={backgroundPath}
           fill="none"
-          stroke="#ddd"
+          stroke={bgColor}
           strokeWidth="12"
           strokeLinecap="round"
         />
@@ -92,41 +101,50 @@ const ProgressCircle = ({ result }) => {
         <path
           d={progressPath}
           fill="none"
-          stroke="#F4AA5A"
+          stroke={progressColor}
           strokeWidth="12"
           strokeLinecap="round"
         />
       </svg>
 
       {/* Text inside the circle */}
-      <div className="absolute flex flex-col justify-center items-center">
-        {showFinalText ? (
-          <p className="text-white text-lg mt-5">Your Grade: {result}%</p>
-        ) : !animationComplete ? (
-          <>
-            <p className="text-white text-lg">Your result is:</p>
-            <p className="text-white text-2xl font-bold">{progress}%</p>
-          </>
-        ) : null}
-      </div>
+      {outsideQuiz ? (
+        <>
+          <div className="absolute flex flex-col justify-center items-center">
+            {outsideQuizComponent}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="absolute flex flex-col justify-center items-center">
+            {showFinalText ? (
+              <p className="text-white text-lg mt-5">Your Grade: {result}%</p>
+            ) : !animationComplete ? (
+              <>
+                <p className="text-white text-lg">Your result is:</p>
+                <p className="text-white text-2xl font-bold">{progress}%</p>
+              </>
+            ) : null}
+          </div>
 
-      {/* Check or X icon */}
-      {animationComplete && (
-        <div
-          className={`absolute bottom-0 right-0 left-0 flex justify-center items-center transition-all duration-1000 ${
-            showFinalText ? "top-[-80px]" : "top-0"
-          }`}
-        >
-          {result >= 60 ? (
-            <CheckIcon style={{ fontSize: 50, color: "green" }} />
-          ) : (
-            <CancelIcon style={{ fontSize: 50, color: "red" }} />
+          {/* Check or X icon */}
+          {animationComplete && (
+            <div
+              className={`absolute bottom-0 right-0 left-0 flex justify-center items-center transition-all duration-1000 ${
+                showFinalText ? "top-[-80px]" : "top-0"
+              }`}
+            >
+              {result >= 60 ? (
+                <CheckIcon style={{ fontSize: 50, color: "green" }} />
+              ) : (
+                <CancelIcon style={{ fontSize: 50, color: "red" }} />
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
 };
 
 export default ProgressCircle;
-

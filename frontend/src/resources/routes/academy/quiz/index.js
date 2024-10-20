@@ -19,6 +19,21 @@ import ProgressCircle from "./components/Progress";
 import { useRef } from "react";
 
 function QuizPage() {
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 468,
+    backgroundColor: "background.paper",
+    borderRadius: "8px",
+    boxShadow: 24,
+    padding: 4,
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
+  };
+
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [quizParams, setQuizParams] = useState([]);
@@ -30,6 +45,10 @@ function QuizPage() {
   const [confirmationModal, setConfirmationModal] = useState({
     show: false,
     unansweredQuestions: [],
+  });
+
+  const [closeConfirmationModal, setCloseConfirmationModal] = useState({
+    show: false,
   });
 
   const location = useLocation();
@@ -90,6 +109,10 @@ function QuizPage() {
     setConfirmationModal({ show: false, unansweredQuestions: [] });
   };
 
+  const hideCloseConfirmationModal = () => {
+    setCloseConfirmationModal({ show: false });
+  };
+
   const handleSubmitQuiz = async () => {
     clearInterval(timerIntervalRef.current);
 
@@ -98,7 +121,6 @@ function QuizPage() {
       const response = await axiosConfig
         .post(`/quiz/${quiz_id}/submit`, {
           answers: answers,
-          time: timer,
         })
         .then((res) => {
           toast.success("Quiz submitted successfully!");
@@ -114,29 +136,53 @@ function QuizPage() {
     }
   };
 
-  const handleQuizClose = () => {
-    // if there's pending questions to answer and timer not finished
-    // updated the tables with current answers
-    // if answers are empty, ask if wish to delete the quiz
-
-    navigate('/academy');
-  }
-
-  const modalStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 468,
-    backgroundColor: "background.paper",
-    borderRadius: "8px",
-    boxShadow: 24,
-    padding: 4,
-    display: "flex",
-    flexDirection: "column",
-    gap: "18px",
+  const saveQuizProgress = () => {
+    axiosConfig
+      .post(`/quiz/${quiz_id}/save-progress`, {
+        answers: answers,
+      })
+      .catch((error) => {
+        console.error("Failed to auto-save quiz progress:", error);
+      });
   };
 
+  const handleQuizClose = () => {
+    clearInterval(timerIntervalRef.current);
+    setCloseConfirmationModal({
+      show: true,
+    });
+  };
+
+  const quizClose = () => {
+    
+    saveQuizProgress();
+    navigate("/academy");
+  };
+
+  // Save progress every 5 seconds
+  useEffect(() => {
+    const autoSaveInterval = setInterval(() => {
+      saveQuizProgress();
+    }, 5000);
+
+    return () => clearInterval(autoSaveInterval);
+  }, [answers, timer]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      saveQuizProgress();
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [answers, timer]);
+
+  // Timer
   useEffect(() => {
     if (timer > 0) {
       timerIntervalRef.current = setInterval(() => {
@@ -341,6 +387,34 @@ function QuizPage() {
                 onClick={handleSubmitQuiz}
               >
                 Submit Quiz
+              </button>
+            </div>
+          </Box>
+        </Modal>
+
+        <Modal
+          open={closeConfirmationModal.show}
+          onClose={hideCloseConfirmationModal}
+          aria-labelledby="confirmation-modal-title"
+          aria-describedby="confirmation-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <h2 id="confirmation-modal-title" className="text-xl font-semibold">
+              Are you sure you want to leave the current quiz?
+            </h2>
+
+            <div className="flex justify-between gap-4 mt-4">
+              <button
+                className="basis-1/2 border-[1px] border-solid border-[#6078DF] rounded-full text-[#6078DF] px-8 py-4"
+                onClick={hideCloseConfirmationModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="basis-1/2 bg-[#6078DF] rounded-full text-[#FFF] px-8 py-4"
+                onClick={quizClose}
+              >
+                Exit Quiz
               </button>
             </div>
           </Box>

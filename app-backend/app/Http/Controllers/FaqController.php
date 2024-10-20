@@ -48,7 +48,7 @@ class FaqController extends Controller
         ]);
 
         return response()->json([
-            'id' => $faq->id, 
+            'id' => $faq->id,
             'message' => __('auth.register'),
         ], 200);
     }
@@ -67,7 +67,13 @@ class FaqController extends Controller
         $faq->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function getAll()
+    {
+        return Faq::active()->get();
     }
 }

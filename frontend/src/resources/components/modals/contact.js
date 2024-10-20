@@ -5,7 +5,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import { ReactComponent as Flower } from "../../media/general/flower.svg";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../styles/contact";
-import { useLocation, Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import axiosConfig from "../../../providers/axiosConfig";
 import { toast } from "react-toastify";
@@ -13,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { CircularProgress } from "@mui/material";
 
 function ContactModal({ open, handleClose }) {
-  const location = useLocation();
   const [loading, setLoading] = useState();
 
   const {
@@ -62,9 +60,8 @@ function ContactModal({ open, handleClose }) {
           }}
         >
           <div className="flex justify-end p-3">
-            <Link
-              to={location.state?.from || "/"}
-              className="border-[#A5A6CC] hover:border-[#F4AA5A] border-2 border-solid rounded-full p-3 group"
+            <div
+              className="border-[#A5A6CC] hover:border-[#F4AA5A] border-2 border-solid rounded-full p-3 group hover:cursor-pointer"
               onClick={handleClose}
             >
               <CloseIcon
@@ -75,7 +72,7 @@ function ContactModal({ open, handleClose }) {
                   },
                 }}
               />
-            </Link>
+            </div>
           </div>
           <div className="flex w-full h-full relative overflow-hidden px-12 pb-12 gap-10 items-center">
             <Flower className="absolute mix-blend-hard-light opacity-25 left-1/4 -top-1/3 object-cover z-0 -rotate-90" />

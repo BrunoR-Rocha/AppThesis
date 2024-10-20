@@ -37,11 +37,6 @@ class Quiz extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function responses()
-    {
-        return $this->hasMany(Response::class);
-    }
-
     public function estimatedCompletionTime() : int
     {
         $totalTime = 0;

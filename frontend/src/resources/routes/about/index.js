@@ -48,14 +48,14 @@ function About() {
   useEffect(() => {
     setLoading(true);
     axiosConfig
-      .get(`/faqs`)
+      .get(`/front/faqs`)
       .then((res) => {
         setFaqs(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
-  
+
   return (
     <>
       <AboutArea className="min-h-[900px] md:min-h-max pb-20">
