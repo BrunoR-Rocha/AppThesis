@@ -73,6 +73,9 @@ Route::group([
     $router->post('/front/post/create', [ForumThreadController::class, 'frontStore']);
     $router->post('/front/post/comment', [ForumPostController::class, 'frontStore']);
     $router->post('/front/quiz/create', [QuizController::class, 'assemble']);
+
+    $router->get('/front/courses', [CourseController::class, 'getAll']);
+    $router->get('/front/courses/{id}', [CourseController::class, 'getContent']);
     $router->post('/front/profile/password', [UserController::class, 'changePassword']);
 
     // Authenticated Routes

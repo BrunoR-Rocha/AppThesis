@@ -58,7 +58,6 @@ const QuizDashboard = () => {
     axiosConfig
       .get(`/profile/quizzes`)
       .then((res) => {
-        console.log(res.data);
         setQuizzes(res.data);
         setLoading(false);
       })

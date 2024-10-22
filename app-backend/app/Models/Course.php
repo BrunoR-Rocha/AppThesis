@@ -11,12 +11,14 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 
-        'description', 
-        'average_time', 
-        'difficulty', 
-        'file_path', 
-        'topic_id'
+        'title',
+        'short_description',
+        'description',
+        'average_time',
+        'difficulty',
+        'file_path',
+        'topic_id',
+        'enabled'
     ];
 
     public function lessons()
@@ -27,6 +29,11 @@ class Course extends Model
     public function questionTopic()
     {
         return $this->belongsTo(QuestionTopic::class, 'topic_id');
+    }
+
+    public function courseContents()
+    {
+        return $this->hasMany(CourseContent::class);
     }
 
     public function subscriptions()
@@ -47,5 +54,10 @@ class Course extends Model
     public function isUserSubscribed(User $user)
     {
         return $this->subscriptions()->where('user_id', $user->id)->exists();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('enabled', true);
     }
 }

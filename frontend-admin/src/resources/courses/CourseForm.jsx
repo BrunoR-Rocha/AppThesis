@@ -1,5 +1,19 @@
 import * as React from "react";
-import { SimpleForm, TextInput, required, NumberInput, FileInput, SelectInput, ReferenceInput, FileField, ImageInput, ImageField, useRedirect, useNotify } from "react-admin";
+import {
+  SimpleForm,
+  TextInput,
+  required,
+  NumberInput,
+  FileInput,
+  SelectInput,
+  ReferenceInput,
+  FileField,
+  ImageInput,
+  ImageField,
+  useRedirect,
+  useNotify,
+  BooleanInput,
+} from "react-admin";
 import { generateDifficultyChoices } from "../../utils/helpers";
 import apiUrl from "../../providers/apiUrl";
 import { httpClient } from "../../providers/dataProvider";
@@ -24,8 +38,7 @@ export default function CourseForm(props) {
     }
 
     for (let key in data) {
-      if (key === "tags")
-        formData.append(key, JSON.stringify(data[key]));
+      if (key === "tags") formData.append(key, JSON.stringify(data[key]));
       else if (key !== "image") formData.append(key, data[key]);
     }
     let requestUrl = apiUrl + "/courses";
@@ -50,19 +63,27 @@ export default function CourseForm(props) {
   return (
     <SimpleForm {...props} onSubmit={submit}>
       <TextInput source="title" validate={required()} />
-      <RichTextInput source="description" validate={required()}/>
+
+      <TextInput source="short_description" />
+
+      <RichTextInput source="description" validate={required()} />
 
       <ReferenceInput source="topic_id" reference="question_topics">
         <SelectInput optionText="name" />
       </ReferenceInput>
 
-      <NumberInput source="average_time" helperText="In minutes" step={1}/>
-      <SelectInput source="difficulty" choices={difficultyChoices} helperText="Average course difficulty" /> 
+      <NumberInput source="average_time" helperText="In minutes" step={1} />
+      <SelectInput
+        source="difficulty"
+        choices={difficultyChoices}
+        helperText="Average course difficulty"
+      />
 
       <ImageInput source="image" label="Related Image">
         <ImageField source="src" title="title" />
       </ImageInput>
 
+      <BooleanInput source="enabled" validate={required()} />
     </SimpleForm>
   );
 }

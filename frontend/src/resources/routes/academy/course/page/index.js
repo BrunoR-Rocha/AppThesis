@@ -24,10 +24,12 @@ import LinearProgress, {
 
 const CoursePage = ({ id }) => {
   const [expanded, setExpanded] = useState();
+  const [course, setCourse] = useState();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  
   const index = 1;
 
   function LinearProgressWithLabel({ value }) {
@@ -41,16 +43,6 @@ const CoursePage = ({ id }) => {
             value
           )}%`}</Typography>
         </Box>
-      </Box>
-    );
-  }
-
-  function LinearWithValueLabel() {
-    const [progress, setProgress] = React.useState(10);
-
-    return (
-      <Box sx={{ width: "100%" }}>
-        <LinearProgressWithLabel value={progress} />
       </Box>
     );
   }

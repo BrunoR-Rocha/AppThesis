@@ -13,7 +13,6 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const setUser = (updatedUser) => {
-    console.log(updatedUser);
     setUserState(updatedUser);
     const authData = JSON.parse(localStorage.getItem('auth'));
     if (authData) {

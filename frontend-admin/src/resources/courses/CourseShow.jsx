@@ -11,6 +11,7 @@ import {
   ImageField,
   Datagrid,
   ArrayField,
+  BooleanField,
 } from "react-admin";
 import { generateDifficultyChoices } from "../../utils/helpers";
 
@@ -22,14 +23,20 @@ export default function CourseShow(props) {
       <TabbedShowLayout>
         <Tab label="Details">
           <TextField source="title" />
+          <TextField source="short_description" />
           <RichTextField source="description" />
-          <ReferenceField source="topic_id" reference="question_topics" label="Topic">
+          <ReferenceField
+            source="topic_id"
+            reference="question_topics"
+            label="Topic"
+          >
             <TextField source="name" />
           </ReferenceField>
-          <NumberField source="average_time" label="Average Time (minutes)"/>
+          <NumberField source="average_time" label="Average Time (minutes)" />
           <SelectField source="difficulty" choices={difficultyChoices} />
 
-          <ImageField source="image" label="Imagem" />
+          <ImageField source="image" label="Image" />
+          <BooleanField source="enabled" label="Active" />
         </Tab>
         <Tab label="Lessons">
           <ArrayField source="lessons" label="">
