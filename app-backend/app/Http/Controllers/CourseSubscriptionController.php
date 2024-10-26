@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseSubscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CourseSubscriptionController extends Controller
 {
@@ -12,53 +14,35 @@ class CourseSubscriptionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function manageSubscription($courseId)
     {
-        //
-    }
+        $user = Auth::user();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\CourseSubscription  $courseSubscription
-     * @return \Illuminate\Http\Response
-     */
-    public function show(CourseSubscription $courseSubscription)
-    {
-        //
-    }
+        if (!$user) {
+            return response()->json([
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CourseSubscription  $courseSubscription
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CourseSubscription $courseSubscription)
-    {
-        //
-    }
+        $course = Course::findOrFail($courseId);
+        $existingSubscription = $course->subscriptions()
+            ->where('user_id', $user->id)
+            ->first();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\CourseSubscription  $courseSubscription
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(CourseSubscription $courseSubscription)
-    {
-        //
+        if ($existingSubscription) {
+            $existingSubscription->delete();
+            $isSubscribed = true;
+            $message = 'Subscription removed successfully';
+        } else {
+            $course->subscriptions()->create([
+                'user_id' => $user->id,
+            ]);
+            $isSubscribed = true;
+            $message = 'Subscribed successfully';
+        }
+
+        return response()->json(['message' => $message, 'isSubscribed' => $isSubscribed]);
     }
 }

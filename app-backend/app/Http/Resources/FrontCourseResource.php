@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Difficulty;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class FrontCourseResource extends JsonResource
 {
@@ -16,6 +17,7 @@ class FrontCourseResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -29,7 +31,10 @@ class FrontCourseResource extends JsonResource
                 'id' => $this->questionTopic->id,
                 'name' => $this->questionTopic->name
             ],
-            'contents' => $this->courseContents->count()
+            'contents' => $this->courseContents,
+            'num_contents' => $this->courseContents->count(),
+            'num_lessons' => $this->lessons->count(),
+            'is_subscribed' => $this->isUserSubscribed(Auth::user())
         ];
     }
 

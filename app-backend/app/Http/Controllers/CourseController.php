@@ -7,6 +7,7 @@ use App\Http\Resources\CourseResource;
 use App\Http\Resources\FrontCourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -160,14 +161,12 @@ class CourseController extends Controller
     public function getAll()
     {
         $courses = Course::active()->get();
-
         return FrontCourseResource::collection($courses);
     }
 
     public function getContent($id)
     {
         $course = Course::active()->whereId($id)->firstOrFail();
-
-        dd($course);
+        return new FrontCourseResource($course);
     }
 }

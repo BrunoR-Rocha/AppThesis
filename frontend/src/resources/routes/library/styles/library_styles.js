@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 import GeneralBg from "../../../media/about/background.png";
 

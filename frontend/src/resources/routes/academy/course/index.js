@@ -158,6 +158,7 @@ const Courses = () => {
                     {activeSlide === index ? (
                       <Link
                         to={"/academy/course/" + slide.id}
+                        state={{ course_id: slide.id }}
                         className="text-white font-semibold text-3xl"
                       >
                         {slide.title}
@@ -173,7 +174,7 @@ const Courses = () => {
                     <div className="flex items-start gap-3 text-[#ECECEC] ">
                       <div className="flex gap-1">
                         <FolderOpenRoundedIcon sx={{ color: "#6078DF" }} />
-                        <span>{slide.lessons} sections</span>
+                        <span>{slide.num_contents} sections</span>
                       </div>
                       <div className="flex gap-1">
                         <AccessTimeRoundedIcon sx={{ color: "#6078DF" }} />

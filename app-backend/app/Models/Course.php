@@ -33,22 +33,12 @@ class Course extends Model
 
     public function courseContents()
     {
-        return $this->hasMany(CourseContent::class);
+        return $this->hasManyThrough(CourseContent::class, Lesson::class);
     }
 
     public function subscriptions()
     {
         return $this->hasMany(CourseSubscription::class);
-    }
-
-    public function isSubscribed()
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return false;
-        }
-
-        return $this->subscriptions()->where('user_id', $user->id)->exists();
     }
 
     public function isUserSubscribed(User $user)

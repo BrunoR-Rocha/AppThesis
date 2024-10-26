@@ -21,15 +21,35 @@ import EastRoundedIcon from "@mui/icons-material/EastRounded";
 import LinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
+import { useLocation } from "react-router-dom";
+import axiosConfig from "../../../../../providers/axiosConfig";
+import { useEffect } from "react";
 
 const CoursePage = ({ id }) => {
   const [expanded, setExpanded] = useState();
   const [course, setCourse] = useState();
+  const [loading, setLoading] = useState();
+  const location = useLocation();
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
+  const { course_id } = location.state || {};
+
+  useEffect(() => {
+    setLoading(true);
+    axiosConfig
+      .get(`/front/courses/${course_id}`)
+      .then((res) => {
+        setCourse(res.data);
+        setIsSubscribed(res.data.isSubscribed || !isSubscribed);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   const index = 1;
 
   function LinearProgressWithLabel({ value }) {
@@ -47,6 +67,18 @@ const CoursePage = ({ id }) => {
     );
   }
 
+  const handleManageSubscription = () => {
+    console.log("here");
+    setLoading(true);
+    axiosConfig
+      .post(`/front/courses/manage/${course_id}`)
+      .then((res) => {
+        setIsSubscribed(res.data.isSubscribed || !isSubscribed);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  };
+
   return (
     <>
       <CourseArea>
@@ -57,22 +89,21 @@ const CoursePage = ({ id }) => {
               <BackButton iconBorder="#AAAAAA" iconColor="#AAAAAA" />
               <div className="flex flex-col gap-3 w-full lg:w-1/2">
                 <h3 className="text-3xl font-semibold text-[#ECECEC] capitalize">
-                  Course Title
+                  {course?.title}
                 </h3>
-                <p className="text-base font-medium text-white self-stretch">
-                  At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                  blanditiis praesentium voluptatum deleniti atque corrupti quos
-                  dolores et quas molestias excepturi sint occaecati.
-                </p>
+                <p
+                  className="text-base font-medium text-white self-stretch"
+                  dangerouslySetInnerHTML={{ __html: course?.description }}
+                ></p>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center flex-wrap-reverse gap-5">
                 <div className="flex gap-7 items-center ">
                   <LabeledIcon
-                    label={"3 Sections"}
+                    label={course?.num_contents + " Sections"}
                     icon={<FolderOpenRoundedIcon sx={{ color: "#FFFFFF99" }} />}
                   />
                   <LabeledIcon
-                    label={"202 lectures"}
+                    label={course?.num_lessons + " lectures"}
                     icon={
                       <PlayCircleOutlineRoundedIcon
                         sx={{ color: "#FFFFFF99" }}
@@ -80,11 +111,11 @@ const CoursePage = ({ id }) => {
                     }
                   />
                   <LabeledIcon
-                    label={"20h 17m"}
+                    label={course?.average_time}
                     icon={<AccessTimeRoundedIcon sx={{ color: "#FFFFFF99" }} />}
                   />
                   <LabeledIcon
-                    label={"Last Updated 8/2024"}
+                    label={"Last Updated " + course?.updated_at}
                     icon={
                       <NewReleasesOutlinedIcon sx={{ color: "#FFFFFF99" }} />
                     }
@@ -92,11 +123,13 @@ const CoursePage = ({ id }) => {
                 </div>
                 <div className="flex gap-3 items-center">
                   <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
-                    <span className="text-white">Difficulty</span>
+                    <span className="text-white">
+                      {course?.difficulty?.name}
+                    </span>
                   </div>
-                  <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
+                  {/* <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
                     <span className="text-white">4 hours</span>
-                  </div>
+                  </div> */}
                   <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
                     <LabeledIcon
                       icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}
@@ -108,109 +141,126 @@ const CoursePage = ({ id }) => {
             </div>
           </Wrapper>
         </CourseDisplay>
-        <div>
+        <div className="min-h-fit pb-10">
           <Wrapper>
             <div className="flex">
               <div className="basis-1/2 flex flex-col gap-6 pt-10">
                 <h3 className="text-2xl font-semibold text-white">
                   Course Contents
                 </h3>
-                <Accordion
-                  slotProps={{
-                    transition: { unmountOnExit: true },
-                  }}
-                  key={index}
-                  sx={{
-                    color: "white",
-                    backgroundColor: "transparent",
-                    boxShadow: "none",
-                  }}
-                  expanded={expanded === "content_" + index}
-                  onChange={handleChange("content_" + index)}
-                >
-                  <AccordionItem
-                    expanded={expanded === "content_" + index}
-                    expandIcon={
-                      expanded === "content_" + index ? (
-                        <KeyboardArrowUpRoundedIcon sx={{ color: "#6078DF" }} />
-                      ) : (
-                        <KeyboardArrowDownRoundedIcon
-                          sx={{ color: "#6078DF" }}
-                        />
-                      )
-                    }
-                    sx={{
-                      paddingBlock: "10px",
-                      borderRadius:
-                        expanded === "content_" + index
-                          ? "20px 20px 0 0"
-                          : "20px",
-                      border: "2px solid #1A184C",
-                      borderBottom:
-                        expanded === "content_" + index
-                          ? "none"
-                          : "2px solid #1A184C",
-                      background:
-                        expanded === "content_" + index
-                          ? "rgba(96, 120, 223, 0.5)"
-                          : "rgba(26, 24, 76, 0.25)",
-                    }}
-                  >
-                    <p className="text-[#E9F0FF] font-semibold">
-                      Lorem ipsum sit dolor emet <br />
-                      <span className="text-[#6078DF] font-medium text-sm">
-                        30min
-                      </span>
-                    </p>
-                  </AccordionItem>
-                  <AccordionItemDescription
-                    sx={{
-                      borderRight: "2px solid #1A184C",
-                      borderLeft: "2px solid #1A184C",
-                      borderTop: "none",
-                    }}
-                  >
-                    At vero eos et accusamus et iusto odio dignissimos ducimus
-                    qui blanditiis praesentium voluptatum deleniti atque
-                    corrupti quos dolores.
-                  </AccordionItemDescription>
-                </Accordion>
+                {course?.contents && course?.contents.length > 0 ? (
+                  course?.contents.map((content, index) => (
+                    <Accordion
+                      slotProps={{
+                        transition: { unmountOnExit: true },
+                      }}
+                      key={index}
+                      sx={{
+                        color: "white",
+                        backgroundColor: "transparent",
+                        boxShadow: "none",
+                      }}
+                      expanded={expanded === "content_" + index}
+                      onChange={handleChange("content_" + index)}
+                    >
+                      <AccordionItem
+                        expanded={expanded === "content_" + index}
+                        expandIcon={
+                          expanded === "content_" + index ? (
+                            <KeyboardArrowUpRoundedIcon
+                              sx={{ color: "#6078DF" }}
+                            />
+                          ) : (
+                            <KeyboardArrowDownRoundedIcon
+                              sx={{ color: "#6078DF" }}
+                            />
+                          )
+                        }
+                        sx={{
+                          paddingBlock: "10px",
+                          borderRadius:
+                            expanded === "content_" + index
+                              ? "20px 20px 0 0"
+                              : "20px",
+                          border: "2px solid #1A184C",
+                          borderBottom:
+                            expanded === "content_" + index
+                              ? "none"
+                              : "2px solid #1A184C",
+                          background:
+                            expanded === "content_" + index
+                              ? "rgba(96, 120, 223, 0.5)"
+                              : "rgba(26, 24, 76, 0.25)",
+                        }}
+                      >
+                        <p className="text-[#E9F0FF] font-semibold">
+                          Lorem ipsum sit dolor emet <br />
+                          <span className="text-[#6078DF] font-medium text-sm">
+                            30min
+                          </span>
+                        </p>
+                      </AccordionItem>
+                      <AccordionItemDescription
+                        sx={{
+                          borderRight: "2px solid #1A184C",
+                          borderLeft: "2px solid #1A184C",
+                          borderTop: "none",
+                        }}
+                      >
+                        At vero eos et accusamus et iusto odio dignissimos
+                        ducimus qui blanditiis praesentium voluptatum deleniti
+                        atque corrupti quos dolores.
+                      </AccordionItemDescription>
+                    </Accordion>
+                  ))
+                ) : (
+                  <div className="bg-[#1A184C] p-6 rounded-lg border-2 border-[#6078DF] text-center text-[#E9F0FF]">
+                    No information for now.
+                  </div>
+                )}
               </div>
               <div className="flex basis-1/2 justify-center pt-10">
-                {/* Primeiro card a mostrar, se não tiver subscrito mostra o card abaixo */}
-                {/* <div>
-                  <button className="bg-white px-10 py-4 rounded-full flex gap-4">
-                    <span className="text-[#F4AA5A] font-semibold text-base capitalize">
-                      Enroll Course Now
-                    </span>
-                    <EastRoundedIcon sx={{ color: "#F4AA5A" }} />
-                  </button>
-                </div> */}
-                {/* Se tiver subscrito mostra este */}
-                <div className="flex flex-col gap-6 bg-[#6078DF26] backdrop-blur-lg border-[1px] border-[#6078DF] rounded-lg p-6 w-3/5 h-fit">
-                  <p className="text-[#E9F0FF] text-lg font-medium">
-                    You’re almost done!
-                  </p>
-                  <div className="flex gap-2 items-center">
-                    <div className="w-full">
-                      <LinearProgress variant="determinate" value={10} />
+                <>
+                  {loading ? (
+                    <></>
+                  ) : isSubscribed ? (
+                    <div className="flex flex-col gap-6 bg-[#6078DF26] backdrop-blur-lg border-[1px] border-[#6078DF] rounded-lg p-6 w-3/5 h-fit">
+                      <p className="text-[#E9F0FF] text-lg font-medium">
+                        You’re almost done!
+                      </p>
+                      <div className="flex gap-2 items-center">
+                        <div className="w-full">
+                          <LinearProgress variant="determinate" value={10} />
+                        </div>
+                        <div>
+                          <span className="text-[#E9F0FF] font-medium text-sm">
+                            10%
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <button className="bg-[#F4AA5A] px-10 py-4 rounded-full flex gap-4">
+                          <span className="text-white font-semibold text-base capitalize">
+                            Continue Course
+                          </span>
+                          <EastRoundedIcon sx={{ color: "#FFF" }} />
+                        </button>
+                      </div>
                     </div>
-
+                  ) : (
                     <div>
-                      <span className="text-[#E9F0FF] font-medium text-sm">
-                        10%
-                      </span>
+                      <button
+                        className="bg-white px-10 py-4 rounded-full flex gap-4"
+                        onClick={handleManageSubscription}
+                      >
+                        <span className="text-[#F4AA5A] font-semibold text-base capitalize">
+                          Enroll Course Now
+                        </span>
+                        <EastRoundedIcon sx={{ color: "#F4AA5A" }} />
+                      </button>
                     </div>
-                  </div>
-                  <div>
-                    <button className="bg-[#F4AA5A] px-10 py-4 rounded-full flex gap-4">
-                      <span className="text-white font-semibold text-base capitalize">
-                        Continue Course
-                      </span>
-                      <EastRoundedIcon sx={{ color: "#FFF" }} />
-                    </button>
-                  </div>
-                </div>
+                  )}
+                </>
               </div>
             </div>
           </Wrapper>
