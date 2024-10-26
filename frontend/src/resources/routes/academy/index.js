@@ -10,6 +10,7 @@ import CustomDropdown from "../../components/general/Dropdown";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import RenderButton from "../../components/general/SectionButtons";
 
 function Academy() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -63,19 +64,6 @@ function Academy() {
       .catch(() => setLoading(false));
   };
 
-  const renderButton = (tabId, label) => (
-    <button
-      className={`py-2 px-4 font-semibold rounded-full ${
-        activeTab === tabId
-          ? "bg-white text-[#6078DF]"
-          : "bg-transparent text-[#AAA] border-[1px] border-solid border-[#4B5057]"
-      }`}
-      onClick={() => setActiveTab(tabId)}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <>
       <AcademyArea>
@@ -85,8 +73,18 @@ function Academy() {
               <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
                 Academy
               </h1>
-              {renderButton("tab1", "Quizzes")}
-              {renderButton("tab2", "Courses")}
+              <RenderButton
+                tabId="tab1"
+                label="Quizzes"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+              <RenderButton
+                tabId="tab2"
+                label="Courses"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
             </div>
             {activeTab === "tab1" && (
               <div className="flex flex-col items-center justify-center py-10 gap-10">
