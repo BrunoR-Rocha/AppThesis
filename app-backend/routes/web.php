@@ -31,6 +31,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserFavoriteController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -77,7 +78,7 @@ Route::group([
 
     // Authenticated Routes
     $router->group(['middleware' => 'auth:api'], function (Router $router) {
-        // Authenticated Routes
+
         $router->post('/logout',                                        [AuthController::class, 'logout']);
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);
@@ -86,6 +87,7 @@ Route::group([
         $router->get('profile/quizzes',                                 [QuizController::class, 'getUserQuizDashboard']);
         $router->post('questions/{id}',                                 [QuestionController::class, 'update']);
         $router->post('courses/{id}',                                   [CourseController::class, 'update']);
+
         $router->resources([
             'users' =>                                                  UserController::class,
             'faqs' =>                                                   FaqController::class,
@@ -111,9 +113,13 @@ Route::group([
             'course_interactive_elements' =>                            CourseInteractiveElementController::class,
             'course_contents' =>                                        CourseContentController::class,
         ]);
+
+        $router->get('front/library',                                  [LibraryPageController::class, 'getAll']);
+        $router->post('library/favorites',                              [UserFavoriteController::class, 'storeLibraryFavorite']);
+
         $router->post('forum_threads/{thread}/like',                    [ForumThreadLikeController::class, 'like']);
         $router->delete('forum_threads/{thread}/like',                  [ForumThreadLikeController::class, 'unlike']);
-        
+
         $router->get('/front/courses',                                  [CourseController::class, 'getAll']);
         $router->get('/front/courses/{id}',                             [CourseController::class, 'getContent']);
 

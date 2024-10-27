@@ -77,4 +77,14 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         $this->hasMany(UserQuiz::class);
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(UserFavorite::class);
+    }
+
+    public function favoriteItems()
+    {
+        return $this->morphMany(UserFavorite::class, 'favoritable');
+    }
 }

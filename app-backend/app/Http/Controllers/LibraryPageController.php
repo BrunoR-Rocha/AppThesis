@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Http\Resources\FrontLibraryPageResource;
 use App\Http\Resources\LibraryPageResource;
 use App\Models\LibraryPage;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class LibraryPageController extends Controller
         ]);
 
         return response()->json([
-            'id' => $page->id, 
+            'id' => $page->id,
             'message' => __('validator.success'),
         ], 200);
     }
@@ -73,7 +74,7 @@ class LibraryPageController extends Controller
         }
 
         $page = LibraryPage::findOrFail($id);
-        
+
         $page->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -88,11 +89,19 @@ class LibraryPageController extends Controller
     public function destroy($id)
     {
         $page = LibraryPage::findOrFail($id);
-        
+
         $page->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function getAll()
+    {
+        $libraryPages = LibraryPage::all();
+
+        return FrontLibraryPageResource::collection($libraryPages);
     }
 }
