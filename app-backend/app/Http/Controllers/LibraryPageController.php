@@ -104,4 +104,11 @@ class LibraryPageController extends Controller
 
         return FrontLibraryPageResource::collection($libraryPages);
     }
+
+    public function showPage($id)
+    {
+        $libraryPage = LibraryPage::findOrFail($id);
+
+        return new FrontLibraryPageResource($libraryPage);
+    }
 }

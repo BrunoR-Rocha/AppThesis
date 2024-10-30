@@ -7,6 +7,7 @@ import { useContext } from "react";
 import AuthContext from "../../../context/AuthContext";
 import ProfileSettings from "./settings";
 import QuizDashboard from "./quiz";
+import Favorites from "./favorites";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -63,7 +64,7 @@ const Profile = () => {
               {activeTab === "tab1" && <ProfileDashboard />}
               {activeTab === "tab2" && <></>}
               {activeTab === "tab3" && <QuizDashboard />}
-              {activeTab === "tab4" && <></>}
+              {activeTab === "tab4" && <Favorites />}
               {activeTab === "tab5" && <ProfileSettings />}
             </div>
           </Wrapper>

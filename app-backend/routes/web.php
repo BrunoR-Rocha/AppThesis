@@ -85,6 +85,8 @@ Route::group([
         $router->post('quiz/{id}/save-progress',                        [QuizController::class, 'saveProgress']);
         $router->post('quiz/{id}/questions',                            [QuizController::class, 'getQuizInfo']);
         $router->get('profile/quizzes',                                 [QuizController::class, 'getUserQuizDashboard']);
+        $router->get('profile/favorites',                               [UserFavoriteController::class, 'getFavoritePages']);
+
         $router->post('questions/{id}',                                 [QuestionController::class, 'update']);
         $router->post('courses/{id}',                                   [CourseController::class, 'update']);
 
@@ -114,7 +116,8 @@ Route::group([
             'course_contents' =>                                        CourseContentController::class,
         ]);
 
-        $router->get('front/library',                                  [LibraryPageController::class, 'getAll']);
+        $router->get('front/library',                                   [LibraryPageController::class, 'getAll']);
+        $router->get('front/library/{id}',                              [LibraryPageController::class, 'showPage']);
         $router->post('library/favorites',                              [UserFavoriteController::class, 'storeLibraryFavorite']);
 
         $router->post('forum_threads/{thread}/like',                    [ForumThreadLikeController::class, 'like']);

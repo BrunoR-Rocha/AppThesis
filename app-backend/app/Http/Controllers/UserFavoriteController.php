@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserFavoriteResource;
 use App\Models\LibraryPage;
 use App\Models\UserFavorite;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class UserFavoriteController extends Controller
                 'favoritable_id' => $contentId,
                 'favoritable_type' => $modelClass,
             ]);
+
             return response()->json(['message' => 'Item added to favorites.'], 200);
         }
     }
@@ -54,6 +56,6 @@ class UserFavoriteController extends Controller
         $user = Auth::user();
         $favoritePages = $user->favorites()->where('favoritable_type', LibraryPage::class)->with('favoritable')->get();
 
-        return response()->json($favoritePages);
+        return UserFavoriteResource::collection($favoritePages);
     }
 }

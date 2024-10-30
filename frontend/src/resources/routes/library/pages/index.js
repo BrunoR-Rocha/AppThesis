@@ -9,17 +9,32 @@ import Wrapper from "../../../components/general/Wrapper";
 import EastIcon from "@mui/icons-material/East";
 import WestIcon from "@mui/icons-material/West";
 import BackButton from "../../../components/general/BackButton";
+import axiosConfig from "../../../../providers/axiosConfig";
 
 const LibraryPage = () => {
   const { id } = useParams();
   const location = useLocation();
-  const page = location.state?.page;
-  const navigate = useNavigate();
+  const statePage = location.state?.page;
+  const [page, setPage] = useState();
+  const [loading, setLoading] = useState();
+  const [selectedModule, setSelectedModule] = useState();
 
-  // In case of inexistence of modules, request information and add info to modules var
-  let year = page?.date ? new Date(page.date).getFullYear() : "";
+  useEffect(() => {
+    setLoading(true);
+    axiosConfig
+      .get(`/front/library/${statePage.id}`)
+      .then((res) => {
+        setPage(res.data);
+        if (res.data.modules && res.data.modules.length > 0) {
+          setSelectedModule(res.data?.modules[0]);
+        }
 
-  const [selectedModule, setSelectedModule] = useState(page?.modules[0]);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  let year = page?.date ? new Date(page?.date).getFullYear() : "";
 
   useEffect(() => {
     if (location.hash) {
@@ -37,7 +52,7 @@ const LibraryPage = () => {
 
   const handleNextChapterClick = () => {
     const currentIndex = page?.modules.findIndex(
-      (mod) => mod.id === selectedModule.id
+      (mod) => mod.id === selectedModule?.id
     );
     if (currentIndex !== -1 && currentIndex < page.modules.length - 1 && page) {
       const nextModule = page.modules[currentIndex + 1];
@@ -47,7 +62,7 @@ const LibraryPage = () => {
 
   const handlePreviousChapterClick = () => {
     const currentIndex = page?.modules.findIndex(
-      (mod) => mod.id === selectedModule.id
+      (mod) => mod.id === selectedModule?.id
     );
     if (currentIndex > 0 && page) {
       const previousModule = page.modules[currentIndex - 1];
@@ -55,11 +70,11 @@ const LibraryPage = () => {
     }
   };
 
-  const currentIndex = page?.modules.findIndex(
-    (mod) => mod.id === selectedModule.id
+  const currentIndex = page?.modules?.findIndex(
+    (mod) => mod.id === selectedModule?.id
   );
   const hasNextModule =
-    currentIndex !== -1 && currentIndex < page.modules.length - 1;
+    currentIndex !== -1 && currentIndex < page?.modules?.length - 1;
   const hasPreviousModule = currentIndex > 0;
 
   return (
@@ -89,7 +104,7 @@ const LibraryPage = () => {
                         key={module.id}
                         onClick={() => handleButtonClick(module)}
                         className={`px-4 py-1 rounded-full ${
-                          selectedModule.id === module.id
+                          selectedModule?.id === module.id
                             ? "bg-white text-[#6078DF] border-4 border-solid border-[#FFFFFF1A]"
                             : "bg-transparent text-[#BABABA] border-2 border-solid border-[#272A2E]"
                         }`}
@@ -100,13 +115,13 @@ const LibraryPage = () => {
                   ))}
             </div>
 
-            <div id={selectedModule.id} className="mt-8 text-white">
+            <div id={selectedModule?.id} className="mt-8 text-white">
               <h3 className="text-2xl font-bold mb-8">
-                {selectedModule.title}
+                {selectedModule?.title}
               </h3>
               <div
                 className="flex flex-col gap-4 leading-8 border-b-[0.5px] border-b-[#040A17] pb-5"
-                dangerouslySetInnerHTML={{ __html: selectedModule.content }}
+                dangerouslySetInnerHTML={{ __html: selectedModule?.content }}
               />
               <div className="flex flex-1 justify-between">
                 {hasPreviousModule ? (
