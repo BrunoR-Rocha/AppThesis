@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->string('journal_title');
             $table->string('doi');
             $table->boolean('enabled');

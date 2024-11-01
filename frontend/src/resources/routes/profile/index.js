@@ -8,6 +8,7 @@ import AuthContext from "../../../context/AuthContext";
 import ProfileSettings from "./settings";
 import QuizDashboard from "./quiz";
 import Favorites from "./favorites";
+import ProfileCourses from "./courses";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -62,7 +63,7 @@ const Profile = () => {
           <Wrapper>
             <div className="flex">
               {activeTab === "tab1" && <ProfileDashboard />}
-              {activeTab === "tab2" && <></>}
+              {activeTab === "tab2" && <ProfileCourses />}
               {activeTab === "tab3" && <QuizDashboard />}
               {activeTab === "tab4" && <Favorites />}
               {activeTab === "tab5" && <ProfileSettings />}

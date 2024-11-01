@@ -54,38 +54,48 @@ const Favorites = () => {
           </>
         ) : (
           <>
-            <h5 className="text-white font-semibold text-lg">Recently Saved</h5>
-            <div className="flex gap-4 mt-4">
-              {recentFavorites && recentFavorites.length > 0 ? (
-                recentFavorites.map((favorite) => (
-                  <LibraryCard
-                    key={favorite.id}
-                    page={favorite}
-                    savedPages={savedPages}
-                    handleBookmark={handleBookmark}
-                  />
-                ))
-              ) : (
-                <p>No recent favorites found.</p>
-              )}
+            <div className="d-flex flex-col">
+              <h5 className="text-white font-semibold text-lg">
+                Recently Saved
+              </h5>
+              <div className="flex gap-4 mt-4">
+                {recentFavorites && recentFavorites.length > 0 ? (
+                  recentFavorites.map((favorite) => (
+                    <LibraryCard
+                      key={favorite.id}
+                      page={favorite}
+                      savedPages={savedPages}
+                      handleBookmark={handleBookmark}
+                    />
+                  ))
+                ) : (
+                  <p className="text-white font-medium text-base">
+                    No recent favorites found.
+                  </p>
+                )}
+              </div>
             </div>
 
-            <h5 className="text-white text-lg font-semibold mt-8">
-              All Favorites
-            </h5>
-            <div className="grid grid-cols-1 gap-4 mt-4">
-              {favorites && favorites.length > 0 ? (
-                favorites.map((favorite) => (
-                  <LibraryCard
-                    key={favorite.id}
-                    page={favorite}
-                    savedPages={savedPages}
-                    handleBookmark={handleBookmark}
-                  />
-                ))
-              ) : (
-                <p>No favorites saved yet.</p>
-              )}
+            <div className="d-flex flex-col">
+              <h5 className="text-white text-lg font-semibold mt-8">
+                All Favorites
+              </h5>
+              <div className="grid grid-cols-1 gap-4 mt-4">
+                {favorites && favorites.length > 0 ? (
+                  favorites.map((favorite) => (
+                    <LibraryCard
+                      key={favorite.id}
+                      page={favorite}
+                      savedPages={savedPages}
+                      handleBookmark={handleBookmark}
+                    />
+                  ))
+                ) : (
+                  <p className="text-white font-medium text-base">
+                    No favorites saved yet.
+                  </p>
+                )}
+              </div>
             </div>
           </>
         )}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FrontCourseResource;
 use App\Models\Course;
 use App\Models\CourseSubscription;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class CourseSubscriptionController extends Controller
 
         if ($existingSubscription) {
             $existingSubscription->delete();
-            $isSubscribed = true;
+            $isSubscribed = false;
             $message = 'Subscription removed successfully';
         } else {
             $course->subscriptions()->create([
@@ -44,5 +45,20 @@ class CourseSubscriptionController extends Controller
         }
 
         return response()->json(['message' => $message, 'isSubscribed' => $isSubscribed]);
+    }
+
+    public function getUserCoursesDashboard()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        $courses = $user->courseSubscriptions()->with('course')->get()->pluck('course');
+
+        return FrontCourseResource::collection($courses);
     }
 }

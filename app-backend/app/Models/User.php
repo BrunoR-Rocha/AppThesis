@@ -53,9 +53,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany(Quiz::class);
     }
 
-    public function courses()
+    public function courseSubscriptions()
     {
-        return $this->hasManyThrough(Course::class, CourseSubscription::class);
+        return $this->hasMany(CourseSubscription::class);
     }
 
     public function sendEmailVerificationNotification()

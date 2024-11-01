@@ -46,6 +46,12 @@ class Course extends Model
         return $this->subscriptions()->where('user_id', $user->id)->exists();
     }
 
+    public function getUserSubscribedDateAttribute()
+    {
+        $subscription = $this->subscriptions()->where('user_id', Auth::user()->id)->first();
+        return $subscription ? $subscription->created_at : null;
+    }
+
     public function scopeActive($query)
     {
         return $query->where('enabled', true);

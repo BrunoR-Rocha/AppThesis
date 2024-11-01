@@ -3,16 +3,9 @@ import axiosConfig from "../../../providers/axiosConfig";
 import Wrapper from "../../components/general/Wrapper";
 import Skeleton from "../../components/general/Skeleton";
 import ProgressCircle from "../academy/quiz/components/Progress";
+import { QuizDashboardComponent } from "./style";
 
 const QuizDashboard = () => {
-  const QuizDashboardComponent = ({ children }) => {
-    return (
-      <div className="flex flex-1 bg-[#6078DF26] p-7 gap-4 rounded-xl border border-[#6078DF] items-center backdrop-blur-xl">
-        {children}
-      </div>
-    );
-  };
-
   const OverviewBox = ({
     value,
     percentage = null,

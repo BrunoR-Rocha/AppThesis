@@ -1,0 +1,29 @@
+import { useNavigate } from "react-router-dom";
+import {
+  LibraryItem,
+  LibraryTitle,
+} from "../../../routes/library/styles/library_styles";
+
+const JournalCard = ({ journal }) => {
+  const navigate = useNavigate();
+
+  return (
+    <LibraryItem className="basis-1/3">
+      <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-4">
+          <LibraryTitle
+            onClick={() => journal.link && window.open(journal.link, "_blank")}
+            className="cursor-pointer"
+          >
+            {journal.title}
+          </LibraryTitle>
+          <p className="text-sm font-semibold uppercase text-white">
+            {journal.publisher}
+          </p>
+        </div>
+      </div>
+    </LibraryItem>
+  );
+};
+
+export default JournalCard;

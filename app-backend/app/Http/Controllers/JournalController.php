@@ -35,7 +35,7 @@ class JournalController extends Controller
         $validatedData = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'publisher' => 'nullable|string',
-            'link' => 'required|string', 
+            'link' => 'required|string',
             'citeScore' => 'nullable',
             'subjectArea' => 'required',
             'SNIP' => 'required',
@@ -60,7 +60,7 @@ class JournalController extends Controller
         ]);
 
         return response()->json([
-            'id' => $journal->id, 
+            'id' => $journal->id,
             'message' => __('validator.success'),
         ], 200);
     }
@@ -98,33 +98,30 @@ class JournalController extends Controller
     public function autoUpdateJournalData()
     {
         $theme = SysConfig::tag('theme')->first()->value;
-        $response = Http::get('https://api.crossref.org/journals', [
-            'query' => $theme,
-            'rows' => 60
+        // $response = Http::get('https://api.crossref.org/journals', [
+        //     'query' => $theme,
+        //     'rows' => 60
+        // ]);
+
+        $response = Http::get('https://api.openalex.org/journals', [
+            'search' => $theme,
+            'per-page' => 70,
+            'mailto' => 'brunor_gon_rocha@hotmail.com'
         ]);
 
         if ($response->successful()) {
             $data = $response->json();
 
-            foreach ($data['message']['items'] as $journalData) {
-
-                $issn = $journalData['ISSN'][0] ?? null;
-                $publisher = $journalData['publisher'] ?? null;
-
-                if ($issn) {
-                    $link = $publisher ? 'https://scholar.google.com/scholar?q=' . urlencode($publisher . ' ' . $journalData['title']) : 'https://scholar.google.com/scholar?q=' . urlencode($journalData['title']);
-                } else {
-                    $link = null;
-                }
-
+            foreach ($data['results'] as $journalData) {
                 Journal::updateOrCreate(
-                    ['title' => $journalData['title']],
+                    ['title' => $journalData['display_name']],
                     [
-                        'publisher' => $journalData['publisher'] ?? '',
-                        'link' => $link,
-                        'subject_area' => json_encode($journalData['subjects'] ?? []),
-                        'issn' => json_encode($journalData['ISSN'] ?? []),
-                        'doi_breakdown_by_year' => json_encode($journalData['breakdowns']['dois-by-issued-year'] ?? []),
+                        'publisher' => $journalData['host_organization_name'] ?? '',
+                        'link' => $journalData['homepage_url'],
+                        'subject_area' => json_encode(array_map(function ($topic) {
+                            return $topic['display_name'];
+                        }, $journalData['topics'] ?? [])),
+                        'issn' => json_encode($journalData['issn'] ?? []),
                     ]
                 );
             }
@@ -146,7 +143,15 @@ class JournalController extends Controller
         $journal->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
+    }
+
+    public function getAll()
+    {
+        $journals = Journal::active()->get();
+
+        return JournalResource::collection($journals);
     }
 }

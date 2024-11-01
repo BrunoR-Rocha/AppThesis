@@ -53,3 +53,14 @@ export const QuizOption = styled("div")`
     cursor: pointer;
   }
 `;
+
+export const CourseText = styled("p")`
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  align-self: stretch;
+  * {
+    color: #fff !important;
+    line-height: 24px !important;
+  }
+`;

@@ -32,7 +32,7 @@ export const LibraryItem = styled("div")`
 
 export const LibraryTitle = styled("p")`
     color: #FFF;
-    font-size: 32px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 600;
     line-height: 40px; 

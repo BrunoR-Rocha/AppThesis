@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Wrapper from "../../../../components/general/Wrapper";
-import { CourseArea, CourseDisplay } from "../../style/academy_style";
+import {
+  CourseArea,
+  CourseDisplay,
+  CourseText,
+} from "../../style/academy_style";
 import BackButton from "../../../../components/general/BackButton";
 import { ReactComponent as Flower } from "../../../../media/general/flower.svg";
 import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
@@ -43,8 +47,9 @@ const CoursePage = ({ id }) => {
     axiosConfig
       .get(`/front/courses/${course_id}`)
       .then((res) => {
+        console.log(res.data);
         setCourse(res.data);
-        setIsSubscribed(res.data.isSubscribed || !isSubscribed);
+        setIsSubscribed(res.data.is_subscribed);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -68,7 +73,6 @@ const CoursePage = ({ id }) => {
   }
 
   const handleManageSubscription = () => {
-    console.log("here");
     setLoading(true);
     axiosConfig
       .post(`/front/courses/manage/${course_id}`)
@@ -91,10 +95,9 @@ const CoursePage = ({ id }) => {
                 <h3 className="text-3xl font-semibold text-[#ECECEC] capitalize">
                   {course?.title}
                 </h3>
-                <p
-                  className="text-base font-medium text-white self-stretch"
+                <CourseText
                   dangerouslySetInnerHTML={{ __html: course?.description }}
-                ></p>
+                ></CourseText>
               </div>
               <div className="flex justify-between items-center flex-wrap-reverse gap-5">
                 <div className="flex gap-7 items-center ">
@@ -122,14 +125,24 @@ const CoursePage = ({ id }) => {
                   />
                 </div>
                 <div className="flex gap-3 items-center">
+                  {isSubscribed && (
+                    <div className="bg-[#FFF] rounded-md backdrop-blur-sm px-5 py-3">
+                      <button
+                        className="px-5 rounded-full flex gap-4"
+                        onClick={handleManageSubscription}
+                      >
+                        <span className="text-[#F4AA5A] font-semibold text-base capitalize">
+                          Leave Course Now
+                        </span>
+                        <EastRoundedIcon sx={{ color: "#F4AA5A" }} />
+                      </button>
+                    </div>
+                  )}
                   <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
                     <span className="text-white">
                       {course?.difficulty?.name}
                     </span>
                   </div>
-                  {/* <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
-                    <span className="text-white">4 hours</span>
-                  </div> */}
                   <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
                     <LabeledIcon
                       icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}

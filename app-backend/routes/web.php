@@ -59,6 +59,7 @@ Route::group([
     $router->get('storage/{folderName}/{filename}',                     [MediaController::class, 'showMedia']);
 
     $router->get('/journals/autoUpdate',                                [JournalController::class, 'autoUpdateJournalData']);
+    $router->get('/news/autoUpdate',                                    [NewsController::class, 'autoUpdateNews']);
 
     $router->post('/admin/login',                                       [AuthController::class, 'adminLogin']);
 
@@ -84,8 +85,10 @@ Route::group([
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);
         $router->post('quiz/{id}/save-progress',                        [QuizController::class, 'saveProgress']);
         $router->post('quiz/{id}/questions',                            [QuizController::class, 'getQuizInfo']);
+
         $router->get('profile/quizzes',                                 [QuizController::class, 'getUserQuizDashboard']);
         $router->get('profile/favorites',                               [UserFavoriteController::class, 'getFavoritePages']);
+        $router->get('profile/courses',                                 [CourseSubscriptionController::class, 'getUserCoursesDashboard']);
 
         $router->post('questions/{id}',                                 [QuestionController::class, 'update']);
         $router->post('courses/{id}',                                   [CourseController::class, 'update']);
@@ -115,6 +118,9 @@ Route::group([
             'course_interactive_elements' =>                            CourseInteractiveElementController::class,
             'course_contents' =>                                        CourseContentController::class,
         ]);
+
+        $router->get('front/news',                                      [NewsController::class, 'getAll']);
+        $router->get('front/journals',                                  [JournalController::class, 'getAll']);
 
         $router->get('front/library',                                   [LibraryPageController::class, 'getAll']);
         $router->get('front/library/{id}',                              [LibraryPageController::class, 'showPage']);

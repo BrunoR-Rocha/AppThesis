@@ -17,7 +17,6 @@ class FrontCourseResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -34,7 +33,8 @@ class FrontCourseResource extends JsonResource
             'contents' => $this->courseContents,
             'num_contents' => $this->courseContents->count(),
             'num_lessons' => $this->lessons->count(),
-            'is_subscribed' => $this->isUserSubscribed(Auth::user())
+            'is_subscribed' => $this->isUserSubscribed(Auth::user()),
+            'subscribed_at' => $this->user_subscribed_date ? $this->user_subscribed_date->format('d/m/Y') : null,
         ];
     }
 
