@@ -32,9 +32,18 @@ class FrontCourseResource extends JsonResource
             ],
             'contents' => $this->courseContents,
             'num_contents' => $this->courseContents->count(),
+            'lessons' => $this->lessons->map(function ($lesson) {
+                return [
+                    'id' => $lesson->id,
+                    'title' => $lesson->title,
+                    'description' => $lesson->short_description,
+                    'estimated_duration' =>  $this->handleTime($lesson->estimated_duration),
+                ];
+            }),
             'num_lessons' => $this->lessons->count(),
             'is_subscribed' => $this->isUserSubscribed(Auth::user()),
             'subscribed_at' => $this->user_subscribed_date ? $this->user_subscribed_date->format('d/m/Y') : null,
+            'general_progress' => $this->general_progress . '%',
         ];
     }
 

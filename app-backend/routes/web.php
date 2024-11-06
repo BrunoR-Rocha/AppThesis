@@ -50,18 +50,19 @@ Route::group([
     'prefix' => '/backend',
 ], function (Router $router) {
 
-    // Non-Authenticated Routes
-    $router->post('/register',                                          [AuthController::class, 'register']);
-    $router->post('/login',                                             [AuthController::class, 'login']);
-    $router->post('/forgot/email',                                      [ForgotPasswordController::class, 'sendResetLinkEmail']);
-    $router->post('/forgot/reset',                                      [ResetPasswordController::class, 'reset']);
+    $router->middleware('throttle:auth')->group(function (Router $router) {
+        $router->post('/register',                                      [AuthController::class, 'register']);
+        $router->post('/login',                                         [AuthController::class, 'login']);
+        $router->post('/forgot/email',                                  [ForgotPasswordController::class, 'sendResetLinkEmail']);
+        $router->post('/forgot/reset',                                  [ResetPasswordController::class, 'reset']);
+
+        $router->post('/admin/login',                                   [AuthController::class, 'adminLogin']);
+    });
 
     $router->get('storage/{folderName}/{filename}',                     [MediaController::class, 'showMedia']);
 
     $router->get('/journals/autoUpdate',                                [JournalController::class, 'autoUpdateJournalData']);
     $router->get('/news/autoUpdate',                                    [NewsController::class, 'autoUpdateNews']);
-
-    $router->post('/admin/login',                                       [AuthController::class, 'adminLogin']);
 
     $router->get('/llm/health',                                         [ChatbotController::class, 'health']);
     $router->get('/llm/topic',                                          [QuestionTopicController::class, 'generate']);

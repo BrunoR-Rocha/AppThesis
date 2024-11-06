@@ -16,6 +16,7 @@ import EmailConfirmation from "./resources/routes/auth/confirmation";
 import Policy from "./resources/routes/policies/policy";
 import Forgot from "./resources/routes/auth/forgot";
 import ResetPassword from "./resources/routes/auth/reset";
+import CourseLearn from "./resources/routes/academy/course/learn";
 
 const routes = [
   // Public Routes
@@ -86,6 +87,11 @@ const routes = [
   {
     path: "/academy/course/:id",
     element: <CoursePage />,
+    protected: true,
+  },
+  {
+    path: "/academy/course/:id/learn",
+    element: <CourseLearn />,
     protected: true,
   },
   {

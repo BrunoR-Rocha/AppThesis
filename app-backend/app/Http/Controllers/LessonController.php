@@ -34,6 +34,8 @@ class LessonController extends Controller
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
+            'short_description' => 'nullable|string',
+            'estimated_duration' => 'nullable|integer',
         ]);
 
         if ($validatedData->fails()) {
@@ -47,10 +49,12 @@ class LessonController extends Controller
             'course_id' => $request->course_id,
             'title' => $request->title,
             'content' => $request->content,
+            'short_description' => $request->short_description,
+            'estimated_duration' => $request->estimated_duration,
         ]);
 
         return response()->json([
-            'id' => $lesson->id, 
+            'id' => $lesson->id,
             'message' => __('validator.success'),
         ], 200);
     }
@@ -81,6 +85,8 @@ class LessonController extends Controller
             'course_id' => 'sometimes|exists:courses,id',
             'title' => 'sometimes|string|max:255',
             'content' => 'nullable|string',
+            'short_description' => 'nullable|string',
+            'estimated_duration' => 'nullable|integer',
         ]);
 
         if ($validatedData->fails()) {
@@ -96,6 +102,8 @@ class LessonController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'course_id' => $request->course_id,
+            'short_description' => $request->short_description,
+            'estimated_duration' => $request->estimated_duration,
         ]);
 
         return $lesson;
@@ -110,12 +118,12 @@ class LessonController extends Controller
     public function destroy($id)
     {
         $lesson = Lesson::findOrFail($id);
-        
+
         $lesson->delete();
 
         return response()->json([
-            'error' => 'successfully_deleted', 'message' => __('errors.successfully_deleted'),
+            'error' => 'successfully_deleted',
+            'message' => __('errors.successfully_deleted'),
         ]);
-
     }
 }

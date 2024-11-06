@@ -45,8 +45,6 @@ class Quiz extends Model
             $totalTime += Difficulty::getEstimatedTime($question->difficulty);
         }
 
-        // $totalMinutes = ceil($totalTime / 60);
-
         return $totalTime;
     }
 }

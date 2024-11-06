@@ -24,11 +24,10 @@ export default function LessonShow(props) {
         <Tab label="Details">
           <TextField source="title" />
           <RichTextField source="content" />
-          <ReferenceField
-            source="course_id"
-            reference="courses"
-            label="Course"
-          >
+          <TextField source="short_description" />
+          <NumberField source="estimated_duration" />
+
+          <ReferenceField source="course_id" reference="courses" label="Course">
             <TextField source="title" />
           </ReferenceField>
         </Tab>

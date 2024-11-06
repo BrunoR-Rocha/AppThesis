@@ -5,6 +5,7 @@ import {
   required,
   SelectInput,
   ReferenceInput,
+  NumberInput,
 } from "react-admin";
 
 const RichTextInput = React.lazy(() =>
@@ -14,7 +15,6 @@ const RichTextInput = React.lazy(() =>
 );
 
 export default function LessonForm(props) {
-
   return (
     <SimpleForm {...props}>
       <TextInput source="title" validate={required()} />
@@ -23,6 +23,13 @@ export default function LessonForm(props) {
       <ReferenceInput source="course_id" reference="courses">
         <SelectInput optionText="title" />
       </ReferenceInput>
+
+      <TextInput source="short_description" />
+      <NumberInput
+        source="estimated_duration"
+        label="Estimated duration (minutes)"
+        min={1}
+      />
     </SimpleForm>
   );
 }

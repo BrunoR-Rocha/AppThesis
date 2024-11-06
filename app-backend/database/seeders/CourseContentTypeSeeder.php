@@ -14,7 +14,7 @@ class CourseContentTypeSeeder extends Seeder
      */
     public function run()
     {
-        $types = ['E-book', 'Video', 'Podcast', 'Article', 'Interactive Video'];
+        $types = ['Video', 'Quiz', 'Text', 'Article', 'Assignment', 'Interactive Video'];
 
         foreach ($types as $type) {
             CourseContentType::firstOrCreate(

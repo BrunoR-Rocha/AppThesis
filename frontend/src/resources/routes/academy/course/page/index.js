@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Wrapper from "../../../../components/general/Wrapper";
 import {
   CourseArea,
@@ -7,12 +7,10 @@ import {
 } from "../../style/academy_style";
 import BackButton from "../../../../components/general/BackButton";
 import { ReactComponent as Flower } from "../../../../media/general/flower.svg";
-import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import NewReleasesOutlinedIcon from "@mui/icons-material/NewReleasesOutlined";
 import LabeledIcon from "../../../../components/general/LabeledIcon";
-import GradeRoundedIcon from "@mui/icons-material/GradeRounded";
 import { Accordion, Box, Typography } from "@mui/material";
 import {
   AccordionItem,
@@ -25,9 +23,9 @@ import EastRoundedIcon from "@mui/icons-material/EastRounded";
 import LinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosConfig from "../../../../../providers/axiosConfig";
-import { useEffect } from "react";
+import CourseProgress from "../../../../components/app/courses/CourseProgress";
 
 const CoursePage = ({ id }) => {
   const [expanded, setExpanded] = useState();
@@ -35,7 +33,7 @@ const CoursePage = ({ id }) => {
   const [loading, setLoading] = useState();
   const location = useLocation();
   const [isSubscribed, setIsSubscribed] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -83,6 +81,10 @@ const CoursePage = ({ id }) => {
       .catch(() => setLoading(false));
   };
 
+  const handleCourseLearn = () => {
+    navigate(`/academy/course/${course?.id}/learn`);
+  };
+
   return (
     <>
       <CourseArea>
@@ -101,10 +103,6 @@ const CoursePage = ({ id }) => {
               </div>
               <div className="flex justify-between items-center flex-wrap-reverse gap-5">
                 <div className="flex gap-7 items-center ">
-                  <LabeledIcon
-                    label={course?.num_contents + " Sections"}
-                    icon={<FolderOpenRoundedIcon sx={{ color: "#FFFFFF99" }} />}
-                  />
                   <LabeledIcon
                     label={course?.num_lessons + " lectures"}
                     icon={
@@ -143,12 +141,12 @@ const CoursePage = ({ id }) => {
                       {course?.difficulty?.name}
                     </span>
                   </div>
-                  <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
+                  {/* <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
                     <LabeledIcon
                       icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}
                       label={" 4.7 (218 ratings)"}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -161,8 +159,8 @@ const CoursePage = ({ id }) => {
                 <h3 className="text-2xl font-semibold text-white">
                   Course Contents
                 </h3>
-                {course?.contents && course?.contents.length > 0 ? (
-                  course?.contents.map((content, index) => (
+                {course?.lessons && course?.lessons.length > 0 ? (
+                  course?.lessons.map((lesson, index) => (
                     <Accordion
                       slotProps={{
                         transition: { unmountOnExit: true },
@@ -207,9 +205,9 @@ const CoursePage = ({ id }) => {
                         }}
                       >
                         <p className="text-[#E9F0FF] font-semibold">
-                          Lorem ipsum sit dolor emet <br />
+                          {lesson?.title} <br />
                           <span className="text-[#6078DF] font-medium text-sm">
-                            30min
+                            {lesson.estimated_duration}
                           </span>
                         </p>
                       </AccordionItem>
@@ -220,9 +218,7 @@ const CoursePage = ({ id }) => {
                           borderTop: "none",
                         }}
                       >
-                        At vero eos et accusamus et iusto odio dignissimos
-                        ducimus qui blanditiis praesentium voluptatum deleniti
-                        atque corrupti quos dolores.
+                        {lesson?.description}
                       </AccordionItemDescription>
                     </Accordion>
                   ))
@@ -238,21 +234,15 @@ const CoursePage = ({ id }) => {
                     <></>
                   ) : isSubscribed ? (
                     <div className="flex flex-col gap-6 bg-[#6078DF26] backdrop-blur-lg border-[1px] border-[#6078DF] rounded-lg p-6 w-3/5 h-fit">
-                      <p className="text-[#E9F0FF] text-lg font-medium">
-                        You’re almost done!
-                      </p>
-                      <div className="flex gap-2 items-center">
-                        <div className="w-full">
-                          <LinearProgress variant="determinate" value={10} />
-                        </div>
-                        <div>
-                          <span className="text-[#E9F0FF] font-medium text-sm">
-                            10%
-                          </span>
-                        </div>
-                      </div>
+                      <CourseProgress
+                        label={"You're almost done!"}
+                        value={course?.general_progress}
+                      />
                       <div>
-                        <button className="bg-[#F4AA5A] px-10 py-4 rounded-full flex gap-4">
+                        <button
+                          className="bg-[#F4AA5A] px-10 py-4 rounded-full flex gap-4"
+                          onClick={handleCourseLearn}
+                        >
                           <span className="text-white font-semibold text-base capitalize">
                             Continue Course
                           </span>

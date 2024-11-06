@@ -56,4 +56,27 @@ class Course extends Model
     {
         return $query->where('enabled', true);
     }
+
+    public function getGeneralProgressAttribute()
+    {
+        $userId = Auth::user()->id;
+
+        if (!$userId) {
+            return 0;
+        }
+
+        $totalLessons = $this->lessons()->count();
+        if ($totalLessons === 0) {
+            return 0; 
+        }
+
+        $userProgress = CourseProgress::where('user_id', $userId)
+            ->where('course_id', $this->id)
+            ->sum('progress');
+
+        $generalProgress = $userProgress / $totalLessons;
+
+        return round($generalProgress, 2);
+    }
+
 }

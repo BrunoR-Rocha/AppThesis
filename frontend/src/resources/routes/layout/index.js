@@ -5,12 +5,15 @@ import Footer from "../../components/main/Footer";
 
 const CustomLayout = () => {
   const location = useLocation();
+
   const hiddenRoutes = [
     "/login",
     "/register",
     "/academy/quiz/*",
+    "/academy/course/*",
     "/email-confirmation/*",
-    "/forgot*"
+    "/forgot*",
+    "/academy/course/:id/learn",
   ];
 
   const hideNavAndFooter = hiddenRoutes.some((route) =>
@@ -20,7 +23,7 @@ const CustomLayout = () => {
   return (
     <>
       {!hideNavAndFooter && <NavBar />}
-        <Outlet />
+      <Outlet />
       {!hideNavAndFooter && <Footer />}
     </>
   );
