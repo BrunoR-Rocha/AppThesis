@@ -66,6 +66,22 @@ function QuizPage() {
         setQuestions(res.data.questions);
         setQuizParams(res.data.params);
         setTimer(res.data.params.time_limit);
+
+        if (res.data.saved_answers) {
+          setAnswers(res.data.saved_answers);
+  
+          const unansweredQuestionIndex = res.data.questions.findIndex(
+            (q) => !res.data.saved_answers[q.id]
+          );
+  
+          setCurrentQuestionIndex(
+            unansweredQuestionIndex !== -1 ? unansweredQuestionIndex : 0
+          );
+  
+          const answeredCount = Object.keys(res.data.saved_answers).length;
+          setProgress((answeredCount / res.data.questions.length) * 100);
+        }
+
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -154,7 +170,6 @@ function QuizPage() {
   };
 
   const quizClose = () => {
-    
     saveQuizProgress();
     navigate("/academy");
   };

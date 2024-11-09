@@ -224,7 +224,6 @@ class QuizController extends Controller
             dd($e->getMessage());
         }
 
-
         return response()->json([
             'message' => 'Quiz created',
             'quiz_id' => $quiz->id,
@@ -234,9 +233,98 @@ class QuizController extends Controller
 
     public function getQuizInfo($id)
     {
+        $user = Auth::user();
         $quiz = Quiz::with('questions.options')->findOrFail($id);
 
-        return response()->json(new FrontQuizResource($quiz));
+        $userQuiz = UserQuiz::where('quiz_id', $quiz->id)->where('user_id', $user->id)->first();
+
+        $savedAnswers = [];
+        $remainingTime = null;
+
+        if ($userQuiz) {
+            $quizProgress = QuizProgress::where('user_quiz_id', $userQuiz->id)->first();
+
+            if ($quizProgress) {
+                $savedAnswers = $quizProgress->answers; // Assuming answers are stored as JSON
+                $remainingTime = $quizProgress->remaining_time;
+            }
+        }
+
+
+        // return response()->json(new FrontQuizResource($quiz));
+        return response()->json([
+            'params' => [
+                'id' => $quiz->id,
+                'title' => $quiz->title,
+                'description' => $quiz->description,
+                'difficulty' => $quiz->difficulty,
+                'time_limit' => $remainingTime ?? $quiz->time_limit ?? $quiz->estimatedCompletionTime(),
+            ],
+            'questions' => $quiz->questions->map(function ($question) {
+                return [
+                    'id' => $question->id,
+                    'title' => $question->title,
+                    'type' => $question->type->tag,
+                    'options' => $question->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                        ];
+                    }),
+                ];
+            }),
+            'saved_answers' => $savedAnswers,
+        ]);
+    }
+
+    public function getQuizReview($id)
+    {
+        // Ensure the quiz is from the authenticated User
+        $user = Auth::user();
+
+        $userQuiz = UserQuiz::where('user_id', $user->id)->where('quiz_id', $id)->first();
+
+        if (!$userQuiz) {
+            return response()->json([
+                'message' => __('errors.validator_fail'),
+            ], 400);
+        }
+
+        if (!$userQuiz->is_completed) {
+            return response()->json([
+                'message' => 'Not finished yet. Please reload and try again.',
+            ], 400);
+        }
+
+        $answers = $userQuiz->quizProgress?->answers;
+        $responses = $userQuiz->questionResponses;
+
+        $questions = $responses->map(function ($response) {
+            $question = $response->question;
+
+            return [
+                'question_id' => $question->id,
+                'question_text' => $question->title,
+                'question_tags' => $question->tags,
+                'question_type' => $question->type->tag,
+                'question_options' => $question->options->map(function ($option) {
+                    return [
+                        'option_id' => $option->id,
+                        'option_text' => $option->option_text,
+                        'is_correct' => $option->is_correct,
+                    ];
+                })->toArray(),
+                'is_correct' => $response->is_correct,
+                'response_quality_score' => $response->response_quality_score,
+            ];
+        });
+
+        return response()->json([
+            'score' => $userQuiz->score,
+            'time' => $userQuiz->time_taken,
+            'answers' => $answers,
+            'questions' => $questions,
+        ], 200);
     }
 
     /**
@@ -610,10 +698,10 @@ class QuizController extends Controller
         $unfinished = $userQuizzes->count() - $finished;
 
         $totalQuizzes = $userQuizzes->count();
-        
-        $percentageFinished = $totalQuizzes > 0 ? ($finished / $totalQuizzes) * 100 : 0;
-        $percentageUnfinished = $totalQuizzes > 0 ? ($unfinished / $totalQuizzes) * 100 : 0;
-    
+
+        $percentageFinished = $totalQuizzes > 0 ? round(($finished / $totalQuizzes) * 100, 2) : 0;
+        $percentageUnfinished = $totalQuizzes > 0 ? round(($unfinished / $totalQuizzes) * 100, 2) : 0;
+
         $metrics = $userMetrics ? $userMetrics->toArray() : [];
         $metrics = array_merge($metrics, [
             'totalScore' => $totalScore,

@@ -18,7 +18,6 @@ const FooterWrapper = styled("div")`
   padding-top: 60px;
 `;
 
-
 function Footer() {
   return (
     <FooterWrapper>

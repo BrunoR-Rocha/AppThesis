@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { QuizOption } from "../../style/academy_style";
 
 const MultipleChoiceQuestion = ({
@@ -5,6 +6,17 @@ const MultipleChoiceQuestion = ({
   handleAnswerChange,
   selectedAnswer,
 }) => {
+  const [selectedOption, setSelectedOption] = useState(selectedAnswer || null);
+
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+    handleAnswerChange(question.id, option);
+  };
+
+  useEffect(() => {
+    setSelectedOption(selectedAnswer || null);
+  }, [selectedAnswer]);
+
   return (
     <div className="py-20 grid grid-cols-2 gap-10 max-w-screen-lg">
       {question?.options.map((option, index) => {
@@ -12,8 +24,8 @@ const MultipleChoiceQuestion = ({
           <QuizOption
             className={`group`}
             key={index}
-            selected={selectedAnswer?.option_text === option.option_text}
-            onClick={() => handleAnswerChange(question.id, option)}
+            selected={selectedOption?.option_text === option.option_text}
+            onClick={() => handleOptionChange(question.id, option)}
           >
             <div
               className={`p-3 rounded ${
@@ -35,6 +47,17 @@ const MultipleChoiceQuestion = ({
 };
 
 const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
+  const [selectedOption, setSelectedOption] = useState(selectedAnswer || null);
+
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+    handleAnswerChange(question.id, option);
+  };
+
+  useEffect(() => {
+    setSelectedOption(selectedAnswer || null);
+  }, [selectedAnswer]);
+
   return (
     <div className="py-20 flex justify-center gap-10 max-w-screen-lg">
       <label className="group">
@@ -43,13 +66,13 @@ const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
           name={`yes_no_${question.id}`}
           value="yes"
           className="hidden"
-          checked={selectedAnswer === "yes"}
-          onClick={() => handleAnswerChange(question.id, "yes")}
+          checked={selectedOption === "yes"}
+          onClick={() => handleOptionChange(question.id, "yes")}
         />
-        <QuizOption className="group" selected={selectedAnswer === "yes"}>
+        <QuizOption className="group" selected={selectedOption === "yes"}>
           <div
             className={`p-3 rounded ${
-              selectedAnswer === "yes"
+              selectedOption === "yes"
                 ? "bg-[#E9F0FF] text-[#6078DF]"
                 : "bg-[#6078DF40] text-[#E9F0FF] group-hover:bg-[#E9F0FF] group-hover:text-[#6078DF]"
             } `}
@@ -64,13 +87,13 @@ const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
           name={`yes_no_${question.id}`}
           value="no"
           className="hidden"
-          checked={selectedAnswer === "no"}
-          onClick={() => handleAnswerChange(question.id, "no")}
+          checked={selectedOption === "no"}
+          onClick={() => handleOptionChange(question.id, "no")}
         />
-        <QuizOption className="group" selected={selectedAnswer === "no"}>
+        <QuizOption className="group" selected={selectedOption === "no"}>
           <div
             className={`p-3 rounded ${
-              selectedAnswer === "no"
+              selectedOption === "no"
                 ? "bg-[#E9F0FF] text-[#6078DF]"
                 : "bg-[#6078DF40] text-[#E9F0FF] group-hover:bg-[#E9F0FF] group-hover:text-[#6078DF]"
             } `}
@@ -84,14 +107,25 @@ const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
 };
 
 const FreeTextQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
+  const [selectedOption, setSelectedOption] = useState(selectedAnswer || null);
+
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+    handleAnswerChange(question.id, option);
+  };
+
+  useEffect(() => {
+    setSelectedOption(selectedAnswer || null);
+  }, [selectedAnswer]);
+
   return (
     <QuizOption className="my-20">
       <textarea
         className="w-full p-3 bg-[#6078DF40] text-[#E9F0FF] rounded"
         placeholder={"Type your answer here..."}
         rows={4}
-        value={selectedAnswer || ""}
-        onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+        value={selectedOption || ""}
+        onChange={(e) => handleOptionChange(question.id, e.target.value)}
       ></textarea>
     </QuizOption>
   );

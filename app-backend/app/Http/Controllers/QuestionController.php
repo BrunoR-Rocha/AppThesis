@@ -247,7 +247,7 @@ class QuestionController extends Controller
         return response()->json($response);
     }
 
-    public function params(Request $request)
+    public function getQuizParams(Request $request)
     {
         $topics = QuestionTopic::all();
         $difficulty = Difficulty::getStandardDifficulty();

@@ -9,20 +9,30 @@ import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineR
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import NewReleasesOutlinedIcon from "@mui/icons-material/NewReleasesOutlined";
 import CourseProgress from "../../../../components/app/courses/CourseProgress";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import { Accordion, CircularProgress } from "@mui/material";
+import {
+  AccordionItem,
+  AccordionItemDescription,
+} from "../../../about/styles/landing_styles";
 
 const CourseLearn = ({ id }) => {
+  const [expanded, setExpanded] = useState();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [courseContents, setCourseContents] = useState(false);
 
   const { course_id } = location.state || {};
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   useEffect(() => {
     setLoading(true);
     axiosConfig
       .get(`/front/courses/${course_id}/contents`)
       .then((res) => {
-        console.log(res.data);
         setCourseContents(res.data);
         setLoading(false);
       })

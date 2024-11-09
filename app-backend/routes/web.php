@@ -50,14 +50,11 @@ Route::group([
     'prefix' => '/backend',
 ], function (Router $router) {
 
-    $router->middleware('throttle:auth')->group(function (Router $router) {
-        $router->post('/register',                                      [AuthController::class, 'register']);
-        $router->post('/login',                                         [AuthController::class, 'login']);
-        $router->post('/forgot/email',                                  [ForgotPasswordController::class, 'sendResetLinkEmail']);
-        $router->post('/forgot/reset',                                  [ResetPasswordController::class, 'reset']);
-
-        $router->post('/admin/login',                                   [AuthController::class, 'adminLogin']);
-    });
+    $router->post('/register',                                      [AuthController::class, 'register']);
+    $router->post('/login',                                         [AuthController::class, 'login']);
+    $router->post('/forgot/email',                                  [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    $router->post('/forgot/reset',                                  [ResetPasswordController::class, 'reset']);
+    $router->post('/admin/login',                                   [AuthController::class, 'adminLogin']);
 
     $router->get('storage/{folderName}/{filename}',                     [MediaController::class, 'showMedia']);
 
@@ -74,18 +71,18 @@ Route::group([
     $router->post('/front/contacts',                                    [ContactController::class, 'frontStore']);
     $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
-    $router->post('/front/post/create',                                 [ForumThreadController::class, 'frontStore']);
-    $router->post('/front/post/comment',                                [ForumPostController::class, 'frontStore']);
-    $router->post('/front/quiz/create',                                 [QuizController::class, 'assemble']);
-
+   
     // Authenticated Routes
     $router->group(['middleware' => 'auth:api'], function (Router $router) {
 
         $router->post('/logout',                                        [AuthController::class, 'logout']);
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
+
+        $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);
         $router->post('quiz/{id}/save-progress',                        [QuizController::class, 'saveProgress']);
         $router->post('quiz/{id}/questions',                            [QuizController::class, 'getQuizInfo']);
+        $router->get('quiz/{id}/review',                                [QuizController::class, 'getQuizReview']);
 
         $router->get('profile/quizzes',                                 [QuizController::class, 'getUserQuizDashboard']);
         $router->get('profile/favorites',                               [UserFavoriteController::class, 'getFavoritePages']);
@@ -119,6 +116,11 @@ Route::group([
             'course_interactive_elements' =>                            CourseInteractiveElementController::class,
             'course_contents' =>                                        CourseContentController::class,
         ]);
+
+        $router->post('/front/post/create',                             [ForumThreadController::class, 'frontStore']);
+        $router->post('/front/post/comment',                            [ForumPostController::class, 'frontStore']);
+        
+        $router->post('/front/quiz/create',                             [QuizController::class, 'assemble']);
 
         $router->get('front/news',                                      [NewsController::class, 'getAll']);
         $router->get('front/journals',                                  [JournalController::class, 'getAll']);

@@ -17,6 +17,7 @@ import Policy from "./resources/routes/policies/policy";
 import Forgot from "./resources/routes/auth/forgot";
 import ResetPassword from "./resources/routes/auth/reset";
 import CourseLearn from "./resources/routes/academy/course/learn";
+import QuizReview from "./resources/routes/academy/quiz/review";
 
 const routes = [
   // Public Routes
@@ -97,6 +98,16 @@ const routes = [
   {
     path: "/academy/quiz/:id",
     element: <QuizPage />,
+    protected: true,
+  },
+  {
+    path: "/academy/quiz/continue/:id",
+    element: <QuizPage />,
+    protected: true,
+  },
+  {
+    path: "/academy/quiz/review/:id",
+    element: <QuizReview />,
     protected: true,
   },
   {

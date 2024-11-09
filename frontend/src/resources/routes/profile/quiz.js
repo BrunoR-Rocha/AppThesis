@@ -4,6 +4,8 @@ import Wrapper from "../../components/general/Wrapper";
 import Skeleton from "../../components/general/Skeleton";
 import ProgressCircle from "../academy/quiz/components/Progress";
 import { QuizDashboardComponent } from "./style";
+import { Link } from "react-router-dom";
+import { formatTimeText } from "../../utils/timeUtils";
 
 const QuizDashboard = () => {
   const OverviewBox = ({
@@ -39,12 +41,6 @@ const QuizDashboard = () => {
 
   const [loading, setLoading] = useState();
   const [quizzes, setQuizzes] = useState();
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = (seconds % 60).toFixed(0);
-    return `${minutes} min ${remainingSeconds} sec`;
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -102,7 +98,9 @@ const QuizDashboard = () => {
                         colorLabel={"Unfinished"}
                       />
                       <OverviewBox
-                        value={formatTime(quizzes?.metrics?.time_efficiency)}
+                        value={formatTimeText(
+                          quizzes?.metrics?.time_efficiency
+                        )}
                         colorLabel={"Average Time"}
                       />
                     </div>
@@ -162,13 +160,20 @@ const QuizDashboard = () => {
                             <td className="px-4 py-2">{quiz.completed_at}</td>
                             <td className="px-4 py-2">
                               {quiz.is_completed == 1 ? (
-                                <div className="bg-[#6078DF] rounded-lg flex justify-center font-medium">
+                                <Link
+                                  to={`/academy/quiz/review/${quiz.quiz_id}`}
+                                  className="bg-[#6078DF] rounded-lg flex justify-center font-medium cursor-pointer"
+                                >
                                   Review Quiz
-                                </div>
+                                </Link>
                               ) : (
-                                <div className="bg-[#4B5057] rounded-lg flex justify-center font-medium">
+                                <Link
+                                  to={`/academy/quiz/continue/${quiz.quiz_id}`}
+                                  state={{ quiz_id: quiz.quiz_id }}
+                                  className="bg-[#4B5057] rounded-lg flex justify-center font-medium cursor-pointer"
+                                >
                                   Finish Quiz
-                                </div>
+                                </Link>
                               )}
                             </td>
                           </tr>

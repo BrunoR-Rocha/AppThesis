@@ -31,7 +31,12 @@ class UserQuiz extends Model
 
     public function questionResponses()
     {
-        return $this->hasMany(QuestionResponse::class, 'user_quiz_id');
+        return $this->hasMany(QuestionResponse::class);
+    }
+
+    public function quizProgress()
+    {
+        return $this->hasOne(QuizProgress::class);
     }
 
     public function scopeIsFinished($query, $bool = true)

@@ -24,7 +24,7 @@ function Academy() {
   useEffect(() => {
     setLoading(true);
     axiosConfig
-      .get(`/params/questions`)
+      .get(`/question/params`)
       .then((res) => {
         setTopicOptions(res.data.topics);
         setDifficultyOptions(res.data.difficulty);
