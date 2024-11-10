@@ -7,6 +7,7 @@ import axiosConfig from "../../../../providers/axiosConfig";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import Skeleton from "../../../components/general/Skeleton";
 
 const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
   const [loading, setLoading] = useState();
@@ -17,7 +18,6 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
   } = useForm();
 
@@ -127,9 +127,18 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
           </form>
         </div>
         <div className="flex flex-col overflow-y-auto max-h-[50vh] scrollbar-hide">
-          {comments &&
-            comments.map((comment) => (
-              <div className="border-b-[1px] border-b-[#FFFFFF26] border-b-solid flex flex-col gap-3 py-5">
+          {loadingComments ? (
+            <>
+              <Skeleton width="50%" />
+              <Skeleton height="50px" />
+            </>
+          ) : (
+            comments &&
+            comments.map((comment, index) => (
+              <div
+                className="border-b-[1px] border-b-[#FFFFFF26] border-b-solid flex flex-col gap-3 py-5"
+                key={index}
+              >
                 <div className="">
                   <p className="text-white font-semibold">{comment.author}</p>
                   <p className="text-white text-sm font-normal">
@@ -149,7 +158,8 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
                   <p className="font-medium text-[#ECECEC] text-base">Reply</p>
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       </div>
     </div>

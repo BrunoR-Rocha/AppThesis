@@ -1,12 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import {
   LibraryItem,
   LibraryTitle,
 } from "../../../routes/library/styles/library_styles";
 
 const JournalCard = ({ journal }) => {
-  const navigate = useNavigate();
-
   return (
     <LibraryItem className="basis-1/3">
       <div className="flex flex-col gap-12">

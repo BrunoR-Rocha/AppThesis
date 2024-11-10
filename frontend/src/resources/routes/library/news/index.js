@@ -11,7 +11,6 @@ const News = () => {
     axiosConfig
       .get(`/front/news`)
       .then((res) => {
-        console.log(res.data);
         setNews(res.data);
         setLoading(false);
       })

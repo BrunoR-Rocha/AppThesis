@@ -12,7 +12,7 @@ import ProfileCourses from "./courses";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("tab1");
-  const { isAuthenticated, user } = useContext(AuthContext);
+  const {user } = useContext(AuthContext);
 
   const renderButton = (tabId, label) => (
     <button

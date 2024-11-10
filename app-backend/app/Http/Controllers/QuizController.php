@@ -152,7 +152,9 @@ class QuizController extends Controller
         }
 
         $userId = Auth::user()->id;
-
+        $topicId = null;
+        $difficultyLevel = null;
+        
         if ($request->is_random) {
             // Get a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
             $questions = Question::inRandomOrder()->take(20)->get();
@@ -249,7 +251,6 @@ class QuizController extends Controller
                 $remainingTime = $quizProgress->remaining_time;
             }
         }
-
 
         // return response()->json(new FrontQuizResource($quiz));
         return response()->json([

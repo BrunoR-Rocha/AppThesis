@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { QuizArea, QuizOption } from "../style/academy_style";
+import { QuizArea } from "../style/academy_style";
 import axiosConfig from "../../../../providers/axiosConfig";
 import Wrapper from "../../../components/general/Wrapper";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import LinearProgress from "@mui/material/LinearProgress";
 import Modal from "@mui/material/Modal";
@@ -17,6 +17,7 @@ import {
 } from "./components/QuizInputs";
 import ProgressCircle from "./components/Progress";
 import { useRef } from "react";
+import Skeleton from "../../../components/general/Skeleton";
 
 function QuizPage() {
   const modalStyle = {
@@ -36,7 +37,6 @@ function QuizPage() {
 
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
-  const [quizParams, setQuizParams] = useState([]);
   const navigate = useNavigate();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -64,20 +64,19 @@ function QuizPage() {
       .post(`/quiz/${quiz_id}/questions`)
       .then((res) => {
         setQuestions(res.data.questions);
-        setQuizParams(res.data.params);
         setTimer(res.data.params.time_limit);
 
         if (res.data.saved_answers) {
           setAnswers(res.data.saved_answers);
-  
+
           const unansweredQuestionIndex = res.data.questions.findIndex(
             (q) => !res.data.saved_answers[q.id]
           );
-  
+
           setCurrentQuestionIndex(
             unansweredQuestionIndex !== -1 ? unansweredQuestionIndex : 0
           );
-  
+
           const answeredCount = Object.keys(res.data.saved_answers).length;
           setProgress((answeredCount / res.data.questions.length) * 100);
         }
@@ -85,7 +84,7 @@ function QuizPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [quiz_id]);
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -133,8 +132,7 @@ function QuizPage() {
     clearInterval(timerIntervalRef.current);
 
     try {
-      // Make the POST request to submit the quiz answers
-      const response = await axiosConfig
+      await axiosConfig
         .post(`/quiz/${quiz_id}/submit`, {
           answers: answers,
         })
@@ -152,7 +150,7 @@ function QuizPage() {
     }
   };
 
-  const saveQuizProgress = () => {
+  const saveQuizProgress = useCallback(() => {
     axiosConfig
       .post(`/quiz/${quiz_id}/save-progress`, {
         answers: answers,
@@ -160,7 +158,7 @@ function QuizPage() {
       .catch((error) => {
         console.error("Failed to auto-save quiz progress:", error);
       });
-  };
+  }, [answers, quiz_id]);
 
   const handleQuizClose = () => {
     clearInterval(timerIntervalRef.current);
@@ -181,7 +179,7 @@ function QuizPage() {
     }, 5000);
 
     return () => clearInterval(autoSaveInterval);
-  }, [answers, timer]);
+  }, [saveQuizProgress]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -195,7 +193,7 @@ function QuizPage() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [answers, timer]);
+  }, [saveQuizProgress]);
 
   // Timer
   useEffect(() => {
@@ -233,134 +231,143 @@ function QuizPage() {
     <>
       <QuizArea>
         <Wrapper>
-          <div className="w-full flex flex-col pt-20">
-            <div className="flex flex-1 justify-between">
-              {/* Close Button */}
-              <div className="flex items-center">
-                <div
-                  onClick={handleQuizClose}
-                  className="p-3 group flex items-center gap-2 text-[#ECECEC] hover:text-[#F4AA5A] hover:cursor-pointer"
-                >
-                  <CloseIcon
-                    sx={{
-                      color: "#ECECEC",
-                      ".group:hover &": {
-                        color: "#F4AA5A",
-                      },
-                    }}
-                  />
-                  <p className="font-medium">Close</p>
-                </div>
+          {loading ? (
+            <>
+              <div className="flex flex-col gap-5">
+                <Skeleton width="50%" />
+                <Skeleton height="100px" />
               </div>
-              {/* Timer */}
-              {!isSubmitting && !results && (
+            </>
+          ) : (
+            <div className="w-full flex flex-col pt-20">
+              <div className="flex flex-1 justify-between">
+                {/* Close Button */}
                 <div className="flex items-center">
-                  <div className="p-3 flex items-center gap-2 text-[#ECECEC]">
-                    <TimerOutlinedIcon />
-                    <p className="font-medium">{formatTime(timer)}</p>
+                  <div
+                    onClick={handleQuizClose}
+                    className="p-3 group flex items-center gap-2 text-[#ECECEC] hover:text-[#F4AA5A] hover:cursor-pointer"
+                  >
+                    <CloseIcon
+                      sx={{
+                        color: "#ECECEC",
+                        ".group:hover &": {
+                          color: "#F4AA5A",
+                        },
+                      }}
+                    />
+                    <p className="font-medium">Close</p>
                   </div>
                 </div>
-              )}
-            </div>
-            {/* Main Content */}
-            <div className="flex flex-col flex-1 justify-center items-center">
-              {!isSubmitting && !results && (
-                <>
-                  {/* Question Title */}
-                  <p className="text-3xl font-semibold text-[#ECECEC] text-center mt-10">
-                    {questions[currentQuestionIndex]?.title}
-                  </p>
-
-                  {/* Question Component */}
-                  <div className="flex-1 flex justify-center items-center w-3/4">
-                    {QuestionComponent && (
-                      <QuestionComponent
-                        question={currentQuestion}
-                        handleAnswerChange={handleAnswerChange}
-                        selectedAnswer={selectedAnswer}
-                      />
-                    )}
+                {/* Timer */}
+                {!isSubmitting && !results && (
+                  <div className="flex items-center">
+                    <div className="p-3 flex items-center gap-2 text-[#ECECEC]">
+                      <TimerOutlinedIcon />
+                      <p className="font-medium">{formatTime(timer)}</p>
+                    </div>
                   </div>
-                </>
-              )}
+                )}
+              </div>
+              {/* Main Content */}
+              <div className="flex flex-col flex-1 justify-center items-center">
+                {!isSubmitting && !results && (
+                  <>
+                    {/* Question Title */}
+                    <p className="text-3xl font-semibold text-[#ECECEC] text-center mt-10">
+                      {questions[currentQuestionIndex]?.title}
+                    </p>
 
-              {isSubmitting && (
-                <div className="flex-1 flex justify-center items-center">
-                  <p className="text-3xl font-semibold text-[#ECECEC] text-center">
-                    We're compiling your results...
-                  </p>
-                </div>
-              )}
+                    {/* Question Component */}
+                    <div className="flex-1 flex justify-center items-center w-3/4">
+                      {QuestionComponent && (
+                        <QuestionComponent
+                          question={currentQuestion}
+                          handleAnswerChange={handleAnswerChange}
+                          selectedAnswer={selectedAnswer}
+                        />
+                      )}
+                    </div>
+                  </>
+                )}
 
-              {results && (
-                <div className="flex flex-col justify-center items-center gap-8 h-full">
-                  <p className="text-3xl font-semibold text-[#ECECEC] text-center">
-                    You finished the quiz!
-                  </p>
-                  <div>
-                    <ProgressCircle result={resultsScore} />
-                  </div>
-                  <div>
-                    <p className="text-lg text-white text-center">
-                      We hope the results are satisfying and that this quiz
-                      offered you new insights.
+                {isSubmitting && (
+                  <div className="flex-1 flex justify-center items-center">
+                    <p className="text-3xl font-semibold text-[#ECECEC] text-center">
+                      We're compiling your results...
                     </p>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
 
-            {/* Footer */}
-            <div className="fixed bottom-0 left-0 w-full">
-              {!isSubmitting && !results && (
-                <div className="flex flex-col gap-10">
-                  {/* Buttons */}
+                {results && (
+                  <div className="flex flex-col justify-center items-center gap-8 h-full">
+                    <p className="text-3xl font-semibold text-[#ECECEC] text-center">
+                      You finished the quiz!
+                    </p>
+                    <div>
+                      <ProgressCircle result={resultsScore} />
+                    </div>
+                    <div>
+                      <p className="text-lg text-white text-center">
+                        We hope the results are satisfying and that this quiz
+                        offered you new insights.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="fixed bottom-0 left-0 w-full">
+                {!isSubmitting && !results && (
+                  <div className="flex flex-col gap-10">
+                    {/* Buttons */}
+                    <div className="flex justify-center items-center gap-5 py-4">
+                      <button
+                        className="border-[1px] border-solid border-[#AAAAAA] px-10 py-4 font-semibold text-[#FFF] rounded-full"
+                        onClick={handlePreviousQuestion}
+                        disabled={currentQuestionIndex === 0}
+                      >
+                        Back
+                      </button>
+                      <button
+                        className="bg-[#F4AA5A] px-10 py-4 font-semibold text-[#FFF] rounded-full"
+                        onClick={handleNextQuestion}
+                      >
+                        {currentQuestionIndex === questions.length - 1
+                          ? "Finish"
+                          : "Next"}
+                      </button>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="w-full">
+                      <p className="text-center text-[#E9F0FF] font-medium pb-4">
+                        {currentQuestionIndex + 1} of {questions.length}
+                      </p>
+                      <LinearProgress variant="determinate" value={progress} />
+                    </div>
+                  </div>
+                )}
+
+                {results && (
                   <div className="flex justify-center items-center gap-5 py-4">
                     <button
                       className="border-[1px] border-solid border-[#AAAAAA] px-10 py-4 font-semibold text-[#FFF] rounded-full"
-                      onClick={handlePreviousQuestion}
-                      disabled={currentQuestionIndex === 0}
+                      onClick={() => navigate("/my-quizzes")}
                     >
-                      Back
+                      My Quizzes
                     </button>
                     <button
-                      className="bg-[#F4AA5A] px-10 py-4 font-semibold text-[#FFF] rounded-full"
-                      onClick={handleNextQuestion}
+                      className="bg-[#FFF] px-10 py-4 font-semibold text-[#F4AA5A] rounded-full hover:border-2 hover:border-[#F4AA5A] hover:border-solid transition-transform"
+                      onClick={() => navigate("/new-quiz")}
                     >
-                      {currentQuestionIndex === questions.length - 1
-                        ? "Finish"
-                        : "Next"}
+                      New Quiz
                     </button>
                   </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full">
-                    <p className="text-center text-[#E9F0FF] font-medium pb-4">
-                      {currentQuestionIndex + 1} of {questions.length}
-                    </p>
-                    <LinearProgress variant="determinate" value={progress} />
-                  </div>
-                </div>
-              )}
-
-              {results && (
-                <div className="flex justify-center items-center gap-5 py-4">
-                  <button
-                    className="border-[1px] border-solid border-[#AAAAAA] px-10 py-4 font-semibold text-[#FFF] rounded-full"
-                    onClick={() => navigate("/my-quizzes")}
-                  >
-                    My Quizzes
-                  </button>
-                  <button
-                    className="bg-[#FFF] px-10 py-4 font-semibold text-[#F4AA5A] rounded-full hover:border-2 hover:border-[#F4AA5A] hover:border-solid transition-transform"
-                    onClick={() => navigate("/new-quiz")}
-                  >
-                    New Quiz
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </Wrapper>
 
         <Modal

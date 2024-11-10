@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import {
   LibraryItem,
   LibraryTitle,
 } from "../../../routes/library/styles/library_styles";
 
 const NewsCard = ({ news }) => {
-  const navigate = useNavigate();
 
   return (
     <LibraryItem className="basis-1/3">

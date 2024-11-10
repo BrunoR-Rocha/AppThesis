@@ -1,5 +1,5 @@
 // src/context/AuthContext.js
-import React, { createContext } from "react";
+import { createContext } from "react";
 
 const AuthContext = createContext();
 

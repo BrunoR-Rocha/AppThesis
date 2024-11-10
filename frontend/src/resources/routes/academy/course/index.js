@@ -9,6 +9,7 @@ import ExampleImage from "../../../media/academy/courses/example.png";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
 import { Link } from "react-router-dom";
 import axiosConfig from "../../../../providers/axiosConfig";
+import Skeleton from "../../../components/general/Skeleton";
 
 const Courses = () => {
   const [slides, setSlides] = useState([]);
@@ -105,119 +106,128 @@ const Courses = () => {
 
   return (
     <div className="relative max-w-full mx-auto my-auto ">
-      <Slider {...settings} className="h-full min-h-96 flex items-center">
-        {totalSlides > 0 ? (
-          slides.map((slide, index) => (
-            <div key={slide.id} className={getClassNames(index)}>
+      {loading ? (
+        <>
+          <div className="flex flex-col gap-4">
+            <Skeleton width="50%" />
+            <Skeleton height="100px" />
+          </div>
+        </>
+      ) : (
+        <Slider {...settings} className="h-full min-h-96 flex items-center">
+          {totalSlides > 0 ? (
+            slides.map((slide, index) => (
+              <div key={slide.id} className={getClassNames(index)}>
+                <Card
+                  sx={{
+                    minHeight: "22rem",
+                    backgroundColor: "#6078DF40",
+                    filter: activeSlide === index ? "none" : "grayscale(100%)",
+                    transform: `scale(${getScaleValues(index)})`,
+                    transition:
+                      "transform 0.5s ease, filter 0.5s ease, , background-color 0.5s ease-in-out",
+                    padding: "0px",
+                    zIndex: activeSlide === index ? 3 : 1,
+                    position: "relative",
+                    backdropFilter:
+                      activeSlide === index ? "none" : "blur(40px)",
+                    border: "1px solid #6078DF",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    "&:hover":
+                      activeSlide === index
+                        ? {
+                            backgroundColor: "#6078DF99",
+                          }
+                        : { backdropFilter: "blur(40px)" },
+                    "&:hover .zoom-image":
+                      activeSlide === index
+                        ? {
+                            transform: "scale(1.1)", // Image zoom-in effect only if this slide is active
+                          }
+                        : {},
+                  }}
+                >
+                  <div className=" absolute left-8 top-8 max-w-fit rounded-full bg-[#FFFFFF40] shadow-md shadow-[#2b00d40f] px-4 py-2 z-[5]">
+                    <span className="capitalize text-white text-xs font-medium">
+                      {slide.difficulty?.name}
+                    </span>
+                  </div>
+                  <CardMedia
+                    sx={{
+                      height: "12rem",
+                      width: "100%",
+                      transition: "transform 0.5s ease",
+                    }}
+                    className="card-image"
+                    image={ExampleImage}
+                    title={slide.title}
+                  />
+                  <CardContent>
+                    <div className="flex flex-col gap-7">
+                      {activeSlide === index ? (
+                        <Link
+                          to={"/academy/course/" + slide.id}
+                          className="text-white font-semibold text-3xl"
+                        >
+                          {slide.title}
+                        </Link>
+                      ) : (
+                        <h5 className="text-white font-semibold text-3xl">
+                          {slide.title}
+                        </h5>
+                      )}
+                      <p className="text-[#ECECEC] text-base font-normal">
+                        {slide.short_description}
+                      </p>
+                      <div className="flex items-start gap-3 text-[#ECECEC] ">
+                        <div className="flex gap-1">
+                          <FolderOpenRoundedIcon sx={{ color: "#6078DF" }} />
+                          <span>{slide.num_contents} sections</span>
+                        </div>
+                        <div className="flex gap-1">
+                          <AccessTimeRoundedIcon sx={{ color: "#6078DF" }} />
+                          <span>{slide.average_time}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ))
+          ) : (
+            <>
               <Card
                 sx={{
                   minHeight: "22rem",
                   backgroundColor: "#6078DF40",
-                  filter: activeSlide === index ? "none" : "grayscale(100%)",
-                  transform: `scale(${getScaleValues(index)})`,
+                  filter: "none",
                   transition:
                     "transform 0.5s ease, filter 0.5s ease, , background-color 0.5s ease-in-out",
                   padding: "0px",
-                  zIndex: activeSlide === index ? 3 : 1,
+                  zIndex: "1",
                   position: "relative",
-                  backdropFilter: activeSlide === index ? "none" : "blur(40px)",
+                  backdropFilter: "blur(40px)",
                   border: "1px solid #6078DF",
                   borderRadius: "10px",
                   cursor: "pointer",
-                  "&:hover":
-                    activeSlide === index
-                      ? {
-                          backgroundColor: "#6078DF99",
-                        }
-                      : { backdropFilter: "blur(40px)" },
-                  "&:hover .zoom-image":
-                    activeSlide === index
-                      ? {
-                          transform: "scale(1.1)", // Image zoom-in effect only if this slide is active
-                        }
-                      : {},
                 }}
               >
-                <div className=" absolute left-8 top-8 max-w-fit rounded-full bg-[#FFFFFF40] shadow-md shadow-[#2b00d40f] px-4 py-2 z-[5]">
-                  <span className="capitalize text-white text-xs font-medium">
-                    {slide.difficulty?.name}
-                  </span>
-                </div>
-                <CardMedia
-                  sx={{
-                    height: "12rem",
-                    width: "100%",
-                    transition: "transform 0.5s ease",
-                  }}
-                  className="card-image"
-                  image={ExampleImage}
-                  title={slide.title}
-                />
                 <CardContent>
                   <div className="flex flex-col gap-7">
-                    {activeSlide === index ? (
-                      <Link
-                        to={"/academy/course/" + slide.id}
-                        state={{ course_id: slide.id }}
-                        className="text-white font-semibold text-3xl"
-                      >
-                        {slide.title}
-                      </Link>
-                    ) : (
-                      <h5 className="text-white font-semibold text-3xl">
-                        {slide.title}
-                      </h5>
-                    )}
+                    <h5 className="text-white font-semibold text-3xl">
+                      No courses yet
+                    </h5>
                     <p className="text-[#ECECEC] text-base font-normal">
-                      {slide.short_description}
+                      Stay tunned for the new upcomming releases
                     </p>
-                    <div className="flex items-start gap-3 text-[#ECECEC] ">
-                      <div className="flex gap-1">
-                        <FolderOpenRoundedIcon sx={{ color: "#6078DF" }} />
-                        <span>{slide.num_contents} sections</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <AccessTimeRoundedIcon sx={{ color: "#6078DF" }} />
-                        <span>{slide.average_time}</span>
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
-            </div>
-          ))
-        ) : (
-          <>
-            <Card
-              sx={{
-                minHeight: "22rem",
-                backgroundColor: "#6078DF40",
-                filter: "none",
-                transition:
-                  "transform 0.5s ease, filter 0.5s ease, , background-color 0.5s ease-in-out",
-                padding: "0px",
-                zIndex: "1",
-                position: "relative",
-                backdropFilter: "blur(40px)",
-                border: "1px solid #6078DF",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-            >
-              <CardContent>
-                <div className="flex flex-col gap-7">
-                  <h5 className="text-white font-semibold text-3xl">
-                    No courses yet
-                  </h5>
-                  <p className="text-[#ECECEC] text-base font-normal">
-                    Stay tunned for the new upcomming releases
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        )}
-      </Slider>
+            </>
+          )}
+        </Slider>
+      )}
     </div>
   );
 };

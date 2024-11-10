@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ReactComponent as Flower } from "../../media/general/flower.svg";
 import Wrapper from "../../components/general/Wrapper";
 import { BannerArea, BannerDisplay } from "../profile/style";

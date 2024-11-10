@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   LibraryArea,
   LibraryItemTitle,
@@ -10,19 +10,19 @@ import EastIcon from "@mui/icons-material/East";
 import WestIcon from "@mui/icons-material/West";
 import BackButton from "../../../components/general/BackButton";
 import axiosConfig from "../../../../providers/axiosConfig";
+import Skeleton from "../../../components/general/Skeleton";
 
 const LibraryPage = () => {
   const { id } = useParams();
-  const location = useLocation();
-  const statePage = location.state?.page;
   const [page, setPage] = useState();
+  const location = useLocation();
   const [loading, setLoading] = useState();
   const [selectedModule, setSelectedModule] = useState();
 
   useEffect(() => {
     setLoading(true);
     axiosConfig
-      .get(`/front/library/${statePage.id}`)
+      .get(`/front/library/${id}`)
       .then((res) => {
         setPage(res.data);
         if (res.data.modules && res.data.modules.length > 0) {
@@ -32,7 +32,7 @@ const LibraryPage = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [id]);
 
   let year = page?.date ? new Date(page?.date).getFullYear() : "";
 
@@ -83,119 +83,130 @@ const LibraryPage = () => {
         <Wrapper className={"flex items-start gap-14 flex-wrap sm:flex-nowrap"}>
           <BackButton />
           <PageInfo className="flex flex-col w-full">
-            <div className="flex flex-col gap-4 pb-6">
-              <div className="flex rounded-full items-center text-white bg-[#FFFFFF1A] px-3 max-w-fit py-1">
-                <span>{page?.tag}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <LibraryItemTitle>{page?.title}</LibraryItemTitle>
-                <p className="text-sm font-semibold uppercase text-white">
-                  {page?.author} • {year}
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4 border-t-[1px] border-t-[#272A2E] pt-6">
-              {page &&
-                page?.modules
-                  .sort((a, b) => a.position - b.position)
-                  .map((module, index) => (
-                    <>
-                      <button
-                        key={module.id}
-                        onClick={() => handleButtonClick(module)}
-                        className={`px-4 py-1 rounded-full ${
-                          selectedModule?.id === module.id
-                            ? "bg-white text-[#6078DF] border-4 border-solid border-[#FFFFFF1A]"
-                            : "bg-transparent text-[#BABABA] border-2 border-solid border-[#272A2E]"
-                        }`}
-                      >
-                        {module.title}
-                      </button>
-                    </>
-                  ))}
-            </div>
+            {loading ? (
+              <>
+                <div className="flex flex-col gap-5">
+                  <Skeleton width="50%" />
+                  <Skeleton height="100px" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col gap-4 pb-6">
+                  <div className="flex rounded-full items-center text-white bg-[#FFFFFF1A] px-3 max-w-fit py-1">
+                    <span>{page?.tag}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <LibraryItemTitle>{page?.title}</LibraryItemTitle>
+                    <p className="text-sm font-semibold uppercase text-white">
+                      {page?.author} • {year}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4 border-t-[1px] border-t-[#272A2E] pt-6">
+                  {page &&
+                    page?.modules
+                      .sort((a, b) => a.position - b.position)
+                      .map((module, index) => (
+                        <button
+                          key={module.id}
+                          onClick={() => handleButtonClick(module)}
+                          className={`px-4 py-1 rounded-full ${
+                            selectedModule?.id === module.id
+                              ? "bg-white text-[#6078DF] border-4 border-solid border-[#FFFFFF1A]"
+                              : "bg-transparent text-[#BABABA] border-2 border-solid border-[#272A2E]"
+                          }`}
+                        >
+                          {module.title}
+                        </button>
+                      ))}
+                </div>
 
-            <div id={selectedModule?.id} className="mt-8 text-white">
-              <h3 className="text-2xl font-bold mb-8">
-                {selectedModule?.title}
-              </h3>
-              <div
-                className="flex flex-col gap-4 leading-8 border-b-[0.5px] border-b-[#040A17] pb-5"
-                dangerouslySetInnerHTML={{ __html: selectedModule?.content }}
-              />
-              <div className="flex flex-1 justify-between">
-                {hasPreviousModule ? (
-                  <div className="flex pt-5 items-center">
-                    <div className="flex gap-4 items-center">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-light text-[#ECECEC] text-base">
-                          Previous Chapter
-                        </span>
-                        <span className="font-semibold text-[#ECECEC] text-base">
-                          {page?.modules[currentIndex - 1].title}
-                        </span>
+                <div id={selectedModule?.id} className="mt-8 text-white">
+                  <h3 className="text-2xl font-bold mb-8">
+                    {selectedModule?.title}
+                  </h3>
+                  <div
+                    className="flex flex-col gap-4 leading-8 border-b-[0.5px] border-b-[#040A17] pb-5"
+                    dangerouslySetInnerHTML={{
+                      __html: selectedModule?.content,
+                    }}
+                  />
+                  <div className="flex flex-1 justify-between">
+                    {hasPreviousModule ? (
+                      <div className="flex pt-5 items-center">
+                        <div className="flex gap-4 items-center">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-light text-[#ECECEC] text-base">
+                              Previous Chapter
+                            </span>
+                            <span className="font-semibold text-[#ECECEC] text-base">
+                              {page?.modules[currentIndex - 1].title}
+                            </span>
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => handlePreviousChapterClick()}
+                              className={
+                                "pl-7 pr-3 py-3 rounded-full border-2 border-[#ECECEC] ease-in-out duration-300 group hover:bg-[#ECECEC]"
+                              }
+                            >
+                              <WestIcon
+                                sx={{
+                                  color: "#ECECEC",
+                                  transition: "transform 0.3s ease",
+                                  ".group:hover &": {
+                                    color: "#F4AA5A",
+                                    transform: "translateX(-50%)",
+                                  },
+                                }}
+                              />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <button
-                          onClick={() => handlePreviousChapterClick()}
-                          className={
-                            "pl-7 pr-3 py-3 rounded-full border-2 border-[#ECECEC] ease-in-out duration-300 group hover:bg-[#ECECEC]"
-                          }
-                        >
-                          <WestIcon
-                            sx={{
-                              color: "#ECECEC",
-                              transition: "transform 0.3s ease",
-                              ".group:hover &": {
-                                color: "#F4AA5A",
-                                transform: "translateX(-50%)",
-                              },
-                            }}
-                          />
-                        </button>
+                    ) : (
+                      <div />
+                    )}
+                    {hasNextModule ? (
+                      <div className="flex justify-end pt-5">
+                        <div className="flex gap-4 items-center">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-light text-[#ECECEC] text-base">
+                              Next Chapter
+                            </span>
+                            <span className="font-semibold text-[#ECECEC] text-base">
+                              {page?.modules[currentIndex + 1].title}
+                            </span>
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => handleNextChapterClick()}
+                              className={
+                                "pl-3 pr-7 py-3 rounded-full border-2 border-[#ECECEC] ease-in-out duration-300 group hover:bg-[#ECECEC]"
+                              }
+                            >
+                              <EastIcon
+                                sx={{
+                                  color: "#ECECEC",
+                                  transition: "transform 0.3s ease",
+                                  ".group:hover &": {
+                                    color: "#F4AA5A",
+                                    transform: "translateX(50%)",
+                                  },
+                                }}
+                              />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div />
+                    )}
                   </div>
-                ) : (
-                  <div />
-                )}
-                {hasNextModule ? (
-                  <div className="flex justify-end pt-5">
-                    <div className="flex gap-4 items-center">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-light text-[#ECECEC] text-base">
-                          Next Chapter
-                        </span>
-                        <span className="font-semibold text-[#ECECEC] text-base">
-                          {page?.modules[currentIndex + 1].title}
-                        </span>
-                      </div>
-                      <div>
-                        <button
-                          onClick={() => handleNextChapterClick()}
-                          className={
-                            "pl-3 pr-7 py-3 rounded-full border-2 border-[#ECECEC] ease-in-out duration-300 group hover:bg-[#ECECEC]"
-                          }
-                        >
-                          <EastIcon
-                            sx={{
-                              color: "#ECECEC",
-                              transition: "transform 0.3s ease",
-                              ".group:hover &": {
-                                color: "#F4AA5A",
-                                transform: "translateX(50%)",
-                              },
-                            }}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div />
-                )}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
           </PageInfo>
         </Wrapper>
       </LibraryArea>

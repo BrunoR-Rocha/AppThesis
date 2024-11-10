@@ -159,7 +159,7 @@ const QuizDashboard = () => {
                             <td className="px-4 py-2">{quiz.score}</td>
                             <td className="px-4 py-2">{quiz.completed_at}</td>
                             <td className="px-4 py-2">
-                              {quiz.is_completed == 1 ? (
+                              {quiz.is_completed === true ? (
                                 <Link
                                   to={`/academy/quiz/review/${quiz.quiz_id}`}
                                   className="bg-[#6078DF] rounded-lg flex justify-center font-medium cursor-pointer"

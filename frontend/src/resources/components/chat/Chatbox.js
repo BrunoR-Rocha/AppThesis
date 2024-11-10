@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import NavigationRoundedIcon from "@mui/icons-material/NavigationRounded";
 import { ReactComponent as AppChatIcon } from "../../media/chat/app_chat.svg";

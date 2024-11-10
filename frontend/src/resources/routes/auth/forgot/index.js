@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../media/navbar/logo_moony.svg";
 import AuthLogo from "../../../media/auth/auth_moony.svg";
 import {
   AuthArea,
-  AuthButton,
-  AuthIcon,
   AuthInput,
   AuthSideLogo,
 } from "../styles/auth_styles";
@@ -13,7 +11,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthContext from "../../../../context/AuthContext";
 import axiosConfig from "../../../../providers/axiosConfig";
 
 function Forgot() {
@@ -23,8 +20,7 @@ function Forgot() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset
+    formState: { errors }
   } = useForm();
 
   const onSubmit = async (data) => {

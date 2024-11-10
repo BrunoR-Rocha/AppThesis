@@ -11,7 +11,7 @@ import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineR
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import NewReleasesOutlinedIcon from "@mui/icons-material/NewReleasesOutlined";
 import LabeledIcon from "../../../../components/general/LabeledIcon";
-import { Accordion, Box, Typography } from "@mui/material";
+import { Accordion } from "@mui/material";
 import {
   AccordionItem,
   AccordionItemDescription,
@@ -20,55 +20,34 @@ import {
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosConfig from "../../../../../providers/axiosConfig";
 import CourseProgress from "../../../../components/app/courses/CourseProgress";
 
-const CoursePage = ({ id }) => {
+const CoursePage = () => {
+  const { id } = useParams();
   const [expanded, setExpanded] = useState();
   const [course, setCourse] = useState();
   const [loading, setLoading] = useState();
-  const location = useLocation();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const navigate = useNavigate();
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const { course_id } = location.state || {};
+  const course_id = id;
 
   useEffect(() => {
     setLoading(true);
     axiosConfig
       .get(`/front/courses/${course_id}`)
       .then((res) => {
-        console.log(res.data);
         setCourse(res.data);
         setIsSubscribed(res.data.is_subscribed);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
-
-  const index = 1;
-
-  function LinearProgressWithLabel({ value }) {
-    return (
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ width: "100%", mr: 1 }}>
-          <LinearProgress variant="determinate" value={10} />
-        </Box>
-        <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body2" color="text.secondary">{`${Math.round(
-            value
-          )}%`}</Typography>
-        </Box>
-      </Box>
-    );
-  }
+  }, [course_id]);
 
   const handleManageSubscription = () => {
     setLoading(true);

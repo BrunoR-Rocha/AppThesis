@@ -16,7 +16,6 @@ const ProfileCourses = () => {
       .get(`/profile/courses`)
       .then((res) => {
         setCourses(res.data);
-        console.log(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -63,7 +62,7 @@ const ProfileCourses = () => {
                                   {course.subscribed_at}
                                 </td>
                                 <td className="px-4 py-2">
-                                  {course.is_completed == 1 ? (
+                                  {course.is_completed === 1 ? (
                                     <div className="bg-[#98E39940] rounded-lg flex justify-center font-medium">
                                       Finished
                                     </div>

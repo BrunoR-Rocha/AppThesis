@@ -37,7 +37,6 @@ const ProfileSettings = () => {
     handleSubmit: handleSubmitProfile,
     formState: { errors: errorsProfile },
     setValue: setValueProfile,
-    reset: resetProfile,
   } = useForm({
     defaultValues: {
       name: user?.name || "",

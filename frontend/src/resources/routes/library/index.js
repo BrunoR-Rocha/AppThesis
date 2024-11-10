@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import Wrapper from "../../components/general/Wrapper";
 import axiosConfig from "../../../providers/axiosConfig";
 import { CircularProgress } from "@mui/material";
-import {
-  LibraryArea,
-  LibraryList,
-} from "./styles/library_styles";
+import { LibraryArea, LibraryList } from "./styles/library_styles";
 import RenderButton from "../../components/general/SectionButtons";
 import News from "./news";
 import Journals from "./journals";
 import LibraryCard from "../../components/app/library/LibraryCard";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Library() {
   const [loading, setLoading] = useState();
@@ -40,6 +39,12 @@ function Library() {
     await axiosConfig
       .post(`/library/favorites`, { content_id: pageId })
       .then((res) => {
+        if (isCurrentlyFavorite) {
+          toast.error(res.data.message);
+        } else {
+          toast.success(res.data.message);
+        }
+
         setSavedPages((prev) => ({ ...prev, [pageId]: !isCurrentlyFavorite }));
       })
       .catch((err) => {

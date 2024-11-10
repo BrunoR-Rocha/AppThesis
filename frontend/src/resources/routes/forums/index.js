@@ -106,9 +106,8 @@ function Threads() {
                   <div className="flex gap-4">
                     {categories &&
                       categories?.map((category, index) => (
-                        <>
+                        <div key={category.id}>
                           <button
-                            key={category.id}
                             onClick={() => handleCategoryClick(category.id)}
                             className={`px-5 py-2 rounded-full border-[1px] border-solid ${
                               selectedCategories.includes(category.id)
@@ -118,7 +117,7 @@ function Threads() {
                           >
                             {category.name}
                           </button>
-                        </>
+                        </div>
                       ))}
                   </div>
                   <div>

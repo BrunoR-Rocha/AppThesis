@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../media/navbar/logo_moony.svg";
 import AuthLogo from "../../../media/auth/auth_moony.svg";
@@ -21,8 +21,7 @@ function ResetPassword() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-    reset,
+    formState: { errors }
   } = useForm({
     defaultValues: {
       email: email || "",

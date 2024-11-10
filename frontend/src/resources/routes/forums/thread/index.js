@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Wrapper from "../../../components/general/Wrapper";
 import EastIcon from "@mui/icons-material/East";
 import { ForumPostArea, ThreadInfo } from "../styles/forum_styles";
@@ -12,10 +12,9 @@ import PostSection from "../post";
 import BackButton from "../../../components/general/BackButton";
 
 const ThreadPage = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
   const location = useLocation();
   const thread = location.state?.thread;
-  const navigate = useNavigate();
   const [isCommentSectionOpen, setCommentSectionOpen] = useState(false);
 
   const handleNextChapterClick = () => {};

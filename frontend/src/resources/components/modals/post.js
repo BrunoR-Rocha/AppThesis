@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../styles/contact";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
@@ -55,13 +55,16 @@ function PostModal({ open, handleClose, onAddThread }) {
   };
 
   useEffect(() => {
+    setLoading(true);
     axiosConfig
       .get("/front/post/category")
       .then((response) => {
         setTopics(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         toast.error("There was an error fetching the topics!");
+        setLoading(false);
       });
   }, []);
 
@@ -161,7 +164,6 @@ function PostModal({ open, handleClose, onAddThread }) {
               </div>
               <div className="flex flex-col basis-full lg:basis-1/2 gap-6">
                 <div className="flex flex-col flex-1">
-
                   <UploadInput
                     onImageSelected={handleImageSelected}
                     error={errors.image && "Error when uploading image"}
