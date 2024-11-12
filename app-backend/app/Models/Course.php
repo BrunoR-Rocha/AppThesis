@@ -67,7 +67,7 @@ class Course extends Model
 
         $totalLessons = $this->lessons()->count();
         if ($totalLessons === 0) {
-            return 0; 
+            return 0;
         }
 
         $userProgress = CourseProgress::where('user_id', $userId)
@@ -79,4 +79,18 @@ class Course extends Model
         return round($generalProgress, 2);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(CourseRating::class);
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->ratings()->avg('rating');
+    }
+
+    public function getRatingsCountAttribute()
+    {
+        return $this->ratings()->count();
+    }
 }

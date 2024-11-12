@@ -18,6 +18,7 @@ import Forgot from "./resources/routes/auth/forgot";
 import ResetPassword from "./resources/routes/auth/reset";
 import CourseLearn from "./resources/routes/academy/course/learn";
 import QuizReview from "./resources/routes/academy/quiz/review";
+import CourseRating from "./resources/routes/academy/course/rating/rating";
 
 const routes = [
   // Public Routes
@@ -93,6 +94,11 @@ const routes = [
   {
     path: "/academy/course/:id/learn",
     element: <CourseLearn />,
+    protected: true,
+  },
+  {
+    path: "/academy/course/:id/rating",
+    element: <CourseRating />,
     protected: true,
   },
   {

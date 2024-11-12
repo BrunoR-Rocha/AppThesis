@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class FrontCourseResource extends JsonResource
+class FrontCourseLearnResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -36,16 +36,24 @@ class FrontCourseResource extends JsonResource
                 return [
                     'id' => $lesson->id,
                     'title' => $lesson->title,
+                    'content' => $lesson->content,
                     'description' => $lesson->short_description,
                     'estimated_duration' =>  $this->handleTime($lesson->estimated_duration),
+                    'course_contents' => $lesson->courseContents->map(function ($content) {
+                        return [
+                            'id' => $content->id,
+                            'title' => $content->title,
+                            'content' => $content->content,
+                            'content_type' => $content->contentType->name,
+                        ];
+                    }),
                 ];
             }),
             'num_lessons' => $this->lessons->count(),
             'is_subscribed' => $this->isUserSubscribed(Auth::user()),
             'subscribed_at' => $this->user_subscribed_date ? $this->user_subscribed_date->format('d/m/Y') : null,
             'general_progress' => $this->general_progress . '%',
-            'avg_rating' => $this->average_rating,
-            'num_ratings' => $this->ratings_count
+            'progress' => $this->general_progress,
         ];
     }
 

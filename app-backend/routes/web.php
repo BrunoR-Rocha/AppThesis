@@ -10,6 +10,7 @@ use App\Http\Controllers\CourseContentController;
 use App\Http\Controllers\CourseContentTypeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseInteractiveElementController;
+use App\Http\Controllers\CourseRatingController;
 use App\Http\Controllers\CourseSubscriptionController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ForumCategoryController;
@@ -71,7 +72,7 @@ Route::group([
     $router->post('/front/contacts',                                    [ContactController::class, 'frontStore']);
     $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
-   
+
     // Authenticated Routes
     $router->group(['middleware' => 'auth:api'], function (Router $router) {
 
@@ -119,7 +120,7 @@ Route::group([
 
         $router->post('/front/post/create',                             [ForumThreadController::class, 'frontStore']);
         $router->post('/front/post/comment',                            [ForumPostController::class, 'frontStore']);
-        
+
         $router->post('/front/quiz/create',                             [QuizController::class, 'assemble']);
 
         $router->get('front/news',                                      [NewsController::class, 'getAll']);
@@ -134,6 +135,10 @@ Route::group([
 
         $router->get('/front/courses',                                  [CourseController::class, 'getAll']);
         $router->get('/front/courses/{id}',                             [CourseController::class, 'getContent']);
+        $router->get('/front/courses/{id}/contents',                    [CourseController::class, 'getCourseContents']);
+        $router->get('/front/courses/{id}/progress',                    [CourseController::class, 'getCourseProgress']);
+        $router->post('/front/courses/{id}/save-progress',              [CourseController::class, 'saveCourseProgress']);
+        $router->post('/front/courses/{id}/rating',                     [CourseRatingController::class, 'frontStore']);
 
         $router->post('/front/profile/password',                        [UserController::class, 'changePassword']);
         $router->post('/front/courses/manage/{id}',                     [CourseSubscriptionController::class, 'manageSubscription']);

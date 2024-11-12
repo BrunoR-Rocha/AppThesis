@@ -22,7 +22,7 @@ class Lesson extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function contents()
+    public function courseContents()
     {
         return $this->hasMany(CourseContent::class);
     }

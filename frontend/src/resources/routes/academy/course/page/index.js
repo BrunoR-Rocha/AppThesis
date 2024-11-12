@@ -16,7 +16,7 @@ import {
   AccordionItem,
   AccordionItemDescription,
 } from "../../../about/styles/landing_styles";
-
+import GradeRoundedIcon from "@mui/icons-material/GradeRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
@@ -120,12 +120,17 @@ const CoursePage = () => {
                       {course?.difficulty?.name}
                     </span>
                   </div>
-                  {/* <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
-                    <LabeledIcon
-                      icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}
-                      label={" 4.7 (218 ratings)"}
-                    />
-                  </div> */}
+                  {course?.num_ratings > 0 && (
+                    <div className="bg-[#1A184C40] rounded-md backdrop-blur-sm px-5 py-3">
+                      <LabeledIcon
+                        icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}
+                        label={
+                          course?.avg_ratings +
+                          `( ${course?.num_ratings} ratings)`
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

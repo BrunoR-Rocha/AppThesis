@@ -11,7 +11,7 @@ class CourseContentType extends Model
 
     protected $fillable = ['name', 'tag', 'enabled'];
 
-    public function contents()
+    public function courseContents()
     {
         return $this->hasMany(CourseContent::class);
     }

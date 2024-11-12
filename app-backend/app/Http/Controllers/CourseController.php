@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\FrontCourseLearnResource;
 use App\Http\Resources\FrontCourseResource;
 use App\Models\Course;
+use App\Models\CourseProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -169,4 +171,64 @@ class CourseController extends Controller
         $course = Course::active()->whereId($id)->firstOrFail();
         return new FrontCourseResource($course);
     }
+
+    public function getCourseContents($id)
+    {
+        $course = Course::with([
+            'lessons.courseContents.contentType',
+        ])->active()->whereId($id)->firstOrFail();
+
+        return new FrontCourseLearnResource($course);
+    }
+
+    public function getCourseProgress($courseId)
+    {
+        $user = Auth::user();
+
+        $courseProgress = CourseProgress::where('user_id', $user->id)
+            ->where('course_id', $courseId)
+            ->first();
+
+            $completedLessons = $courseProgress->where('progress', 100)->pluck('lesson_id')->toArray();
+
+        $totalLessons = Course::findOrFail($courseId)->lessons()->count();
+        $overallProgress = $totalLessons > 0
+            ? (count($completedLessons) / $totalLessons) * 100
+            : 0;
+
+        return response()->json([
+            'completed_lessons' => $completedLessons,
+            'overall_progress' => round($overallProgress, 2)
+        ]);
+    }
+
+    public function saveCourseProgress(Request $request, $courseId)
+    {
+        $user = Auth::user();
+        $completedLessons = $request->input('completed_lessons');
+
+        $course = Course::findOrFail($courseId);
+        $lessonIds = $course->lessons()->pluck('id')->toArray();
+
+        $validCompletedLessons = array_intersect($completedLessons, $lessonIds);
+
+        foreach ($validCompletedLessons as $lessonId) {
+            CourseProgress::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'course_id' => $courseId,
+                    'lesson_id' => $lessonId,
+                ],
+                [
+                    'progress' => 100,
+                ]
+            );
+        }
+
+        return response()->json(['message' => 'Progress saved successfully']);
+    }
+
+
+
+
 }

@@ -32,7 +32,7 @@ export default function LessonShow(props) {
           </ReferenceField>
         </Tab>
         <Tab label="Contents Modules">
-          <ArrayField source="contents" label="">
+          <ArrayField source="courseContents" label="">
             <Datagrid bulkActionButtons={false}>
               <TextField source="title" label="Content" />
             </Datagrid>
