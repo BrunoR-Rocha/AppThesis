@@ -156,10 +156,8 @@ class QuizController extends Controller
         $difficultyLevel = null;
         
         if ($request->is_random) {
-            // Get a random set of questions of several topics, select the quizzes and add to QuizQuestion model, like attach and assign an order
             $questions = Question::inRandomOrder()->take(20)->get();
         } else {
-            // check if difficulty and topic is set
             if (!$request->has('topic_id') || !$request->has('difficulty')) {
                 return response()->json([
                     'message' => 'No topic provided',
@@ -195,7 +193,7 @@ class QuizController extends Controller
                 $questionTopic = QuestionTopic::whereId($topicId)->first();
 
                 if ($questionTopic) {
-                    $response = $questionController->generateRandom($request, $questionTopic);
+                    $questionController->generateRandom($request, $questionTopic);
 
                     $questions = Question::whereBetween('difficulty', [$difficultyRange[0], $difficultyRange[1]])
                         ->whereHas('topics', function ($query) use ($request, $topicId) {
@@ -252,7 +250,6 @@ class QuizController extends Controller
             }
         }
 
-        // return response()->json(new FrontQuizResource($quiz));
         return response()->json([
             'params' => [
                 'id' => $quiz->id,
@@ -280,7 +277,6 @@ class QuizController extends Controller
 
     public function getQuizReview($id)
     {
-        // Ensure the quiz is from the authenticated User
         $user = Auth::user();
 
         $userQuiz = UserQuiz::where('user_id', $user->id)->where('quiz_id', $id)->first();
@@ -504,13 +500,12 @@ class QuizController extends Controller
 
         if ($question->type->tag === 'multiple_choice') {
             if (is_array($answer)) {
-                // Multiple selections (checkboxes)
                 foreach ($answer as $option) {
                     if (!in_array($option, $allOptions)) {
-                        return false; // Invalid option selected
+                        return false;
                     }
                 }
-                // Check if all selected options are correct and no extra options are selected
+               
                 return empty(array_diff($correctOptions, $answer)) && empty(array_diff($answer, $correctOptions));
             } else {
                 return in_array($answer, $correctOptions);
@@ -534,7 +529,7 @@ class QuizController extends Controller
         $data = [
             'theme' => SysConfig::tag('theme')->first()->value,
             'question' => $question->title,
-            'answer' => $answer
+            'answer' => is_string($answer) ? $answer : strval($answer) 
         ];
 
         $responseLangchain = $this->callLangChainAPI($data);
@@ -563,6 +558,7 @@ class QuizController extends Controller
      */
     private function callLangChainAPI($data)
     {
+
         $llmUrl = config('llm.url');
         $response = Http::post($llmUrl . '/question-evaluate', $data);
 

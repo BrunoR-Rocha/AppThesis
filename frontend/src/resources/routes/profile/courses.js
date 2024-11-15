@@ -5,6 +5,7 @@ import Skeleton from "../../components/general/Skeleton";
 import { CourseCard, QuizDashboardComponent } from "./style";
 import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import EmptyValue from "../../components/general/EmptyValue";
 
 const ProfileCourses = () => {
   const [loading, setLoading] = useState();
@@ -77,7 +78,7 @@ const ProfileCourses = () => {
                           ) : (
                             <tr>
                               <td colSpan="3" className="px-4 py-2 text-center">
-                                No courses enrolled yet
+                                <EmptyValue label={"No courses enrolled yet"} />
                               </td>
                             </tr>
                           )}

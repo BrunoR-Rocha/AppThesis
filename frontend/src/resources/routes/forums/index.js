@@ -11,6 +11,7 @@ import PostModal from "../../components/modals/post";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import moment from "moment";
 import ChatBox from "../../components/chat/Chatbox";
+import EmptyValue from "../../components/general/EmptyValue";
 
 function Threads() {
   const [loading, setLoading] = useState();
@@ -144,8 +145,7 @@ function Threads() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full gap-5">
               {loading ? (
                 <CircularProgress className="mx-auto" sx={{ color: "#FFF" }} />
-              ) : (
-                threads &&
+              ) : threads && threads.length > 0 ? (
                 threads
                   .filter(
                     (thread) =>
@@ -193,6 +193,8 @@ function Threads() {
                       </div>
                     );
                   })
+              ) : (
+                <EmptyValue label={"No posts yet"} />
               )}
             </div>
           </ForumPostList>

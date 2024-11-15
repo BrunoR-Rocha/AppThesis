@@ -6,6 +6,7 @@ import ProgressCircle from "../academy/quiz/components/Progress";
 import { QuizDashboardComponent } from "./style";
 import { Link } from "react-router-dom";
 import { formatTimeText } from "../../utils/timeUtils";
+import EmptyValue from "../../components/general/EmptyValue";
 
 const QuizDashboard = () => {
   const OverviewBox = ({
@@ -181,7 +182,7 @@ const QuizDashboard = () => {
                       ) : (
                         <tr>
                           <td colSpan="3" className="px-4 py-2 text-center">
-                            No quizzes created yet
+                            <EmptyValue label={"No quizzes created yet"} />
                           </td>
                         </tr>
                       )}

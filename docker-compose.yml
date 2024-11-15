@@ -6,6 +6,7 @@ services:
     build:
       context: ./app-backend
     container_name: app-backend
+    restart: always
     ports:
       - "9000:9000"
     volumes:
@@ -25,6 +26,7 @@ services:
     build:
       context: ./frontend
     container_name: frontend
+    restart: always
     ports:
       - "3000:3000"
     volumes:
@@ -42,6 +44,7 @@ services:
     build:
       context: ./frontend-admin
     container_name: frontend-admin
+    restart: always
     ports:
       - "3001:3001"
     volumes:
@@ -90,6 +93,7 @@ services:
       context: ./langchain
       dockerfile: Dockerfile
     container_name: langchain
+    restart: always
     environment:
       - PYTHONUNBUFFERED=1
       - LANGCHAIN_TRACING_V2=true

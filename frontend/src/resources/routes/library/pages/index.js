@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import {
   LibraryArea,
   LibraryItemTitle,
+  LibraryText,
   PageInfo,
 } from "../styles/library_styles";
 import Wrapper from "../../../components/general/Wrapper";
@@ -126,8 +127,8 @@ const LibraryPage = () => {
                   <h3 className="text-2xl font-bold mb-8">
                     {selectedModule?.title}
                   </h3>
-                  <div
-                    className="flex flex-col gap-4 leading-8 border-b-[0.5px] border-b-[#040A17] pb-5"
+                  <LibraryText
+                    className="flex flex-col gap-4 leading-8 border-b-[0.5px] border-b-[#040A17] pb-5 text-white"
                     dangerouslySetInnerHTML={{
                       __html: selectedModule?.content,
                     }}

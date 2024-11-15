@@ -25,7 +25,7 @@ const MultipleChoiceQuestion = ({
             className={`group`}
             key={index}
             selected={selectedOption?.option_text === option.option_text}
-            onClick={() => handleOptionChange(question.id, option)}
+            onClick={() => handleOptionChange(option)}
           >
             <div
               className={`p-3 rounded ${
@@ -48,7 +48,6 @@ const MultipleChoiceQuestion = ({
 
 const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
   const [selectedOption, setSelectedOption] = useState(selectedAnswer || null);
-
   const handleOptionChange = (option) => {
     setSelectedOption(option);
     handleAnswerChange(question.id, option);
@@ -67,7 +66,7 @@ const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
           value="yes"
           className="hidden"
           checked={selectedOption === "yes"}
-          onClick={() => handleOptionChange(question.id, "yes")}
+          onClick={() => handleOptionChange("yes")}
         />
         <QuizOption className="group" selected={selectedOption === "yes"}>
           <div
@@ -88,7 +87,7 @@ const YesNoQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
           value="no"
           className="hidden"
           checked={selectedOption === "no"}
-          onClick={() => handleOptionChange(question.id, "no")}
+          onClick={() => handleOptionChange("no")}
         />
         <QuizOption className="group" selected={selectedOption === "no"}>
           <div
@@ -125,7 +124,7 @@ const FreeTextQuestion = ({ question, handleAnswerChange, selectedAnswer }) => {
         placeholder={"Type your answer here..."}
         rows={4}
         value={selectedOption || ""}
-        onChange={(e) => handleOptionChange(question.id, e.target.value)}
+        onChange={(e) => handleOptionChange(e.target.value)}
       ></textarea>
     </QuizOption>
   );

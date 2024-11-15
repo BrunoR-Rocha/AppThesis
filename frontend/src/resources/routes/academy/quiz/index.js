@@ -103,6 +103,7 @@ function QuizPage() {
   };
 
   const handleAnswerChange = (questionId, answer) => {
+    console.log("Question ID:", questionId, "Answer:", answer);
     setAnswers((prev) => ({
       ...prev,
       [questionId]: answer,

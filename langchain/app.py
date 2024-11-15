@@ -164,7 +164,7 @@ def randomQuestions():
         2. **Multiple Choice**: A question with multiple predefined options, where one or more options can be correct, up to 8 options.
         3. **Free Text**: A question where the answer will be written by the user.
 
-    Generate 5 questions in the following JSON format, with a mix of question types. If the question is Multiple Choice or Yes/No, include the correct answer(s). For Free Text, leave the options blank.
+    Generate 10 questions in the following JSON format, with a mix of question types. If the question is Multiple Choice or Yes/No, include the correct answer(s). For Free Text, leave the options blank.
     For the multiple choice questions, you can provide up to 8 options, but no less than 4. 
     The difficulty of the questions can range between 1 and 100, to have a more specific assessment. The higher the number, the more difficult the question is.
     Return only the JSON objects:

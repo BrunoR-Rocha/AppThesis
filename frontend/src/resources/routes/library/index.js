@@ -9,6 +9,7 @@ import Journals from "./journals";
 import LibraryCard from "../../components/app/library/LibraryCard";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EmptyValue from "../../components/general/EmptyValue";
 
 function Library() {
   const [loading, setLoading] = useState();
@@ -88,8 +89,7 @@ function Library() {
                     className="mx-auto"
                     sx={{ color: "#FFF" }}
                   />
-                ) : (
-                  pages &&
+                ) : pages && pages.length > 0 ? (
                   pages.map((page, index) => {
                     return (
                       <LibraryCard
@@ -100,6 +100,8 @@ function Library() {
                       />
                     );
                   })
+                ) : (
+                  <EmptyValue label={"No library pages yet"} />
                 )}
               </div>
             )}

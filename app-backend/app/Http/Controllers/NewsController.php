@@ -152,6 +152,6 @@ class NewsController extends Controller
                 ->update(['enabled' => false]);
         }
 
-        return response()->json(['message' => 'Journal data updated successfully.']);
+        return response()->json(['message' => 'News data updated successfully.']);
     }
 }

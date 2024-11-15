@@ -51,3 +51,14 @@ export const PageInfo = styled("div")`
     padding-block: 120px;
     min-height: 100vh;
 `;
+
+export const LibraryText = styled("p")`
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  align-self: stretch;
+  * {
+    color: #fff !important;
+    line-height: 24px !important;
+  }
+`;
