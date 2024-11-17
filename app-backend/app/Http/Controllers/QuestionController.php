@@ -178,7 +178,6 @@ class QuestionController extends Controller
                 'topic_name' => $topic->name
             ];
         } else {
-            // Generate a question without associated Topic
             $data = [
                 'theme' => $theme,
             ];
@@ -199,7 +198,6 @@ class QuestionController extends Controller
                 foreach ($questions as $question) {
                     $questionType = QuestionType::tag($question['type'])->first();
 
-                    // If question type doesn't exist or there's already the same question with same type skips
                     if (!$questionType) {
                         continue;
                     }

@@ -51,11 +51,11 @@ Route::group([
     'prefix' => '/backend',
 ], function (Router $router) {
 
-    $router->post('/register',                                      [AuthController::class, 'register']);
-    $router->post('/login',                                         [AuthController::class, 'login']);
-    $router->post('/forgot/email',                                  [ForgotPasswordController::class, 'sendResetLinkEmail']);
-    $router->post('/forgot/reset',                                  [ResetPasswordController::class, 'reset']);
-    $router->post('/admin/login',                                   [AuthController::class, 'adminLogin']);
+    $router->post('/register',                                          [AuthController::class, 'register']);
+    $router->post('/login',                                             [AuthController::class, 'login']);
+    $router->post('/forgot/email',                                      [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    $router->post('/forgot/reset',                                      [ResetPasswordController::class, 'reset']);
+    $router->post('/admin/login',                                       [AuthController::class, 'adminLogin']);
 
     $router->get('storage/{folderName}/{filename}',                     [MediaController::class, 'showMedia']);
 
@@ -65,7 +65,6 @@ Route::group([
     $router->get('/llm/health',                                         [ChatbotController::class, 'health']);
     $router->get('/llm/topic',                                          [QuestionTopicController::class, 'generate']);
     $router->get('/llm/question',                                       [QuestionController::class, 'generateRandom']);
-    $router->post('/chatbot',                                           [ChatbotController::class, 'chat']);
 
     $router->get('/front/comments/{id}',                                [ForumThreadController::class, 'showComments']);
     $router->post('/front/register',                                    [UserController::class, 'frontRegister']);
@@ -78,6 +77,8 @@ Route::group([
 
         $router->post('/logout',                                        [AuthController::class, 'logout']);
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
+
+        $router->post('/chatbot',                                       [ChatbotController::class, 'chat']);
 
         $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);

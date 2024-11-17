@@ -20,11 +20,11 @@ const CourseLearn = () => {
   const [currentLesson, setCurrentLesson] = useState(null);
   const [completedLessons, setCompletedLessons] = useState([]);
   const [courseProgress, setCourseProgress] = useState(0);
-  const navigate = useNavigate();
+  const [expandedLessons, setExpandedLessons] = useState([]);
+  const [currentCourseContent, setCurrentCourseContent] = useState(null);
+  const [completedCourseContents, setCompletedCourseContents] = useState([]);
 
-  const handleChange = (lesson) => {
-    setCurrentLesson(lesson);
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -35,16 +35,23 @@ const CourseLearn = () => {
 
         if (res.data.lessons.length > 0) {
           setCurrentLesson(res.data.lessons[0]);
+
+          if (res.data.lessons[0].course_contents.length > 0) {
+            setCurrentCourseContent(res.data.lessons[0].course_contents[0]);
+          }
         }
 
         axiosConfig
           .get(`/front/courses/${id}/progress`)
           .then((progressRes) => {
+            const completedContents =
+              progressRes.data.completed_course_contents || [];
             const completedLessons = progressRes.data.completed_lessons || [];
-            setCompletedLessons(completedLessons);
+            const overallProgress = progressRes.data.overall_progress || 0;
 
-            const progress = progressRes.data.overall_progress;
-            setCourseProgress(progress);
+            setCompletedCourseContents(completedContents);
+            setCompletedLessons(completedLessons);
+            setCourseProgress(overallProgress);
 
             setLoading(false);
           })
@@ -56,25 +63,45 @@ const CourseLearn = () => {
       .catch(() => setLoading(false));
   }, [id]);
 
-  const handleMarkLessonComplete = (lessonId) => {
-    if (!completedLessons.includes(lessonId)) {
-      const updatedCompletedLessons = [...completedLessons, lessonId];
-      setCompletedLessons(updatedCompletedLessons);
+  const handleMarkContentComplete = (contentId) => {
+    if (!completedCourseContents.includes(contentId)) {
+      const updatedCompletedContents = [...completedCourseContents, contentId];
+      setCompletedCourseContents(updatedCompletedContents);
 
-      const totalLessons = courseContents.lessons.length;
-      const newProgress = (updatedCompletedLessons.length / totalLessons) * 100;
+      const totalContents = courseContents.lessons.reduce(
+        (total, lesson) => total + lesson.course_contents.length,
+        0
+      );
+      const newProgress =
+        (updatedCompletedContents.length / totalContents) * 100;
       setCourseProgress(newProgress);
 
-      saveCourseProgress(updatedCompletedLessons);
+      const lessonContentIds = currentLesson.course_contents.map(
+        (content) => content.id
+      );
+      const isLessonCompleted = lessonContentIds.every((id) =>
+        updatedCompletedContents.includes(id)
+      );
+
+      if (isLessonCompleted && !completedLessons.includes(currentLesson.id)) {
+        const updatedCompletedLessons = [...completedLessons, currentLesson.id];
+        setCompletedLessons(updatedCompletedLessons);
+
+        saveCourseProgress(updatedCompletedContents, updatedCompletedLessons);
+      } else {
+        saveCourseProgress(updatedCompletedContents, completedLessons);
+      }
     }
   };
 
-  const saveCourseProgress = (completedLessons) => {
+  const saveCourseProgress = (completedContents, completedLessons) => {
+    console.log(completedContents, completedLessons);
     axiosConfig
       .post(`/front/courses/${id}/save-progress`, {
+        completed_course_contents: completedContents,
         completed_lessons: completedLessons,
       })
-      .then((res) => {
+      .then(() => {
         console.log("Progress saved successfully");
       })
       .catch((error) => {
@@ -82,37 +109,70 @@ const CourseLearn = () => {
       });
   };
 
-  const handleNextLesson = () => {
-    if (!currentLesson || !courseContents) return;
+  const handleNextContent = () => {
+    if (!currentLesson || !currentCourseContent || !courseContents) return;
 
-    const currentIndex = courseContents.lessons.findIndex(
+    const lessonIndex = courseContents.lessons.findIndex(
       (lesson) => lesson.id === currentLesson.id
     );
 
-    if (currentIndex >= 0 && currentIndex < courseContents.lessons.length - 1) {
-      const nextLesson = courseContents.lessons[currentIndex + 1];
+    const contentIndex = currentLesson.course_contents.findIndex(
+      (content) => content.id === currentCourseContent.id
+    );
+
+    if (
+      contentIndex >= 0 &&
+      contentIndex < currentLesson.course_contents.length - 1
+    ) {
+      // Move to next content in the current lesson
+      const nextContent = currentLesson.course_contents[contentIndex + 1];
+      setCurrentCourseContent(nextContent);
+    } else if (
+      lessonIndex >= 0 &&
+      lessonIndex < courseContents.lessons.length - 1
+    ) {
+      // Move to the first content of the next lesson
+      const nextLesson = courseContents.lessons[lessonIndex + 1];
       setCurrentLesson(nextLesson);
+      if (nextLesson.course_contents.length > 0) {
+        setCurrentCourseContent(nextLesson.course_contents[0]);
+      } else {
+        // If next lesson has no content, skip to the next content
+        handleNextContent();
+      }
     } else {
-      console.log("You have completed all lessons!");
+      console.log("You have completed all contents!");
     }
   };
 
-  const hasNextLesson = () => {
-    if (!currentLesson || !courseContents) return false;
+  const hasNextContent = () => {
+    if (!currentLesson || !currentCourseContent || !courseContents)
+      return false;
 
-    const currentIndex = courseContents.lessons.findIndex(
+    const lessonIndex = courseContents.lessons.findIndex(
       (lesson) => lesson.id === currentLesson.id
     );
 
-    return (
-      currentIndex >= 0 && currentIndex < courseContents.lessons.length - 1
+    const contentIndex = currentLesson.course_contents.findIndex(
+      (content) => content.id === currentCourseContent.id
     );
+
+    if (contentIndex < currentLesson.course_contents.length - 1) {
+      return true;
+    } else if (lessonIndex < courseContents.lessons.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
-  const allLessonsCompleted = () => {
+  const allContentsCompleted = () => {
+    const totalContents = courseContents?.lessons?.reduce(
+      (total, lesson) => total + lesson.course_contents.length,
+      0
+    );
     return (
-      courseContents &&
-      completedLessons.length === courseContents.lessons.length
+      totalContents > 0 && completedCourseContents.length === totalContents
     );
   };
 
@@ -175,86 +235,90 @@ const CourseLearn = () => {
             <Wrapper>
               <div className="flex flex-wrap-reverse lg:flex-nowrap gap-10 sm:gap-20 flex-1">
                 <div className="flex flex-col basis-2/3">
-                  {currentLesson ? (
+                  {currentCourseContent ? (
                     <div>
                       <h2 className="text-2xl font-semibold text-white mb-4">
-                        {currentLesson.title}
+                        {currentLesson?.title}
                       </h2>
-                      {currentLesson.course_contents.map((contentItem) => {
+                      {(() => {
                         const ContentComponent =
-                          contentTypeComponents[contentItem.content_type] ||
-                          contentTypeComponents.default;
+                          contentTypeComponents[
+                            currentCourseContent.content_type
+                          ] || contentTypeComponents.default;
 
                         if (ContentComponent) {
                           return (
                             <ContentComponent
-                              key={contentItem.id}
-                              content={contentItem}
+                              key={currentCourseContent.id}
+                              content={currentCourseContent}
                             />
                           );
                         } else {
                           return (
-                            <div key={contentItem.id}>
+                            <div key={currentCourseContent.id}>
                               <p>
                                 Unsupported content type:{" "}
-                                {contentItem.content_type}
+                                {currentCourseContent.content_type}
                               </p>
                             </div>
                           );
                         }
-                      })}
+                      })()}
                     </div>
                   ) : (
-                    <>
-                      {() => {
-                        const ContentComponent = contentTypeComponents.default;
-                        return (
-                          <ContentComponent content={currentLesson.content} />
-                        );
-                      }}
-                    </>
+                    <div>
+                      <p>Select a content to view</p>
+                    </div>
                   )}
-                  <div className="flex w-full justify-between">
+
+                  <div className="flex justify-between">
                     <button
                       onClick={() =>
-                        handleMarkLessonComplete(currentLesson?.id)
+                        handleMarkContentComplete(currentCourseContent?.id)
                       }
                       className={`mt-4 flex items-center gap-2 text-white px-4 py-3 rounded-full ${
-                        completedLessons.includes(currentLesson?.id)
+                        completedCourseContents.includes(
+                          currentCourseContent?.id
+                        )
                           ? "bg-[#AAA]"
                           : "bg-[#4B5057]"
                       }`}
-                      disabled={completedLessons.includes(currentLesson?.id)}
+                      disabled={completedCourseContents.includes(
+                        currentCourseContent?.id
+                      )}
                     >
-                      {completedLessons.includes(currentLesson?.id)
+                      {completedCourseContents.includes(
+                        currentCourseContent?.id
+                      )
                         ? "Completed"
                         : "Mark as Completed"}
                       <CheckCircleIcon
                         sx={{
-                          color: completedLessons.includes(currentLesson?.id)
+                          color: completedCourseContents.includes(
+                            currentCourseContent?.id
+                          )
                             ? "#ECECEC"
                             : "#AAAAAA",
                           marginLeft: "8px",
                         }}
                       />
                     </button>
-                    <div className="p-0 rounded-full border-8 border-transparent hover:border-[#6078DF59]">
-                      <button
-                        onClick={
-                          allLessonsCompleted()
-                            ? handleFinishCourse
-                            : handleNextLesson
-                        }
-                        className="bg-[#6078DF] text-white px-4 py-3 rounded-full"
-                        disabled={!hasNextLesson() && !allLessonsCompleted()}
-                      >
-                        {allLessonsCompleted()
-                          ? "Finish Course"
-                          : "Next Lesson"}
-                      </button>
-                    </div>
+                    <button
+                      onClick={
+                        allContentsCompleted()
+                          ? handleFinishCourse
+                          : handleNextContent
+                      }
+                      className="mt-4 bg-[#6078DF] text-white px-4 py-3 rounded-full"
+                      disabled={!hasNextContent() && !allContentsCompleted()}
+                    >
+                      {allContentsCompleted()
+                        ? "Finish Course"
+                        : "Next Content"}
+                    </button>
                   </div>
                 </div>
+
                 <div className="flex flex-col gap-8 basis-1/3">
                   <div className="flex flex-col gap-4">
                     <CourseProgress
@@ -265,36 +329,97 @@ const CourseLearn = () => {
                   </div>
                   <div className="flex flex-col gap-5">
                     {courseContents &&
-                      courseContents.lessons.map((lesson, index) => (
-                        <div
-                          key={lesson.id}
-                          className={`flex flex-col rounded-xl border-2 border-solid border-[#1A184C] p-6 cursor-pointer ${
-                            lesson.id === currentLesson?.id
-                              ? "bg-[#6078DF40]"
-                              : completedLessons.includes(lesson.id)
-                              ? "bg-[#1A184CCC]"
-                              : "bg-[#1A184C40]"
-                          }`}
-                          onClick={() => handleChange(lesson)}
-                        >
-                          <div className="flex justify-between items-center">
-                            <p className="text-[#E9F0FF] font-semibold">
-                              {lesson?.title}
-
-                              <br />
-                              <span className="text-[#6078DF] font-medium text-sm">
-                                {lesson?.estimated_duration}
-                              </span>
-                            </p>
-                            <CheckCircleIcon
-                              sx={{
-                                color: completedLessons.includes(lesson.id)
-                                  ? "#6078DF"
-                                  : "#FFFFFF26",
-                                marginLeft: "8px",
-                              }}
-                            />
+                      courseContents.lessons.map((lesson) => (
+                        <div key={lesson.id} className="lesson-container">
+                          <div
+                            className={`flex flex-col border-2 border-solid border-[#1A184C] p-6 cursor-pointer ${
+                              lesson.id === currentLesson?.id
+                                ? "bg-[#6078DF40]"
+                                : completedLessons.includes(lesson.id)
+                                ? "bg-[#1A184CCC]"
+                                : "bg-[#1A184C40]"
+                            } ${
+                              expandedLessons.includes(lesson.id)
+                                ? "rounded-t-xl"
+                                : "rounded-xl"
+                            }`}
+                            onClick={() => {
+                              if (expandedLessons.includes(lesson.id)) {
+                                setExpandedLessons(
+                                  expandedLessons.filter(
+                                    (id) => id !== lesson.id
+                                  )
+                                );
+                              } else {
+                                setExpandedLessons([
+                                  ...expandedLessons,
+                                  lesson.id,
+                                ]);
+                              }
+                            }}
+                          >
+                            <div className="flex justify-between items-center">
+                              <p className="text-[#E9F0FF] font-semibold">
+                                {lesson?.title}
+                                <br />
+                                <span className="text-[#6078DF] font-medium text-sm">
+                                  {lesson?.estimated_duration}
+                                </span>
+                              </p>
+                              <CheckCircleIcon
+                                sx={{
+                                  color: completedLessons.includes(lesson.id)
+                                    ? "#6078DF"
+                                    : "#FFFFFF26",
+                                  marginLeft: "8px",
+                                }}
+                              />
+                            </div>
                           </div>
+
+                          {expandedLessons.includes(lesson.id) && (
+                            <div className="course-contents">
+                              {lesson.course_contents.map(
+                                (contentItem, index) => (
+                                  <div
+                                    key={contentItem.id}
+                                    className={`flex justify-between items-center p-4 cursor-pointer ${
+                                      currentCourseContent?.id ===
+                                      contentItem.id
+                                        ? "bg-[#6078DF40]"
+                                        : completedCourseContents.includes(
+                                            contentItem.id
+                                          )
+                                        ? "bg-[#1A184CCC]"
+                                        : "bg-[#1A184C40]"
+                                    } ${
+                                      index ===
+                                      lesson?.course_contents?.length - 1
+                                        ? "rounded-b-xl"
+                                        : ""
+                                    }`}
+                                    onClick={() => {
+                                      setCurrentLesson(lesson);
+                                      setCurrentCourseContent(contentItem);
+                                    }}
+                                  >
+                                    <p className="text-[#E9F0FF] font-medium">
+                                      {contentItem.title}
+                                    </p>
+                                    <CheckCircleIcon
+                                      sx={{
+                                        color: completedCourseContents.includes(
+                                          contentItem.id
+                                        )
+                                          ? "#6078DF"
+                                          : "#FFFFFF26",
+                                      }}
+                                    />
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                   </div>

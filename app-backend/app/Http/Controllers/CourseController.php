@@ -189,28 +189,57 @@ class CourseController extends Controller
             ->where('course_id', $courseId)
             ->first();
 
-            $completedLessons = $courseProgress->where('progress', 100)->pluck('lesson_id')->toArray();
+        if (!$courseProgress) {
+            return response()->json([
+                'completed_lessons' => [],
+                'completed_course_contents' => [],
+                'overall_progress' => 0,
+            ]);
+        }
 
-        $totalLessons = Course::findOrFail($courseId)->lessons()->count();
-        $overallProgress = $totalLessons > 0
-            ? (count($completedLessons) / $totalLessons) * 100
+        $completedLessons = $courseProgress
+            ->whereNull('course_content_id')
+            ->where('progress', 100)
+            ->pluck('lesson_id')
+            ->toArray();
+
+        $course = Course::with('lessons.courseContents')->findOrFail($courseId);
+        $allContents = $course->lessons->pluck('courseContents')->flatten()->pluck('id')->toArray();
+
+        $completedContents = $courseProgress
+            ->whereNotNull('course_content_id')
+            ->pluck('course_content_id')
+            ->toArray();
+
+        $totalContents = count($allContents);
+        $overallProgress = $totalContents > 0
+            ? (count(array_intersect($completedContents, $allContents)) / $totalContents) * 100
             : 0;
 
         return response()->json([
             'completed_lessons' => $completedLessons,
-            'overall_progress' => round($overallProgress, 2)
+            'completed_course_contents' => $completedContents,
+            'overall_progress' => round($overallProgress, 2),
         ]);
     }
 
     public function saveCourseProgress(Request $request, $courseId)
     {
         $user = Auth::user();
-        $completedLessons = $request->input('completed_lessons');
+
+        $completedLessons = $request->input('completed_lessons', []);
+        $completedContents = $request->input('completed_course_contents', []);
 
         $course = Course::findOrFail($courseId);
         $lessonIds = $course->lessons()->pluck('id')->toArray();
+        $lessonContents = $course->lessons()->with('courseContents')->get()
+            ->pluck('courseContents')
+            ->flatten()
+            ->pluck('id')
+            ->toArray();
 
         $validCompletedLessons = array_intersect($completedLessons, $lessonIds);
+        $validCompletedContents = array_intersect($completedContents, $lessonContents);
 
         foreach ($validCompletedLessons as $lessonId) {
             CourseProgress::updateOrCreate(
@@ -218,6 +247,28 @@ class CourseController extends Controller
                     'user_id' => $user->id,
                     'course_id' => $courseId,
                     'lesson_id' => $lessonId,
+                    'course_content_id' => null,
+                ],
+                [
+                    'progress' => 100,
+                ]
+            );
+        }
+
+        foreach ($validCompletedContents as $contentId) {
+            $contentLessonId = $course->lessons()
+                ->whereHas('courseContents', function ($query) use ($contentId) {
+                    $query->where('id', $contentId);
+                })
+                ->pluck('id')
+                ->first();
+
+            CourseProgress::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'course_id' => $courseId,
+                    'lesson_id' => $contentLessonId,
+                    'course_content_id' => $contentId,
                 ],
                 [
                     'progress' => 100,
@@ -227,8 +278,4 @@ class CourseController extends Controller
 
         return response()->json(['message' => 'Progress saved successfully']);
     }
-
-
-
-
 }

@@ -12,13 +12,22 @@ class CourseRatingController extends Controller
 
     public function frontStore(Request $request, $courseId)
     {
-       
-        $request->validate([
+        $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string',
         ]);
 
         $user = Auth::user();
+
+        $existingRating = CourseRating::where('course_id', $courseId)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'message' => 'You have already rated this course.',
+            ], 400);
+        }
 
         $rating = CourseRating::updateOrCreate(
             [
@@ -26,8 +35,8 @@ class CourseRatingController extends Controller
                 'user_id' => $user->id,
             ],
             [
-                'rating' => $request->input('rating'),
-                'comment' => $request->input('comment'),
+                'rating' => $validated['rating'],
+                'comment' => $validated['comment'],
             ]
         );
 

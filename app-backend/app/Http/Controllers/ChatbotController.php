@@ -10,6 +10,7 @@ class ChatbotController extends Controller
 {
     public function chat(Request $request)
     {
+        dd($request);
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);

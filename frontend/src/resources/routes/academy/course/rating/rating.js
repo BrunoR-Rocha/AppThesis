@@ -26,14 +26,18 @@ const CourseRating = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      console.log(data);
+
       await axiosConfig.post(`/front/courses/${id}/rating`, {
-        data,
+        rating: data.rating,
+        comment: data.comment,
       });
 
       toast.success("Thank you for rating the course!");
-    //   navigate(`/academy/course/${id}`);
+      navigate(`/academy/course/${id}`);
     } catch (error) {
-      setError("Failed to submit rating. Please try again.");
+      toast.error(error.message ?? "Failed to submit rating. Please try again.");
+      navigate("/academy");
     } finally {
       setLoading(false);
     }
