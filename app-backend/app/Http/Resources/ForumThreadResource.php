@@ -29,6 +29,7 @@ class ForumThreadResource extends JsonResource
             'posts_count' => $this->forumPosts()->count(),
             'likes_count' => $this->likes()->count(),
             'is_liked_by_user' => $request->user() ? $this->isLikedBy($request->user()) : null,
+            'next_thread_id' => $this->nextThread()?->id,
         ];
     }
 }

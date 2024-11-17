@@ -26,7 +26,6 @@ const CourseRating = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      console.log(data);
 
       await axiosConfig.post(`/front/courses/${id}/rating`, {
         rating: data.rating,

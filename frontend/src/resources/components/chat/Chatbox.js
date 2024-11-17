@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import NavigationRoundedIcon from "@mui/icons-material/NavigationRounded";
 import { ReactComponent as AppChatIcon } from "../../media/chat/app_chat.svg";
@@ -13,6 +13,9 @@ function ChatBox() {
     { user: "system", text: "Hello! Ask me anything!" },
   ]);
 
+  const chatContainerRef = useRef(null);
+  const latestUserMessageRef = useRef(null);
+
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
@@ -26,6 +29,16 @@ function ChatBox() {
       setConversation(updatedConversation);
       setMessage("");
 
+      setTimeout(() => {
+        if (latestUserMessageRef.current && chatContainerRef.current) {
+          const containerTop =
+            chatContainerRef.current.getBoundingClientRect().top;
+          const messageTop =
+            latestUserMessageRef.current.getBoundingClientRect().top;
+          chatContainerRef.current.scrollTop += messageTop - containerTop;
+        }
+      }, 100);
+
       try {
         const response = await axiosConfig.post("/chat", {
           conversation: updatedConversation,
@@ -37,7 +50,10 @@ function ChatBox() {
           { user: "system", text: response.data.message },
         ]);
       } catch (err) {
-        toast.error(err.response?.data?.error ?? 'An error has occured making the request. Please try later!');
+        toast.error(
+          err.response?.data?.error ??
+            "An error has occured making the request. Please try later!"
+        );
       }
     }
   };
@@ -58,10 +74,11 @@ function ChatBox() {
             </div>
           </div>
 
-          <div className="flex-1 p-3 overflow-y-auto">
+          <div ref={chatContainerRef} className="flex-1 p-3 overflow-y-auto">
             {conversation.map((msg, index) => (
               <div
                 key={index}
+                ref={msg.user === "user" ? latestUserMessageRef : null}
                 className={`mb-2 ${
                   msg.user === "user" ? "text-right" : "text-left"
                 }`}

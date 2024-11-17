@@ -5,6 +5,7 @@ import { ReactComponent as Logo } from "../../media/navbar/logo_moony.svg";
 import Wrapper from "../general/Wrapper";
 import ContactModal from "../modals/contact";
 import AuthContext from "../../../context/AuthContext";
+import LanguageSwitch from "../app/LanguageSwitch";
 
 const NavigationBar = styled("div")`
   width: 100%;
@@ -174,6 +175,7 @@ function NavBar() {
                   </button>
                 </>
               )}
+              <LanguageSwitch />
             </div>
           </div>
         </Wrapper>

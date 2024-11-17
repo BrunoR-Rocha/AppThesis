@@ -4,14 +4,7 @@ import "./index.css";
 import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./context/AuthProvider";
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//   <React.StrictMode>
-//     <App />
-//     <p>here</p>
-//   </React.StrictMode>
-// );
+import "./i18n"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

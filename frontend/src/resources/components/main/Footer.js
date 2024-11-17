@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Wrapper from "../general/Wrapper";
+import AuthContext from "../../../context/AuthContext";
 
 const FooterWrapper = styled("div")`
   position: relative;
@@ -19,6 +20,8 @@ const FooterWrapper = styled("div")`
 `;
 
 function Footer() {
+  const { isAuthenticated } = useContext(AuthContext);
+
   return (
     <FooterWrapper>
       <Wrapper>
@@ -51,15 +54,19 @@ function Footer() {
                 <Link to="/about" className="flex justify-start">
                   About
                 </Link>
-                <Link to="/library" className="flex justify-start">
-                  Library
-                </Link>
-                <Link to="/posts" className="flex justify-start">
-                  Forums
-                </Link>
-                <Link to="/academy" className="flex justify-start">
-                  Academy
-                </Link>
+                {isAuthenticated && (
+                  <>
+                    <Link to="/library" className="flex justify-start">
+                      Library
+                    </Link>
+                    <Link to="/posts" className="flex justify-start">
+                      Forums
+                    </Link>
+                    <Link to="/academy" className="flex justify-start">
+                      Academy
+                    </Link>
+                  </>
+                )}
               </div>
 
               <div className="md:basis-1/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">

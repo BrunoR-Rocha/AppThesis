@@ -108,6 +108,13 @@ class ForumThreadController extends Controller
         return new ForumThreadResource($forumThread);
     }
 
+    public function getAll()
+    {
+        $forumThreads = ForumThread::all();
+
+        return ForumThreadResource::collection($forumThreads);
+    }
+
     public function showComments($id)
     {
         $forumThread = ForumThread::findOrFail($id);

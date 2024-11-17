@@ -9,10 +9,16 @@ import ProfileSettings from "./settings";
 import QuizDashboard from "./quiz";
 import Favorites from "./favorites";
 import ProfileCourses from "./courses";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
-  const {user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const location = useLocation();
+
+  // Set the default active tab or retrieve it from the state
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "dashboard"
+  );
 
   const renderButton = (tabId, label) => (
     <button
@@ -49,11 +55,11 @@ const Profile = () => {
 
               <div className="flex items-center">
                 <div className="flex gap-3 items-center">
-                  {renderButton("tab1", "Dashboard")}
-                  {renderButton("tab2", "Courses")}
-                  {renderButton("tab3", "Quizzes")}
-                  {renderButton("tab4", "Saved")}
-                  {renderButton("tab5", "Settings")}
+                  {renderButton("dashboard", "Dashboard")}
+                  {renderButton("courses", "Courses")}
+                  {renderButton("quizzes", "Quizzes")}
+                  {renderButton("library", "Saved")}
+                  {renderButton("settings", "Settings")}
                 </div>
               </div>
             </div>
@@ -62,11 +68,11 @@ const Profile = () => {
         <div>
           <Wrapper>
             <div className="flex">
-              {activeTab === "tab1" && <ProfileDashboard />}
-              {activeTab === "tab2" && <ProfileCourses />}
-              {activeTab === "tab3" && <QuizDashboard />}
-              {activeTab === "tab4" && <Favorites />}
-              {activeTab === "tab5" && <ProfileSettings />}
+              {activeTab === "dashboard" && <ProfileDashboard />}
+              {activeTab === "courses" && <ProfileCourses />}
+              {activeTab === "quizzes" && <QuizDashboard />}
+              {activeTab === "library" && <Favorites />}
+              {activeTab === "settings" && <ProfileSettings />}
             </div>
           </Wrapper>
         </div>

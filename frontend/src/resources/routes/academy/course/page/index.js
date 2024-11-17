@@ -102,7 +102,7 @@ const CoursePage = () => {
                   />
                 </div>
                 <div className="flex gap-3 items-center">
-                  {isSubscribed && (
+                  {!course?.is_completed && isSubscribed && (
                     <div className="bg-[#FFF] rounded-md backdrop-blur-sm px-5 py-3">
                       <button
                         className="px-5 rounded-full flex gap-4"
@@ -126,7 +126,7 @@ const CoursePage = () => {
                         icon={<GradeRoundedIcon sx={{ color: "#FFF" }} />}
                         label={
                           course?.avg_ratings +
-                          `( ${course?.num_ratings} ratings)`
+                          ` ( ${course?.num_ratings} ratings)`
                         }
                       />
                     </div>
@@ -202,7 +202,25 @@ const CoursePage = () => {
                           borderTop: "none",
                         }}
                       >
-                        {lesson?.description}
+                        <p>{lesson?.description}</p>
+                        <p className="font-semibold mt-3">Contents: </p>
+                        {lesson?.course_contents &&
+                        lesson.course_contents.length > 0 ? (
+                          <ul className="mt-4 space-y-2">
+                            {lesson.course_contents.map((content) => (
+                              <li
+                                key={content.id}
+                                className="font-medium text-sm pl-4"
+                              >
+                                - {content.title}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-[#AAAAAA] mt-4">
+                            No contents available for this lesson.
+                          </p>
+                        )}
                       </AccordionItemDescription>
                     </Accordion>
                   ))
@@ -212,10 +230,32 @@ const CoursePage = () => {
                   </div>
                 )}
               </div>
-              <div className="flex basis-1/2 justify-center pt-10">
+              <div className="flex basis-1/2 justify-end pt-10">
                 <>
                   {loading ? (
                     <></>
+                  ) : course?.is_completed ? (
+                    <div className="flex flex-col gap-6 bg-[#6078DF26] backdrop-blur-lg border-[1px] border-[#6078DF] rounded-lg p-6 w-3/5 h-fit text-center">
+                      <h3 className="text-xl font-semibold text-[#6078DF]">
+                        Course Completed
+                      </h3>
+                      <p className="text-[#E9F0FF]">
+                        You have successfully completed this course!
+                      </p>
+                      <button
+                        className="bg-[#F4AA5A] px-10 py-4 rounded-full flex gap-4 mx-auto"
+                        onClick={() =>
+                          navigate("/academy", {
+                            state: { activeTab: "courses" },
+                          })
+                        }
+                      >
+                        <span className="text-white font-semibold text-base capitalize">
+                          Explore more courses
+                        </span>
+                        <EastRoundedIcon sx={{ color: "#FFF" }} />
+                      </button>
+                    </div>
                   ) : isSubscribed ? (
                     <div className="flex flex-col gap-6 bg-[#6078DF26] backdrop-blur-lg border-[1px] border-[#6078DF] rounded-lg p-6 w-3/5 h-fit">
                       <CourseProgress

@@ -1,0 +1,22 @@
+{
+    "landing":{
+        "learn_more": "Aprende mais",
+        "project" :{
+            "slogan" : "Sobre o projeto",
+            "title" : "O que é o Moony",
+            "description" : "Moony is an e-learning system focused on improving the learning experience"
+        },
+        "features" : {
+            "title": "As nossas funcionalidades",
+            "features" :{
+                "comments": "Discussions and community support",
+                "quizzes": "Interactive quizzes to test your knowledge.",
+                "courses": "Comprehensive courses on various topics.",
+                "learning": "AI-based personalized learning paths.",
+                "tools": "Memory enhancement tools and resources.",
+                "evaluation": "AI-based evaluation system."
+            }
+        },
+        "tools" :"Ferramentas usadas no projeto"
+    }
+}

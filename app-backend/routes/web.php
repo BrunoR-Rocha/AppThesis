@@ -133,7 +133,9 @@ Route::group([
 
         $router->post('forum_threads/{thread}/like',                    [ForumThreadLikeController::class, 'like']);
         $router->delete('forum_threads/{thread}/like',                  [ForumThreadLikeController::class, 'unlike']);
-
+        $router->get('/front/forum/threads',                            [ForumThreadController::class, 'getAll']);
+        $router->get('/front/forum/threads/{id}',                       [ForumThreadController::class, 'show']);
+       
         $router->get('/front/courses',                                  [CourseController::class, 'getAll']);
         $router->get('/front/courses/{id}',                             [CourseController::class, 'getContent']);
         $router->get('/front/courses/{id}/contents',                    [CourseController::class, 'getCourseContents']);

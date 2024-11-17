@@ -58,17 +58,19 @@ const ProfileCourses = () => {
                                 className="hover:bg-[#6078DF1A] font-semibold text-white"
                               >
                                 <td className="px-4 py-2">{course.title}</td>
-                                <td className="px-4 py-2">{course.score}</td>
+                                <td className="px-4 py-2">
+                                  {course.general_progress}
+                                </td>
                                 <td className="px-4 py-2">
                                   {course.subscribed_at}
                                 </td>
                                 <td className="px-4 py-2">
-                                  {course.is_completed === 1 ? (
-                                    <div className="bg-[#98E39940] rounded-lg flex justify-center font-medium">
+                                  {course.is_completed === true ? (
+                                    <div className="bg-[#98E39940] rounded-lg flex justify-center font-medium px-3 py-2">
                                       Finished
                                     </div>
                                   ) : (
-                                    <div className="bg-[#FC5E5540] rounded-full flex justify-center font-medium">
+                                    <div className="bg-[#FC5E5540] rounded-full flex justify-center font-medium px-3 py-2">
                                       Unfinished
                                     </div>
                                   )}

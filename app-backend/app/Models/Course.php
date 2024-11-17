@@ -65,18 +65,24 @@ class Course extends Model
             return 0;
         }
 
-        $totalLessons = $this->lessons()->count();
-        if ($totalLessons === 0) {
+        $lessons = $this->lessons()->with('courseContents')->get();
+
+        $totalContents = $lessons->sum(function ($lesson) {
+            return $lesson->courseContents->count();
+        });
+
+        if ($totalContents === 0) {
             return 0;
         }
 
-        $userProgress = CourseProgress::where('user_id', $userId)
+        $completedContents = CourseProgress::where('user_id', $userId)
             ->where('course_id', $this->id)
-            ->sum('progress');
+            ->whereNotNull('course_content_id')
+            ->count();
 
-        $generalProgress = $userProgress / $totalLessons;
+        $generalProgress = $completedContents / $totalContents;
 
-        return round($generalProgress, 2);
+        return round($generalProgress * 100, 2);
     }
 
     public function ratings()

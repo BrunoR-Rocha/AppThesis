@@ -1,0 +1,34 @@
+{
+    "landing":{
+        "learn_more": "Learn More",
+        "project" :{
+            "slogan" : "About the project",
+            "title" : "What is Moony",
+            "description" : "Moony is an e-learning system focused on improving the learning experience"
+        },
+        "features" : {
+            "title": "Our features",
+            "features" :{
+                "comments": "Discussions and community support",
+                "quizzes": "Interactive quizzes to test your knowledge.",
+                "courses": "Comprehensive courses on various topics.",
+                "learning": "AI-based personalized learning paths.",
+                "tools": "Memory enhancement tools and resources.",
+                "evaluation": "AI-based evaluation system."
+            }
+        },
+        "tools" :"Tools used in this project"
+    },
+    "about" :{
+        "title": "About us",
+        "description" : "Moony is a platform dedicated to e-learning of sleep and its mechanisms. It provides an overview of the basic science, suggests clinical implications from those basic sciences, and delivers a user experience that integrates these two aspects into one cohesive learning package. \n\n The platform provides scientifically-based insights about sleep to the user. The main goal of Moony is to give an easy access to users that want to learn about the topic and also collaborate with experts around the globe.",
+        "team": {
+            "title": "Meet the team behind Moony"
+        }
+    },
+    "contacts": {
+        "title": "Contact us",
+        "helper" :"Couldn’t find what you were looking for?",
+        "link": "Contact our team"
+    }
+}

@@ -10,7 +10,7 @@ class ForumThread extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 
+        'title',
         'description',
         'forum_category_id',
         'user_id',
@@ -56,5 +56,12 @@ class ForumThread extends Model
         if ($this->isLikedBy($user)) {
             $this->likes()->where('user_id', $user->id)->delete();
         }
+    }
+
+    public function nextThread()
+    {
+        return self::where('id', '>', $this->id)
+            ->orderBy('id', 'asc')
+            ->first();
     }
 }

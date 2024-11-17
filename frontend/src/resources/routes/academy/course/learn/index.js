@@ -95,7 +95,6 @@ const CourseLearn = () => {
   };
 
   const saveCourseProgress = (completedContents, completedLessons) => {
-    console.log(completedContents, completedLessons);
     axiosConfig
       .post(`/front/courses/${id}/save-progress`, {
         completed_course_contents: completedContents,
@@ -124,20 +123,18 @@ const CourseLearn = () => {
       contentIndex >= 0 &&
       contentIndex < currentLesson.course_contents.length - 1
     ) {
-      // Move to next content in the current lesson
       const nextContent = currentLesson.course_contents[contentIndex + 1];
       setCurrentCourseContent(nextContent);
     } else if (
       lessonIndex >= 0 &&
       lessonIndex < courseContents.lessons.length - 1
     ) {
-      // Move to the first content of the next lesson
       const nextLesson = courseContents.lessons[lessonIndex + 1];
       setCurrentLesson(nextLesson);
       if (nextLesson.course_contents.length > 0) {
         setCurrentCourseContent(nextLesson.course_contents[0]);
       } else {
-        // If next lesson has no content, skip to the next content
+
         handleNextContent();
       }
     } else {
@@ -177,7 +174,9 @@ const CourseLearn = () => {
   };
 
   const handleFinishCourse = () => {
-    navigate(`/academy/course/${id}/rating`);
+    if (!courseContents?.is_completed) {
+      navigate(`/academy/course/${id}/rating`);
+    }
   };
 
   return (
@@ -309,8 +308,11 @@ const CourseLearn = () => {
                           ? handleFinishCourse
                           : handleNextContent
                       }
-                      className="mt-4 bg-[#6078DF] text-white px-4 py-3 rounded-full"
-                      disabled={!hasNextContent() && !allContentsCompleted()}
+                      className="mt-4 bg-[#6078DF] text-white px-4 py-3 rounded-full disabled:opacity-50"
+                      disabled={
+                        courseContents?.is_completed ||
+                        (!hasNextContent() && !allContentsCompleted())
+                      }
                     >
                       {allContentsCompleted()
                         ? "Finish Course"

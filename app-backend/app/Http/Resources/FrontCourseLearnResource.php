@@ -54,6 +54,7 @@ class FrontCourseLearnResource extends JsonResource
             'subscribed_at' => $this->user_subscribed_date ? $this->user_subscribed_date->format('d/m/Y') : null,
             'general_progress' => $this->general_progress . '%',
             'progress' => $this->general_progress,
+            'is_completed' => $this->general_progress == 100 || $this->ratings->where('user_id', Auth::id())->isNotEmpty(),
         ];
     }
 

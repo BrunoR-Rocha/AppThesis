@@ -103,7 +103,6 @@ function QuizPage() {
   };
 
   const handleAnswerChange = (questionId, answer) => {
-    console.log("Question ID:", questionId, "Answer:", answer);
     setAnswers((prev) => ({
       ...prev,
       [questionId]: answer,
@@ -354,7 +353,11 @@ function QuizPage() {
                   <div className="flex justify-center items-center gap-5 py-4">
                     <button
                       className="border-[1px] border-solid border-[#AAAAAA] px-10 py-4 font-semibold text-[#FFF] rounded-full"
-                      onClick={() => navigate("/my-quizzes")}
+                      onClick={() =>
+                        navigate("/profile", {
+                          state: { activeTab: "quizzes" },
+                        })
+                      }
                     >
                       My Quizzes
                     </button>

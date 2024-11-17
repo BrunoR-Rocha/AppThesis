@@ -30,7 +30,6 @@ class FrontCourseResource extends JsonResource
                 'id' => $this->questionTopic->id,
                 'name' => $this->questionTopic->name
             ],
-            'contents' => $this->courseContents,
             'num_contents' => $this->courseContents->count(),
             'lessons' => $this->lessons->map(function ($lesson) {
                 return [
@@ -38,14 +37,22 @@ class FrontCourseResource extends JsonResource
                     'title' => $lesson->title,
                     'description' => $lesson->short_description,
                     'estimated_duration' =>  $this->handleTime($lesson->estimated_duration),
+                    'course_contents' => $lesson->courseContents->map(function ($content) {
+                        return [
+                            'id' => $content->id,
+                            'title' => $content->title,
+                        ];
+                    }),
                 ];
             }),
             'num_lessons' => $this->lessons->count(),
             'is_subscribed' => $this->isUserSubscribed(Auth::user()),
             'subscribed_at' => $this->user_subscribed_date ? $this->user_subscribed_date->format('d/m/Y') : null,
             'general_progress' => $this->general_progress . '%',
-            'avg_rating' => $this->average_rating,
-            'num_ratings' => $this->ratings_count
+            'avg_ratings' => round($this->average_rating, 2),
+            'num_ratings' => $this->ratings_count,
+            'is_completed' => $this->general_progress == 100 || $this->ratings->where('user_id', Auth::id())->isNotEmpty(),
+
         ];
     }
 

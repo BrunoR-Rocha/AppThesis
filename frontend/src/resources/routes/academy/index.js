@@ -8,13 +8,12 @@ import axiosConfig from "../../../providers/axiosConfig";
 import CustomDropdown from "../../components/general/Dropdown";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RenderButton from "../../components/general/SectionButtons";
 import CircularProgress from "@mui/material/CircularProgress";
 import Skeleton from "../../components/general/Skeleton";
 
 function Academy() {
-  const [activeTab, setActiveTab] = useState("tab1");
   const [loadingParams, setLoadingParams] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +21,11 @@ function Academy() {
   const [difficultyOptions, setDifficultyOptions] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
-
+  const location = useLocation();
+  
+  const [activeTab, setActiveTab] = useState(
+    location?.state?.activeTab ?? "quizzes"
+  );
   useEffect(() => {
     setLoadingParams(true);
     axiosConfig
@@ -85,19 +88,19 @@ function Academy() {
                     Academy
                   </h1>
                   <RenderButton
-                    tabId="tab1"
+                    tabId="quizzes"
                     label="Quizzes"
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                   />
                   <RenderButton
-                    tabId="tab2"
+                    tabId="courses"
                     label="Courses"
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                   />
                 </div>
-                {activeTab === "tab1" && (
+                {activeTab === "quizzes" && (
                   <div className="flex flex-col items-center justify-center py-10 gap-10">
                     <div className="flex flex-col gap-3">
                       <h3 className="text-[#ECECEC] text-center font-semibold text-xl lg:text-3xl">
@@ -171,7 +174,7 @@ function Academy() {
                     </div>
                   </div>
                 )}
-                {activeTab === "tab2" && (
+                {activeTab === "courses" && (
                   <div className="content">
                     <Courses />
                   </div>

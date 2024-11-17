@@ -16,8 +16,10 @@ import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import MemoryOutlinedIcon from "@mui/icons-material/MemoryOutlined";
+import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import { HashLink } from "react-router-hash-link";
+import { useTranslation } from "react-i18next";
 
 function Landing() {
   const imageCount = 8;
@@ -25,6 +27,9 @@ function Landing() {
     { length: imageCount },
     (_, i) => `Frame_${i + 1}.svg`
   );
+
+  const { t, i18n } = useTranslation();
+
   return (
     <>
       <LandingArea>
@@ -52,7 +57,7 @@ function Landing() {
                     smooth
                   >
                     <p className="text-base font-medium text-white">
-                      Learn More
+                      {t("landing.learn_more")}
                     </p>
                     <ArrowDownwardRoundedIcon sx={{ color: "#AAAAAA" }} />
                   </HashLink>
@@ -71,23 +76,21 @@ function Landing() {
                 <div className="text-center flex flex-col gap-7 md:max-w-96">
                   <div className="flex flex-col gap-4">
                     <p className="text-[#6078DF] font-semibold uppercase">
-                      About the project
+                      {t("landing.project.slogan")}
                     </p>
                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
-                      What is Moony
+                      {t("landing.project.title")}
                     </h3>
                   </div>
                   <p className="text-lg font-medium text-white">
-                    At vero eos et accusamus et iusto odio dignissimos ducimus
-                    qui blanditiis praesentium voluptatum deleniti atque
-                    corrupti quos dolores et quas molestias.
+                    {t("landing.project.description")}
                   </p>
                   <div className="flex flex-1 justify-center">
                     <Link
                       to="/about"
                       className="text-sm text-white font-light hover:opacity-100 rounded-3xl px-5 py-3 border-2 border-solid border-[#ECECEC] max-w-fit hover:text-[#F4AA5A] hover:border-[#F4AA5A]"
                     >
-                      Learn more
+                      {t("landing.learn_more")}
                     </Link>
                   </div>
                 </div>
@@ -98,12 +101,12 @@ function Landing() {
         <FeatureArea>
           <div className="flex flex-col flex-1 justify-center items-center pt-14 gap-20">
             <h3 className="text-5xl font-semibold font-sans text-[#ECECEC]">
-              Our features
+              {t("landing.features.title")}
             </h3>
             <div className="flex flex-wrap gap-12 items-center justify-center">
               <Feature
                 text={
-                  "Discussions et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                  t("landing.features.features.comments")
                 }
                 icon={
                   <ForumOutlinedIcon
@@ -113,7 +116,7 @@ function Landing() {
               />
               <Feature
                 text={
-                  "Quizzes eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                  t("landing.features.features.quizzes")
                 }
                 icon={
                   <LiveHelpOutlinedIcon
@@ -123,7 +126,7 @@ function Landing() {
               />
               <Feature
                 text={
-                  "Courses eos et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                  t("landing.features.features.courses")
                 }
                 icon={
                   <SchoolOutlinedIcon
@@ -133,7 +136,7 @@ function Landing() {
               />
               <Feature
                 text={
-                  "Learning et accusamus et iusto odio dignissimos ducimus qui  blanditiis praesentium."
+                  t("landing.features.features.tools")
                 }
                 icon={
                   <AutoStoriesOutlinedIcon
@@ -143,7 +146,7 @@ function Landing() {
               />
               <Feature
                 text={
-                  "AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."
+                  t("landing.features.features.learning")
                 }
                 icon={
                   <MemoryOutlinedIcon
@@ -153,10 +156,10 @@ function Landing() {
               />
               <Feature
                 text={
-                  "AI-based Evaluation eos et accusamus dignissimos ducimus qui  blanditiis."
+                  t("landing.features.features.evaluation")
                 }
                 icon={
-                  <MemoryOutlinedIcon
+                  <QueryStatsOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
                   />
                 }
@@ -168,7 +171,7 @@ function Landing() {
           <Wrapper>
             <div className="flex flex-col gap-10">
               <p className="text-[#FFFFFFCC] text-lg text-center">
-                Tools used in this project
+                {t("landing.tools")}
               </p>
 
               <div className="flex items-center justify-evenly flex-1 w-full gap-12">
@@ -177,7 +180,7 @@ function Landing() {
                     key={index}
                     src={require(`../../media/landing/tech/${imageName}`)}
                     alt={`Frame ${index + 1}`}
-                    className="w-32 h-16" 
+                    className="w-32 h-16"
                   />
                 ))}
               </div>
