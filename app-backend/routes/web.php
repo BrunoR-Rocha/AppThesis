@@ -78,7 +78,7 @@ Route::group([
         $router->post('/logout',                                        [AuthController::class, 'logout']);
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
 
-        $router->post('/chatbot',                                       [ChatbotController::class, 'chat']);
+        $router->post('/chat',                                          [ChatbotController::class, 'chat'])->middleware('chat.rate.limit');
 
         $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);

@@ -5,15 +5,21 @@ from dotenv import load_dotenv
 import os
 from langchain.schema import AIMessage
 from typing import Optional
+from typing import List
 
 load_dotenv()
 
 app = Flask(__name__)
 
 # API model to define the structure of incoming requests
+class Message(BaseModel):
+    user: str  # "user" or "system"
+    text: str  # The text of the message
+
 class ChatRequest(BaseModel):
     message: str  # The user's input message
     theme: str    # The theme from SysConfig in Laravel
+    conversation: List[Message]  # The history of the conversation
 
 class QuestionTopicRequest(BaseModel):
     theme: str    # The theme from SysConfig in Laravel
@@ -56,15 +62,17 @@ def chat():
     
     message = chat_request.message
     theme = chat_request.theme
+    conversation = chat_request.conversation
 
     if not message or not theme:
         return jsonify({
             'error': 'Both message and theme are required.'
         }), 400
 
-    # Optionally, modify the message based on the theme before sending it to the LLM
-    full_prompt = f"You are an expert on {theme}. Answer the following question based on your expertise.\n\nQuestion: {message}\n\nAnswer:"
-
+    conversation_prompt = "\n".join([
+        f"{msg.user}: {msg.text}" for msg in conversation
+    ])
+    full_prompt = f"You are an expert on {theme}. Answer the following based on the ongoing conversation.\n\n{conversation_prompt}\n\nUser: {message}\n\nSystem:"
     # Process the message with Langchain/OpenAI
     try:
         response = llm([full_prompt])

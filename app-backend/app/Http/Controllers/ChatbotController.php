@@ -10,15 +10,18 @@ class ChatbotController extends Controller
 {
     public function chat(Request $request)
     {
-        dd($request);
         $validated = $request->validate([
             'message' => 'required|string|max:255',
+            'conversation' => 'required|array',
+            'conversation.*.user' => 'required|string',
+            'conversation.*.text' => 'required|string',
         ]);
 
         $theme = SysConfig::tag('theme')->first()->value;
 
         $data = [
             'message' => $validated['message'],
+            'conversation' => $validated['conversation'],
             'theme' => $theme,
         ];
 
@@ -29,12 +32,12 @@ class ChatbotController extends Controller
             if ($response->successful()) {
                 $flaskResponse = $response->json();
 
-                // add chat message to session or other storage
-                // send the message to the user.
-
-                dd($flaskResponse);
+                return response()->json(['message' => $flaskResponse['response']]);
             } else {
-                return back()->withErrors(['error' => 'There was a problem gathering information']);
+                return response()->json([
+                    'error' => 'Failed to communicate with the backend.',
+                    'details' => $response->body(),
+                ], $response->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);

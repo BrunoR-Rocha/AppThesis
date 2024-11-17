@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import NavigationRoundedIcon from "@mui/icons-material/NavigationRounded";
 import { ReactComponent as AppChatIcon } from "../../media/chat/app_chat.svg";
+import axiosConfig from "../../../providers/axiosConfig";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ChatBox() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,10 +17,28 @@ function ChatBox() {
     setIsOpen(!isOpen);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() !== "") {
-      setConversation([...conversation, { user: "user", text: message }]);
+      const updatedConversation = [
+        ...conversation,
+        { user: "user", text: message },
+      ];
+      setConversation(updatedConversation);
       setMessage("");
+
+      try {
+        const response = await axiosConfig.post("/chat", {
+          conversation: updatedConversation,
+          message: message,
+        });
+
+        setConversation([
+          ...updatedConversation,
+          { user: "system", text: response.data.message },
+        ]);
+      } catch (err) {
+        toast.error(err.response?.data?.error ?? 'An error has occured making the request. Please try later!');
+      }
     }
   };
 
