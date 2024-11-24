@@ -12,6 +12,7 @@ import PostSection from "../post";
 import BackButton from "../../../components/general/BackButton";
 import axiosConfig from "../../../../providers/axiosConfig";
 import Skeleton from "../../../components/general/Skeleton";
+import { useTranslation } from "react-i18next";
 
 const ThreadPage = () => {
   const { id } = useParams();
@@ -67,6 +68,8 @@ const ThreadPage = () => {
     setCommentSectionOpen(false);
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <ForumPostArea>
@@ -89,7 +92,7 @@ const ThreadPage = () => {
                     <div className="flex gap-3 text-[#ECECEC] pt-4 text-sm">
                       <span>{thread?.data}</span>
                       <p className="uppercase border-l-2 border-l-[#ECECEC] pl-3">
-                        By{" "}
+                        {t("forums.created_by")}{" "}
                         <span className="font-semibold text-[#E9F0FF]">
                           {thread?.author}
                         </span>
@@ -167,7 +170,7 @@ const ThreadPage = () => {
                                 },
                               }}
                             >
-                              Share
+                              {t("forums.actions.share")}
                             </Button>
                             <Button
                               onClick={handleReportClick}
@@ -187,7 +190,7 @@ const ThreadPage = () => {
                                 },
                               }}
                             >
-                              Report
+                              {t("forums.actions.report")}
                             </Button>
                           </Box>
                         }
@@ -230,7 +233,7 @@ const ThreadPage = () => {
                       <div className="flex gap-4 items-center">
                         <div className="flex flex-col gap-1">
                           <span className="font-light text-[#ECECEC] text-base">
-                            Next Post
+                            {t("forums.next_post")}
                           </span>
                         </div>
                         <div>

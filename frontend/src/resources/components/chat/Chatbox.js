@@ -5,12 +5,14 @@ import { ReactComponent as AppChatIcon } from "../../media/chat/app_chat.svg";
 import axiosConfig from "../../../providers/axiosConfig";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 function ChatBox() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState([
-    { user: "system", text: "Hello! Ask me anything!" },
+    { user: "system", text: t("forums.chat.default") },
   ]);
 
   const chatContainerRef = useRef(null);
@@ -100,7 +102,7 @@ function ChatBox() {
               rows={1}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Ask your question..."
+              placeholder={t("forums.chat.placeholder")}
             />
             <button
               onClick={handleSendMessage}

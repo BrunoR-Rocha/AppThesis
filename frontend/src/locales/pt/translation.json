@@ -1,22 +1,169 @@
 {
+    "app":{
+        "back": "Voltar",
+        "option_placeholder": "Escolha uma opção"
+    },
+    "links":{
+        "home": "Home",
+        "about": "Sobre nós",
+        "contacts" :"Contactos",
+        "library": "Biblioteca",
+        "forums": "Fóruns",
+        "academy": "Academia",
+        "login": "Entrar",
+        "profile": "Perfil",
+        "logout": "Terminar Sessão"
+    },
+    "footer" :{
+        "title": "Desperte o seu conhecimento sobre <br /><strong>sono <small>&</small> saúde</strong>",
+        "slogan" : "Junte-se a nós e aprenda algo novo hoje!",
+        "explore": "Descubra",
+        "privacy": "Política de privacidade",
+        "terms": "Termos e Condições",
+        "suggestions" : "Elogios, sugestões e reclamações"
+    },
     "landing":{
+        "title": "Desperte o seu conhecimento sobre <br /><strong>sono <small>&</small> saúde</strong>",
         "learn_more": "Aprende mais",
         "project" :{
             "slogan" : "Sobre o projeto",
             "title" : "O que é o Moony",
-            "description" : "Moony is an e-learning system focused on improving the learning experience"
+            "description" : "Moony é um sistema de e-learning centrado na melhoria da experiência de aprendizagem"
         },
         "features" : {
             "title": "As nossas funcionalidades",
             "features" :{
-                "comments": "Discussions and community support",
-                "quizzes": "Interactive quizzes to test your knowledge.",
-                "courses": "Comprehensive courses on various topics.",
-                "learning": "AI-based personalized learning paths.",
-                "tools": "Memory enhancement tools and resources.",
-                "evaluation": "AI-based evaluation system."
+                "comments": "Discussões e apoio da comunidade",
+                "quizzes": "Testes interactivos para testar os seus conhecimentos",
+                "courses": "Cursos abrangentes sobre vários tópicos.",
+                "learning": "Percursos de aprendizagem personalizados baseados em IA.",
+                "tools": "Ferramentas e recursos para melhorar a memória.",
+                "evaluation": "Sistema de avaliação baseado em IA."
             }
         },
         "tools" :"Ferramentas usadas no projeto"
+    },
+    "about" :{
+        "title": "Sobre nós",
+        "description" : "Moony é uma plataforma dedicada à aprendizagem eletrónica do sono e dos seus mecanismos. Fornece uma visão geral da ciência básica, sugere implicações clínicas dessas ciências básicas e proporciona uma experiência de utilizador que integra estes dois aspectos num pacote de aprendizagem coeso. <br/>A plataforma fornece ao utilizador conhecimentos de base científica sobre o sono. O principal objetivo do Moony é proporcionar um acesso fácil aos utilizadores que pretendam aprender sobre o tema e também colaborar com especialistas de todo o mundo.",
+        "team": {
+            "title": "Conheça a equipa"
+        }
+    },
+    "contacts": {
+        "title": "Contacte-nos",
+        "helper" :"Não encontrou o que procurava?",
+        "link": "Contacte a nossa equipa",
+        "modal":{
+            "title": "Alguma dúvida",
+            "subtitle": "Contacte-nos!",
+            "descripton": "Tem alguma dúvida? <br /> Não hesite em contactar-nos diretamente. <br /> A nossa equipa entrará em contacto consigo num espaço de horas para o ajudar",
+            "location": "Localização",
+            "email": "Email"
+        },
+        "form": {
+            "subject": "Assunto",
+            "subject_placeholder": "Escreva aqui",
+            "name": "Nome",
+            "name_placeholder": "O seu nome",
+            "email": "Email",
+            "email_placeholder": "O seu Email",
+            "message": "Mensagem",
+            "message_placeholder": "Escreva aqui",
+            "required": "Este campo é obrigatório",
+            "required_email": "Introduza um e-mail válido"
+        }
+    },
+    "auth":{
+        "socials": {
+            "facebook": "Continuar com o Facebook",
+            "google": "Continuar com o Google"
+        },
+        "login":{
+            "pre_title": "Bem-vindo de volta",
+            "title": "Continuar para a sua conta",
+            "option": "Ou",
+            "register_title": "Chegaste recentemente?",
+            "register_link": "Inscreve-te aqui",
+            "forgot_password": "Esqueceu a palavra-passe?"
+        },
+        "register":{
+            "pre_title": "Bem-vindo ao Moony",
+            "title": "Criar uma nova conta",
+            "option": "Ou",
+            "login_title": "Já está registado?",
+            "login_link": "Iniciar Sessão"
+        },
+        "form":{
+            "name": "Nome",
+            "name_placeholder": "Nome",
+            "email": "Email",
+            "email_placeholder": "O seu email",
+            "password": "Palavra-passe",
+            "password_placeholder": "A sua palavra-passe",
+            "password_confirmation": "Confirmação palavra-passe",
+            "password_confirmation_error": "As palavras-passe devem ser iguais!",
+            "remember": "Lembrar palavra-passe",
+            "required": "Este campo é obrigatório"
+        }
+    },
+    "library":{
+        "title": "Biblioteca",
+        "previous_chapter": "Capítulo anterior",
+        "next_chapter": "Próximo capítulo",
+        "sections" :{
+            "news":{
+                "title": "Notícias"
+            },
+            "journals" :{
+                "title": "Jornais"
+            }
+        }
+    },
+    "forums" :{
+        "title": "Fóruns",
+        "create": "Criar publicação",
+        "clear_filters": "Limpar filtros",
+        "empty": "Sem publicações adicionadas",
+        "next_post": "Próxima publicação",
+        "created_by": "Autor",
+        "actions":{
+            "share": "Partilhar",
+            "report": "Denunciar"
+        },
+        "comments": "Comentários",
+        "form":{
+            "submit": "Submeter",
+            "comments_placeholder": "Dê a sua opinião",
+            "required": "Este campo é obrigatório"
+        },
+        "chat":{
+            "default": "Olá! Pergunta-me qualquer coisa!",
+            "placeholder": "Faça a sua questão ..."
+        }
+    },
+    "academy": {
+        "title" :"Academia",
+        "sections":{
+            "quizzes": {
+                "title": "Testes",
+                "main_title": "Aprender através de questionários",
+                "sub_title": "Desafie-se com um conjunto alargado de perguntas em vários níveis de dificuldade.",
+                "waiting":{
+                    "title":"Por favor, aguarde!",
+                    "sub_title":"Estamos a construir o seu questionário"
+                },
+                "form":{
+                    "randomize": "Aleatório",
+                    "option": "Ou",
+                    "topic": "Tópicos",
+                    "difficulty": "Dificuldade",
+                    "start": "Iniciar teste"
+                }
+            },
+            "courses": {
+                "title" : "Cursos"
+            }
+        }
     }
 }

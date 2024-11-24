@@ -6,6 +6,7 @@ import Wrapper from "../general/Wrapper";
 import ContactModal from "../modals/contact";
 import AuthContext from "../../../context/AuthContext";
 import LanguageSwitch from "../app/LanguageSwitch";
+import { useTranslation } from "react-i18next";
 
 const NavigationBar = styled("div")`
   width: 100%;
@@ -77,6 +78,7 @@ function NavBar() {
   };
 
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -102,7 +104,7 @@ function NavBar() {
                     : ""
                 }`}
               >
-                Home
+                {t("links.home")}
               </Link>
               <Link
                 to="/about"
@@ -110,7 +112,7 @@ function NavBar() {
                   isActive("/about") ? "opacity-100 font-semibold" : ""
                 }`}
               >
-                About
+                {t("links.about")}
               </Link>
               {isAuthenticated && (
                 <>
@@ -120,7 +122,7 @@ function NavBar() {
                       isActive("/library") ? "opacity-100 font-semibold" : ""
                     }`}
                   >
-                    Library
+                    {t("links.library")}
                   </Link>
                   <Link
                     to="/posts"
@@ -128,7 +130,7 @@ function NavBar() {
                       isActive("/posts") ? "opacity-100 font-semibold" : ""
                     }`}
                   >
-                    Forums
+                    {t("links.forums")}
                   </Link>
                   <Link
                     to="/academy"
@@ -136,7 +138,7 @@ function NavBar() {
                       isActive("/academy") ? "opacity-100 font-semibold" : ""
                     }`}
                   >
-                    Academy
+                    {t("links.academy")}
                   </Link>
                 </>
               )}
@@ -146,7 +148,7 @@ function NavBar() {
                 onClick={handleOpenModal}
                 className="uppercase text-sm text-white font-light hover:opacity-100 hover:font-semibold"
               >
-                Contact Us
+                {t("links.contacts")}
               </Link>
               <ContactModal open={isModalOpen} handleClose={handleCloseModal} />
             </div>
@@ -157,7 +159,7 @@ function NavBar() {
                   to="/login"
                   className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
                 >
-                  Sign In
+                  {t("links.login")}
                 </Link>
               ) : (
                 <>
@@ -165,13 +167,13 @@ function NavBar() {
                     to="/profile"
                     className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
                   >
-                    Profile
+                    {t("links.profile")}
                   </Link>
                   <button
                     onClick={handleLogout}
                     className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
                   >
-                    Logout
+                    {t("links.logout")}
                   </button>
                 </>
               )}

@@ -6,10 +6,13 @@ import { CourseCard, QuizDashboardComponent } from "./style";
 import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import EmptyValue from "../../components/general/EmptyValue";
+import { useNavigate } from "react-router-dom";
 
 const ProfileCourses = () => {
   const [loading, setLoading] = useState();
   const [courses, setCourses] = useState([]);
+  const [firstPendingCourse, setFirstPendingCourse] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -17,6 +20,8 @@ const ProfileCourses = () => {
       .get(`/profile/courses`)
       .then((res) => {
         setCourses(res.data);
+        const pending = res.data.filter((course) => !course.is_completed);
+        setFirstPendingCourse(pending.length > 0 ? pending[0] : null);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -26,8 +31,8 @@ const ProfileCourses = () => {
     <Wrapper>
       <div className="flex flex-col gap-11 pb-10 pt-24">
         <div className="d-flex flex-col">
-          <div className="flex flex-1 gap-5">
-            <div className="flex flex-col basis-1/2 gap-5">
+          <div className="flex flex-1 gap-5 flex-wrap-reverse md:flex-nowrap">
+            <div className="flex flex-col basis-full md:basis-1/2 gap-5">
               <QuizDashboardComponent>
                 {loading ? (
                   <>
@@ -91,41 +96,75 @@ const ProfileCourses = () => {
                 )}
               </QuizDashboardComponent>
             </div>
-            <div className="flex flex-col basis-1/2 gap-5">
-              <p className="text-lg font-semibold text-[#FFF]">
-                Don’t forget to finish!
-              </p>
-              <CourseCard>
-                <div className="flex flex-col gap-10 p-4">
-                  <div className="bg-[#FFFFFF40] rounded-full backdrop-blur-sm px-5 py-3 w-fit">
-                    <span className="text-white">
-                      {/* {course?.difficulty?.name} */}
-                      Difficulty
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <p className="text-white text-xl font-semibold">
-                      Here goes the Course Title
-                    </p>
-                    <div className="flex justify-between">
-                      <div className="flex items-end gap-3 text-[#ECECEC] ">
-                        <div className="flex gap-1">
-                          <FolderOpenRoundedIcon sx={{ color: "#6078DF" }} />
-                          <span>3 sections</span>
-                        </div>
-                        <div className="flex gap-1">
-                          <AccessTimeRoundedIcon sx={{ color: "#6078DF" }} />
-                          <span>time</span>
-                        </div>
+            <div className="flex flex-col basis-full md:basis-1/2 gap-5 justify-center">
+              {loading ? (
+                <Skeleton height="100px" />
+              ) : firstPendingCourse ? (
+                <>
+                  <p className="text-lg font-semibold text-[#FFF]">
+                    Don’t forget to finish!
+                  </p>
+                  <CourseCard>
+                    <div className="flex flex-col gap-10 p-4">
+                      <div className="bg-[#FFFFFF40] rounded-full backdrop-blur-sm px-5 py-3 w-fit">
+                        <span className="text-white">
+                          {firstPendingCourse?.difficulty}
+                        </span>
                       </div>
-                      <div className="flex rounded-full bg-[#F4AA5A] px-4 py-2">
-                        <p className="text-white">Continue</p>
+
+                      <div className="flex flex-col">
+                        <p className="text-white text-xl font-semibold">
+                          {firstPendingCourse?.title}
+                        </p>
+                        <div className="flex justify-between">
+                          <div className="flex items-end gap-3 text-[#ECECEC] ">
+                            <div className="flex gap-1">
+                              <FolderOpenRoundedIcon
+                                sx={{ color: "#6078DF" }}
+                              />
+
+                              <span>
+                                {firstPendingCourse?.sections_count || 0}{" "}
+                                sections
+                              </span>
+                            </div>
+                            <div className="flex gap-1">
+                              <AccessTimeRoundedIcon
+                                sx={{ color: "#6078DF" }}
+                              />
+                              <span>
+                                {" "}
+                                {firstPendingCourse?.average_time || "N/A"} mins
+                              </span>
+                            </div>
+                          </div>
+                          <a
+                            href={`/courses/${firstPendingCourse?.id}`}
+                            className="flex rounded-full bg-[#F4AA5A] px-4 py-2"
+                          >
+                            <p className="text-white">Continue</p>
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </CourseCard>
+                </>
+              ) : (
+                <div className="flex flex-col items-center text-center text-white gap-10">
+                  <p>You have no pending courses. Explore new courses!</p>
+                  <a
+                    href="#"
+                    onClick={() =>
+                      navigate("/academy", {
+                        state: { activeTab: "courses" },
+                      })
+                    }
+                    className="flex rounded-full bg-[#F4AA5A] px-4 py-2"
+                  >
+                    Go to Courses
+                  </a>
                 </div>
-              </CourseCard>
+              )}
             </div>
           </div>
         </div>

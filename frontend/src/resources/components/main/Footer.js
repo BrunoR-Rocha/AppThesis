@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Wrapper from "../general/Wrapper";
 import AuthContext from "../../../context/AuthContext";
+import { useTranslation, Trans } from "react-i18next";
 
 const FooterWrapper = styled("div")`
   position: relative;
@@ -20,6 +21,7 @@ const FooterWrapper = styled("div")`
 `;
 
 function Footer() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useContext(AuthContext);
 
   return (
@@ -30,40 +32,45 @@ function Footer() {
             <div className="flex flex-col md:flex-row items-start gap-10 w-full justify-center">
               <div className="md:basis-2/5 flex justify-end flex-wrap flex-col gap-3 text-start">
                 <h4 className="text-2xl md:text-3xl text-white font-semibold font-sans">
-                  Awaken your{" "}
-                  <span class="font-medium text-5xl font-cormorant italic">
-                    sleep <br />
-                    <span className="font-sans text-2xl md:text-3xl">
-                      &
-                    </span>{" "}
-                    health
-                  </span>{" "}
-                  Knowledge
+                  <Trans
+                    i18nKey="footer.title"
+                    components={{
+                      strong: (
+                        <span className="font-medium text-5xl font-cormorant italic" />
+                      ),
+                      br: <br />,
+                      small: (
+                        <span className="font-sans text-2xl md:text-3xl" />
+                      ),
+                    }}
+                  />
                 </h4>
 
                 <p className="text-white font-normal text-base">
-                  Join us now and learn something new today!
+                  {t("footer.slogan")}
                 </p>
               </div>
 
               <div className="md:basis-2/5 flex justify-end w-9/12 md:w-full flex-wrap flex-col gap-3 text-start">
-                <h4 className="text-2xl font-semibold">Explore</h4>
+                <h4 className="text-2xl font-semibold">
+                  {t("footer.explore")}
+                </h4>
                 <Link to="/" className="flex justify-start">
-                  Home
+                  {t("links.home")}
                 </Link>
                 <Link to="/about" className="flex justify-start">
-                  About
+                  {t("links.about")}
                 </Link>
                 {isAuthenticated && (
                   <>
                     <Link to="/library" className="flex justify-start">
-                      Library
+                      {t("links.library")}
                     </Link>
                     <Link to="/posts" className="flex justify-start">
-                      Forums
+                      {t("links.forums")}
                     </Link>
                     <Link to="/academy" className="flex justify-start">
-                      Academy
+                      {t("links.academy")}
                     </Link>
                   </>
                 )}
@@ -73,11 +80,11 @@ function Footer() {
                 <h4 className="text-2xl font-semibold">Moony</h4>
 
                 <Link to="/privacy-policy" className="flex justify-start">
-                  Privacy Policy
+                  {t("footer.privacy")}
                 </Link>
 
                 <Link to="/terms-conditions" className="flex justify-start">
-                  Terms and conditions
+                  {t("footer.terms")}
                 </Link>
 
                 <a
@@ -86,7 +93,7 @@ function Footer() {
                   rel={"noopener noreferrer"}
                   className="flex justify-start"
                 >
-                  Compliments, suggestions and complaints
+                  {t("footer.suggestions")}
                 </a>
               </div>
             </div>

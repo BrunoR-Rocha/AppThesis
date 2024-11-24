@@ -10,6 +10,7 @@ import LibraryCard from "../../components/app/library/LibraryCard";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmptyValue from "../../components/general/EmptyValue";
+import { useTranslation } from "react-i18next";
 
 function Library() {
   const [loading, setLoading] = useState();
@@ -52,6 +53,7 @@ function Library() {
         console.log(err);
       });
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -60,23 +62,23 @@ function Library() {
           <LibraryList className="flex flex-col w-full min-h-screen gap-10">
             <div className="flex gap-6">
               <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
-                Library
+                {t("library.title")}
               </h1>
               <RenderButton
                 tabId="tab1"
-                label="Library"
+                label={t("library.title")}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
               <RenderButton
                 tabId="tab2"
-                label="News"
+                label={t("library.sections.news.title")}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
               <RenderButton
                 tabId="tab3"
-                label="Journals"
+                label={t("library.sections.journals.title")}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />

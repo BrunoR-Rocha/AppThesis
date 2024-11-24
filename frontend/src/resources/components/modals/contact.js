@@ -10,10 +10,12 @@ import axiosConfig from "../../../providers/axiosConfig";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CircularProgress } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 function ContactModal({ open, handleClose }) {
   const [loading, setLoading] = useState();
-
+  const { t } = useTranslation();
+  
   const {
     register,
     handleSubmit,
@@ -78,21 +80,22 @@ function ContactModal({ open, handleClose }) {
             <Flower className="absolute mix-blend-hard-light opacity-25 left-1/4 -top-1/3 object-cover z-0 -rotate-90" />
             <div className="flex flex-col flex-1 gap-5">
               <h2 className="text-4xl text-[#1A184C] font-bold">
-                Any doubts <br />{" "}
+                {t("contacts.modal.title")} <br />{" "}
                 <span className="font-cormorant text-5xl italic">
-                  Contact us!
+                  {t("contacts.modal.subtitle")}
                 </span>
               </h2>
-              <p className="font-medium text-[#575757] ">
-                Do you have any questions? Please do not hesitate to contact us
-                directly. Our team will come back to you within a matter of
-                hours to help you.
-              </p>
+              <p
+                className="font-medium text-[#575757]"
+                dangerouslySetInnerHTML={{
+                  __html: t("contacts.modal.descripton"),
+                }}
+              ></p>
 
               <div className="flex flex-col gap-3">
                 <PlaceIcon sx={{ color: "#6078DF" }} />
                 <p className="text-[#6078DF] text-sm font-bold uppercase">
-                  Location
+                  {t("contacts.modal.location")}
                 </p>
                 <p>
                   Polo Científico e Tecnológico da Madeira, <br />
@@ -105,7 +108,7 @@ function ContactModal({ open, handleClose }) {
               <div className="flex flex-col gap-3">
                 <EmailIcon sx={{ color: "#6078DF" }} />
                 <p className="text-[#6078DF] text-sm font-bold uppercase">
-                  Email
+                  {t("contacts.modal.email")}
                 </p>
                 <a
                   href="mailto:support_sleepinsight@gmail.com"
@@ -122,40 +125,46 @@ function ContactModal({ open, handleClose }) {
               className="flex-1 flex flex-col w-full gap-4 z-[1]"
             >
               <TextInput>
-                <label htmlFor="contact_subject">Subject</label>
+                <label htmlFor="contact_subject">
+                  {t("contacts.form.subject")}
+                </label>
                 <input
                   id="contact_subject"
                   type="text"
-                  placeholder="Write here"
+                  placeholder={t("contacts.form.subject_placeholder")}
                   {...register("subject", { required: true })}
                 />
                 {errors.subject && (
                   <span className="text-xs text-red-500">
-                    This field is required
+                    {t("contacts.form.required")}
                   </span>
                 )}
               </TextInput>
               <div className="flex w-full items-center gap-4">
                 <TextInput className="flex-1">
-                  <label htmlFor="contact_name">Name</label>
+                  <label htmlFor="contact_name">
+                    {t("contacts.form.name")}
+                  </label>
                   <input
                     id="contact_name"
                     type="text"
-                    placeholder="Your Name"
+                    placeholder={t("contacts.form.name_placeholder")}
                     {...register("name", { required: true })}
                   />
                   {errors.name && (
                     <span className="text-xs text-red-500">
-                      This field is required
+                      {t("contacts.form.required")}
                     </span>
                   )}
                 </TextInput>
                 <TextInput className="flex-1">
-                  <label htmlFor="contact_email">Email</label>
+                  <label htmlFor="contact_email">
+                    {t("contacts.form.email")}
+                  </label>
                   <input
                     id="contact_email"
                     type="text"
-                    placeholder="Your Email"
+                    placeholder={t("contacts.form.email_placeholder")}
                     {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
@@ -163,22 +172,24 @@ function ContactModal({ open, handleClose }) {
                   />
                   {errors.email && (
                     <span className="text-xs text-red-500">
-                      Please enter a valid email
+                      {t("contacts.form.required_email")}
                     </span>
                   )}
                 </TextInput>
               </div>
               <TextInput>
-                <label htmlFor="contact_message">Message</label>
+                <label htmlFor="contact_message">
+                  {t("contacts.form.message")}
+                </label>
                 <textarea
                   id="contact_message"
-                  placeholder="Write here"
+                  placeholder={t("contacts.form.message_placeholder")}
                   {...register("message", { required: true })}
                   rows={5}
                 />
                 {errors.message && (
                   <span className="text-xs text-red-500">
-                    This field is required
+                    {t("contacts.form.required")}
                   </span>
                 )}
               </TextInput>

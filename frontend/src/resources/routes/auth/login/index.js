@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../../../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Login() {
       toast.error("Invalid email or password");
     }
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -74,28 +76,28 @@ function Login() {
 
             <div className="flex flex-col gap-5">
               <p className="uppercase text-[#44456A] font-medium text-sm">
-                Welcome Back
+                {t("auth.login.pre_title")}
               </p>
               <h2 className="text-xl md:text-2xl lg:text-3xl text-[#1A184C] font-bold font-sans">
-                Continue to your account
+                {t("auth.login.title")}
               </h2>
               <div className="flex flex-wrap gap-3">
                 <AuthButton>
                   <AuthIcon>
                     <GoogleIcon />
                   </AuthIcon>
-                  <span>Continue with Google</span>
+                  <span>{t("auth.socials.google")}</span>
                 </AuthButton>
                 <AuthButton>
                   <AuthIcon>
                     <FacebookIcon />
                   </AuthIcon>
-                  <span>Continue with Facebook</span>
+                  <span>{t("auth.socials.facebook")}</span>
                 </AuthButton>
               </div>
               <p className="text-center flex items-center uppercase font-medium text-sm">
                 <span className="flex-grow border-t border-gray-300 mx-4"></span>
-                Or
+                {t("auth.login.option")}
                 <span className="flex-grow border-t border-gray-300 mx-4"></span>
               </p>
 
@@ -104,11 +106,11 @@ function Login() {
                 className="flex flex-col w-full gap-4"
               >
                 <AuthInput>
-                  <label htmlFor="login_email">Email</label>
+                  <label htmlFor="login_email">{t("auth.form.email")}</label>
                   <input
                     id="login_email"
                     type="text"
-                    placeholder="Email"
+                    placeholder={t("auth.form.email_placeholder")}
                     {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
@@ -116,21 +118,23 @@ function Login() {
                   />
                   {errors.email && (
                     <span className="text-xs text-red-500">
-                      This field is required
+                      {t("auth.form.required")}
                     </span>
                   )}
                 </AuthInput>
                 <AuthInput>
-                  <label htmlFor="login_password">Password</label>
+                  <label htmlFor="login_password">
+                    {t("auth.form.password")}
+                  </label>
                   <input
                     id="login_password"
                     type="password"
-                    placeholder="Password"
+                    placeholder={t("auth.form.password_placeholder")}
                     {...register("password", { required: true })}
                   />
                   {errors.password && (
                     <span className="text-xs text-red-500">
-                      This field is required
+                      {t("auth.form.required")}
                     </span>
                   )}
                 </AuthInput>
@@ -145,7 +149,7 @@ function Login() {
                     htmlFor="rememberMe"
                     className="text-[#575757] text-sm"
                   >
-                    Remember Password
+                    {t("auth.form.remember")}
                   </label>
                 </div>
                 <input
@@ -155,12 +159,12 @@ function Login() {
               </form>
 
               <p className="text-center font-medium text-md">
-                Are you a Newbie?{" "}
+                {t("auth.login.register_title")}
                 <Link
                   to={"/register"}
                   className="uppercase text-[#6078DF] underline"
                 >
-                  Get Started
+                  {t("auth.login.register_link")}
                 </Link>
               </p>
 
@@ -169,7 +173,7 @@ function Login() {
                   to={"/forgot"}
                   className="uppercase text-[#6078DF] underline"
                 >
-                  Forgot the password? 
+                  {t("auth.login.forgot_password")}
                 </Link>
               </p>
             </div>

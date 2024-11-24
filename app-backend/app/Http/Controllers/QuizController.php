@@ -701,7 +701,7 @@ class QuizController extends Controller
 
         $metrics = $userMetrics ? $userMetrics->toArray() : [];
         $metrics = array_merge($metrics, [
-            'totalScore' => $totalScore,
+            'totalScore' => round($totalScore, 2),
             'finished_quizzes' => $finished,
             'percentage_finished_quizzes' => $percentageFinished,
             'unfinished_quizzes' => $unfinished,

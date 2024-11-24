@@ -12,6 +12,7 @@ import WestIcon from "@mui/icons-material/West";
 import BackButton from "../../../components/general/BackButton";
 import axiosConfig from "../../../../providers/axiosConfig";
 import Skeleton from "../../../components/general/Skeleton";
+import { useTranslation } from "react-i18next";
 
 const LibraryPage = () => {
   const { id } = useParams();
@@ -78,6 +79,8 @@ const LibraryPage = () => {
     currentIndex !== -1 && currentIndex < page?.modules?.length - 1;
   const hasPreviousModule = currentIndex > 0;
 
+  const { t } = useTranslation();
+
   return (
     <>
       <LibraryArea>
@@ -139,7 +142,7 @@ const LibraryPage = () => {
                         <div className="flex gap-4 items-center">
                           <div className="flex flex-col gap-1">
                             <span className="font-light text-[#ECECEC] text-base">
-                              Previous Chapter
+                              {t("library.previous_chapter")}
                             </span>
                             <span className="font-semibold text-[#ECECEC] text-base">
                               {page?.modules[currentIndex - 1].title}
@@ -174,7 +177,7 @@ const LibraryPage = () => {
                         <div className="flex gap-4 items-center">
                           <div className="flex flex-col gap-1">
                             <span className="font-light text-[#ECECEC] text-base">
-                              Next Chapter
+                              {t("library.next_chapter")}
                             </span>
                             <span className="font-semibold text-[#ECECEC] text-base">
                               {page?.modules[currentIndex + 1].title}

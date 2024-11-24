@@ -12,6 +12,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import moment from "moment";
 import ChatBox from "../../components/chat/Chatbox";
 import EmptyValue from "../../components/general/EmptyValue";
+import { useTranslation } from "react-i18next";
 
 function Threads() {
   const [loading, setLoading] = useState();
@@ -76,6 +77,8 @@ function Threads() {
     });
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <ForumPostArea>
@@ -83,14 +86,16 @@ function Threads() {
           <ForumPostList className="flex flex-col w-full min-h-screen gap-10">
             <div className="flex items-center justify-between">
               <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
-                Forums
+                {t("forums.title")}
               </h1>
               <button
                 className="rounded-full flex items-center gap-3 bg-white py-3 px-6"
                 onClick={handleOpenModal}
               >
                 <AddOutlinedIcon sx={{ color: "#6078DF" }} />
-                <p className="text-[#6078DF] font-semibold">Create post</p>
+                <p className="text-[#6078DF] font-semibold">
+                  {t("forums.create")}
+                </p>
               </button>
               <PostModal
                 open={isModalOpen}
@@ -107,7 +112,7 @@ function Threads() {
                   <div className="flex gap-4">
                     {categories &&
                       categories?.map((category, index) => (
-                        <div key={category.id}>
+                        <div key={index}>
                           <button
                             onClick={() => handleCategoryClick(category.id)}
                             className={`px-5 py-2 rounded-full border-[1px] border-solid ${
@@ -135,7 +140,7 @@ function Threads() {
                             },
                           }}
                         />
-                        Clear Filters
+                        {t("forums.clear_filters")}
                       </button>
                     )}
                   </div>
@@ -194,7 +199,7 @@ function Threads() {
                     );
                   })
               ) : (
-                <EmptyValue label={"No posts yet"} />
+                <EmptyValue label={t("forums.empty")} />
               )}
             </div>
           </ForumPostList>

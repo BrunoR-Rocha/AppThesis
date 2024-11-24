@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosConfig from "../../../../providers/axiosConfig";
+import { useTranslation } from "react-i18next";
 
 function Register() {
   const navigate = useNavigate();
@@ -39,11 +40,13 @@ function Register() {
       toast.success(response.data.message);
       reset();
 
-      navigate('/email-confirmation');
+      navigate("/email-confirmation");
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -80,28 +83,28 @@ function Register() {
 
             <div className="flex flex-col gap-5">
               <p className="uppercase text-[#44456A] font-medium text-sm">
-                Welcome to Moony
+                {t("auth.register.pre_title")}
               </p>
               <h2 className="text-xl md:text-2xl lg:text-3xl text-[#1A184C] font-bold font-sans">
-                Create an account
+                {t("auth.register.title")}
               </h2>
               <div className="flex flex-wrap gap-3">
                 <AuthButton>
                   <AuthIcon>
                     <GoogleIcon />
                   </AuthIcon>
-                  <span>Continue with Google</span>
+                  <span>{t("auth.socials.google")}</span>
                 </AuthButton>
                 <AuthButton>
                   <AuthIcon>
                     <FacebookIcon />
                   </AuthIcon>
-                  <span>Continue with Facebook</span>
+                  <span>{t("auth.socials.facebook")}</span>
                 </AuthButton>
               </div>
               <p className="text-center flex items-center uppercase font-medium text-sm">
                 <span className="flex-grow border-t border-gray-300 mx-4"></span>
-                Or
+                {t("auth.register.option")}
                 <span className="flex-grow border-t border-gray-300 mx-4"></span>
               </p>
 
@@ -111,25 +114,27 @@ function Register() {
               >
                 <div className="flex w-full items-center gap-4">
                   <AuthInput className="flex-1">
-                    <label htmlFor="register_name">Name</label>
+                    <label htmlFor="register_name">{t("auth.form.name")}</label>
                     <input
                       id="register_name"
                       type="text"
-                      placeholder="Name"
+                      placeholder={t("auth.form.name_placeholder")}
                       {...register("name", { required: true })}
                     />
                     {errors.name && (
                       <span className="text-xs text-red-500">
-                        This field is required
+                        {t("auth.form.required")}
                       </span>
                     )}
                   </AuthInput>
                   <AuthInput className="flex-1">
-                    <label htmlFor="register_email">Email</label>
+                    <label htmlFor="register_email">
+                      {t("auth.form.email")}
+                    </label>
                     <input
                       id="register_email"
                       type="text"
-                      placeholder="Email"
+                      placeholder={t("auth.form.email")}
                       {...register("email", {
                         required: true,
                         pattern: /^\S+@\S+$/i,
@@ -137,7 +142,7 @@ function Register() {
                     />
                     {errors.email && (
                       <span className="text-xs text-red-500">
-                        This field is required
+                        {t("auth.form.required")}
                       </span>
                     )}
                   </AuthInput>
@@ -145,40 +150,43 @@ function Register() {
 
                 <div className="flex w-full items-center gap-4">
                   <AuthInput className="flex-1">
-                    <label htmlFor="register_password">Password</label>
+                    <label htmlFor="register_password">
+                      {t("auth.form.password")}
+                    </label>
                     <input
                       id="register_password"
                       type="password"
-                      placeholder="Password"
+                      placeholder={t("auth.form.password")}
                       {...register("password", { required: true })}
                     />
                     {errors.password && (
                       <span className="text-xs text-red-500">
-                        This field is required
+                        {t("auth.form.required")}
                       </span>
                     )}
                   </AuthInput>
                   <AuthInput className="flex-1">
                     <label htmlFor="register_c_password">
-                      Password Confirmation
+                      {t("auth.form.password_confirmation")}
                     </label>
                     <input
                       id="register_c_password"
                       type="password"
-                      placeholder="Password Confirmation"
+                      placeholder={t("auth.form.password_confirmation")}
                       {...register("password_confirmation", {
                         required: true,
                         validate: (value) => {
                           const { password } = getValues();
                           return (
-                            password === value || "Passwords should match!"
+                            password === value ||
+                            t("auth.form.password_confirmation_error")
                           );
                         },
                       })}
                     />
                     {errors.password_confirmation && (
                       <span className="text-xs text-red-500">
-                        The passwords should match
+                        {t("auth.form.password_confirmation_error")}
                       </span>
                     )}
                   </AuthInput>
@@ -195,7 +203,7 @@ function Register() {
                     htmlFor="rememberMe"
                     className="text-[#575757] text-sm"
                   >
-                    Remember Password
+                    {t("auth.form.remember")}
                   </label>
                 </div>
                 <input
@@ -206,12 +214,12 @@ function Register() {
               </form>
 
               <p className="text-center font-medium text-md">
-                Already registered?{" "}
+                {t("auth.register.login_title")}
                 <Link
                   to={"/login"}
                   className="uppercase text-[#6078DF] underline"
                 >
-                  Login
+                  {t("auth.register.login_link")}
                 </Link>
               </p>
             </div>

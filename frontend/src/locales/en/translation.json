@@ -1,5 +1,29 @@
 {
+    "app":{
+        "back": "Back",
+        "option_placeholder": "Choose an option"
+    },
+    "links":{
+        "home": "Home",
+        "about": "About",
+        "contacts" :"Contact Us",
+        "library": "Library",
+        "forums": "Forums",
+        "academy": "Academy",
+        "login": "Sign In",
+        "profile": "Profile",
+        "logout": "Logout"
+    },
+    "footer" :{
+        "title": "Awaken your <strong>sleep<br /><small>& health</small></strong> Knowledge",
+        "slogan" : "Join us now and learn something new today!",
+        "explore": "Explore",
+        "privacy": "Privacy Policy",
+        "terms": "Terms and conditions",
+        "suggestions" : "Compliments, suggestions and complaints"
+    },
     "landing":{
+        "title": "Awaken your <br /><strong>sleep <small>&</small> health</strong> <br />Knowledge",
         "learn_more": "Learn More",
         "project" :{
             "slogan" : "About the project",
@@ -21,7 +45,7 @@
     },
     "about" :{
         "title": "About us",
-        "description" : "Moony is a platform dedicated to e-learning of sleep and its mechanisms. It provides an overview of the basic science, suggests clinical implications from those basic sciences, and delivers a user experience that integrates these two aspects into one cohesive learning package. \n\n The platform provides scientifically-based insights about sleep to the user. The main goal of Moony is to give an easy access to users that want to learn about the topic and also collaborate with experts around the globe.",
+        "description" : "Moony is a platform dedicated to e-learning of sleep and its mechanisms. It provides an overview of the basic science, suggests clinical implications from those basic sciences, and delivers a user experience that integrates these two aspects into one cohesive learning package. <br/> The platform provides scientifically-based insights about sleep to the user. The main goal of Moony is to give an easy access to users that want to learn about the topic and also collaborate with experts around the globe.",
         "team": {
             "title": "Meet the team behind Moony"
         }
@@ -29,6 +53,117 @@
     "contacts": {
         "title": "Contact us",
         "helper" :"Couldn’t find what you were looking for?",
-        "link": "Contact our team"
+        "link": "Contact our team",
+        "modal":{
+            "title": "Any Doubts",
+            "subtitle": "Contact us!",
+            "descripton": "Do you have any questions? <br /> Please do not hesitate to contact us directly. <br /> Our team will come back to you within a matter of hours to help you.",
+            "location": "Location",
+            "email": "Email"
+        },
+        "form": {
+            "subject": "Subject",
+            "subject_placeholder": "Write here",
+            "name": "Name",
+            "name_placeholder": "Your Name",
+            "email": "Email",
+            "email_placeholder": "Your Email",
+            "message": "Message",
+            "message_placeholder": "Write here",
+            "required": "This field is required",
+            "required_email": "Please enter a valid email"
+        }
+    },
+    "auth":{
+        "socials": {
+            "facebook": "Continue with Facebook",
+            "google": "Continue with Google"
+        },
+        "login":{
+            "pre_title": "Welcome Back",
+            "title": "Continue to your account",
+            "option": "Or",
+            "register_title": "Are you a Newbie?",
+            "register_link": "Get Started",
+            "forgot_password": "Forgot the password?"
+        },
+        "register":{
+            "pre_title": "Welcome to Moony",
+            "title": "Create an account",
+            "option": "Or",
+            "login_title": "Already registered?",
+            "login_link": "Login"
+        },
+        "form":{
+            "name": "Name",
+            "name_placeholder": "Your Name",
+            "email": "Email",
+            "email_placeholder": "Your Email",
+            "password": "Password",
+            "password_placeholder": "Your Password",
+            "password_confirmation": "Password Confirmation",
+            "password_confirmation_error": "The Passwords should match!",
+            "remember": "Remember Password",
+            "required": "This field is required"
+        }
+    },
+    "library":{
+        "title": "Library",
+        "previous_chapter": "Previous Chapter",
+        "next_chapter": "Next Chapter",
+        "sections" :{
+            "news":{
+                "title": "News"
+            },
+            "journals" :{
+                "title": "Journals"
+            }
+        }
+    },
+    "forums" :{
+        "title": "Forums",
+        "create": "Create post",
+        "clear_filters": "Clear filters",
+        "empty": "No posts yet",
+        "next_post": "Next Post",
+        "created_by": "By",
+        "actions":{
+            "share": "Share",
+            "report": "Report"
+        },
+        "comments": "Comments",
+        "form":{
+            "submit": "Submit",
+            "comments_placeholder": "Write your opinion",
+            "required": "This field is required"
+        },
+        "chat":{
+            "default": "Hello! Ask me anything!",
+            "placeholder": "Ask your question ..."
+        }
+    },
+    "academy": {
+        "title" :"Academy",
+        "sections":{
+            "quizzes": {
+                "title": "Quizzes",
+                "main_title": "Learning through quizzes",
+                "sub_title": "Challenge yourself with an expanded set of questions across multiple difficulty levels.",
+                "waiting":{
+                    "title":"Please wait!",
+                    "sub_title":"We're building your quiz"
+                },
+                "form":{
+                    "randomize": "Randomize",
+                    "option": "Or",
+                    "topic": "Topic",
+                    "difficulty": "Difficulty",
+                    "start": "Start Quiz"
+                }
+            },
+            "courses": {
+                "title" : "Courses"
+            }
+        }
     }
 }

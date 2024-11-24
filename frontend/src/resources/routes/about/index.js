@@ -26,12 +26,14 @@ import axiosConfig from "../../../providers/axiosConfig";
 import { Accordion, CircularProgress } from "@mui/material";
 import ContactModal from "../../components/modals/contact";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function About() {
   const [faqs, setFaqs] = useState();
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -66,22 +68,15 @@ function About() {
               <div className="flex xl:flex-row flex-col items-center w-full">
                 <AboutCaption className="basis-3/4 gap-3 sm:gap-10">
                   <h1 className="text-3xl md:text-4xl lg:text-5xl text-white font-semibold font-sans">
-                    About us
+                    {t("about.title")}
                   </h1>
                   <div>
-                    <p className="text-base font-medium text-white">
-                      Moony is a platform dedicated to e-learning of sleep and
-                      its mechanisms. It provides an overview of the basic
-                      science, suggests clinical implications from those basic
-                      sciences, and delivers a user experience that integrates
-                      these two aspects into one cohesive learning package.
-                    </p>
-                    <p className="text-base font-medium text-white">
-                      The platform provides scientifically-based insights about
-                      sleep to the user. The main goal of Moony is to give an
-                      easy access to users that want to learn about the topic
-                      and also collaborate with experts around the globe.
-                    </p>
+                    <p
+                      className="text-base font-medium text-white"
+                      dangerouslySetInnerHTML={{
+                        __html: t("about.description"),
+                      }}
+                    ></p>
                   </div>
                 </AboutCaption>
               </div>
@@ -90,7 +85,7 @@ function About() {
         </AboutHero>
 
         <TeamArea>
-          <TeamCaption>Meet the Team behind Moony </TeamCaption>
+          <TeamCaption> {t("about.team.title")}</TeamCaption>
           <div className="w-11/12 mx-auto md:w-full flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-10">
             <TeamCard>
               <TeamMemberInfo>
@@ -216,14 +211,14 @@ function About() {
 
               <div className="flex flex-col gap-3 justify-center">
                 <p className="text-lg font-normal text-center">
-                  Couldn’t find what you were looking for?
+                  {t("contacts.helper")}
                 </p>
                 <Link
                   className="text-[#F4AA5A] text-lg font-semibold text-center hover:underline"
                   to={"#"}
                   onClick={() => handleOpenModal()}
                 >
-                  Contact our team
+                  {t("contacts.link")}
                 </Link>
                 <ContactModal
                   open={isModalOpen}

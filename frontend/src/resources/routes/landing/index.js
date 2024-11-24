@@ -19,7 +19,7 @@ import MemoryOutlinedIcon from "@mui/icons-material/MemoryOutlined";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import { HashLink } from "react-router-hash-link";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 
 function Landing() {
   const imageCount = 8;
@@ -28,7 +28,7 @@ function Landing() {
     (_, i) => `Frame_${i + 1}.svg`
   );
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -39,17 +39,18 @@ function Landing() {
               <div className="flex xl:flex-row flex-col items-center w-full xl:py-[60px] mt-10">
                 <HeroCaption className="flex-grow gap-4 sm:gap-10 mt-44 md:mt-24">
                   <h1 className="text-5xl md:text-6xl lg:text-8xl text-white font-semibold font-sans leading-[74%]">
-                    Awaken your
-                    <br />
-                    <span class="font-medium font-cormorant italic text-7xl md:text-8xl lg:text-9xl">
-                      sleep{" "}
-                      <span className="font-sans italic font-medium text-7xl">
-                        &
-                      </span>{" "}
-                      health
-                    </span>
-                    <br />
-                    Knowledge
+                    <Trans
+                      i18nKey="landing.title"
+                      components={{
+                        strong: (
+                          <span className="font-medium text-7xl md:text-8xl lg:text-9xl font-cormorant italic" />
+                        ),
+                        br: <br />,
+                        small: (
+                          <span className="font-sans text-7xl md:text-8xl" />
+                        ),
+                      }}
+                    />
                   </h1>
                   <HashLink
                     className="flex gap-2 items-center"
@@ -105,9 +106,7 @@ function Landing() {
             </h3>
             <div className="flex flex-wrap gap-12 items-center justify-center">
               <Feature
-                text={
-                  t("landing.features.features.comments")
-                }
+                text={t("landing.features.features.comments")}
                 icon={
                   <ForumOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
@@ -115,9 +114,7 @@ function Landing() {
                 }
               />
               <Feature
-                text={
-                  t("landing.features.features.quizzes")
-                }
+                text={t("landing.features.features.quizzes")}
                 icon={
                   <LiveHelpOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
@@ -125,9 +122,7 @@ function Landing() {
                 }
               />
               <Feature
-                text={
-                  t("landing.features.features.courses")
-                }
+                text={t("landing.features.features.courses")}
                 icon={
                   <SchoolOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
@@ -135,9 +130,7 @@ function Landing() {
                 }
               />
               <Feature
-                text={
-                  t("landing.features.features.tools")
-                }
+                text={t("landing.features.features.tools")}
                 icon={
                   <AutoStoriesOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
@@ -145,9 +138,7 @@ function Landing() {
                 }
               />
               <Feature
-                text={
-                  t("landing.features.features.learning")
-                }
+                text={t("landing.features.features.learning")}
                 icon={
                   <MemoryOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}
@@ -155,9 +146,7 @@ function Landing() {
                 }
               />
               <Feature
-                text={
-                  t("landing.features.features.evaluation")
-                }
+                text={t("landing.features.features.evaluation")}
                 icon={
                   <QueryStatsOutlinedIcon
                     sx={{ color: "#6078DF", height: "54px", width: "54px" }}

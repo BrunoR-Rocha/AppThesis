@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import RenderButton from "../../components/general/SectionButtons";
 import CircularProgress from "@mui/material/CircularProgress";
 import Skeleton from "../../components/general/Skeleton";
+import { useTranslation } from "react-i18next";
 
 function Academy() {
   const [loadingParams, setLoadingParams] = useState(false);
@@ -22,7 +23,7 @@ function Academy() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
   const location = useLocation();
-  
+
   const [activeTab, setActiveTab] = useState(
     location?.state?.activeTab ?? "quizzes"
   );
@@ -69,6 +70,8 @@ function Academy() {
       .catch(() => setLoading(false));
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <AcademyArea>
@@ -85,17 +88,17 @@ function Academy() {
               <>
                 <div className="flex gap-6">
                   <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
-                    Academy
+                    {t("academy.title")}
                   </h1>
                   <RenderButton
                     tabId="quizzes"
-                    label="Quizzes"
+                    label={t("academy.sections.quizzes.title")}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                   />
                   <RenderButton
                     tabId="courses"
-                    label="Courses"
+                    label={t("academy.sections.courses.title")}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                   />
@@ -104,19 +107,20 @@ function Academy() {
                   <div className="flex flex-col items-center justify-center py-10 gap-10">
                     <div className="flex flex-col gap-3">
                       <h3 className="text-[#ECECEC] text-center font-semibold text-xl lg:text-3xl">
-                        Learning through quizzes
+                        {t("academy.sections.quizzes.main_title")}
                       </h3>
                       <p className="text-white text-lg text-center max-w-xl">
-                        Challenge yourself with an expanded set of questions
-                        across multiple difficulty levels.
+                        {t("academy.sections.quizzes.sub_title")}
                       </p>
                     </div>
 
                     <div className="flex flex-grow w-full max-w-xl">
                       {loading ? (
                         <div className="flex flex-col gap-5 w-full text-white items-center justify-center mt-5">
-                          <p>Please wait!</p>
-                          <p>We're building your quiz</p>
+                          <p>{t("academy.sections.quizzes.waiting.title")}</p>
+                          <p>
+                            {t("academy.sections.quizzes.waiting.sub_title")}
+                          </p>
                           <CircularProgress color="inherit" />
                         </div>
                       ) : (
@@ -128,7 +132,7 @@ function Academy() {
                             <div className="flex justify-between w-full items-center">
                               <div className="flex flex-col gap-2 justify-start">
                                 <span className="uppercase text-start text-xs font-semibold text-[#ECECEC]">
-                                  Randomize
+                                  {t("academy.sections.quizzes.form.randomize")}
                                 </span>
                                 <span className="text-white font-semibold text-lg">
                                   General Sleep
@@ -139,20 +143,22 @@ function Academy() {
                           </button>
                           <p className="text-center flex items-center uppercase font-medium text-sm text-[#AAA]">
                             <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
-                            Or
+                            {t("academy.sections.quizzes.form.option")}
                             <span className="flex-grow border-t border-white opacity-25 mx-4"></span>
                           </p>
 
                           <CustomDropdown
                             options={topicOptions}
-                            label="Topic"
+                            label={t("academy.sections.quizzes.form.topic")}
                             selectedOption={selectedTopic}
                             setSelectedOption={setSelectedTopic}
                             optionLabelKey="name"
                           />
                           <CustomDropdown
                             options={difficultyOptions}
-                            label="Difficulty"
+                            label={t(
+                              "academy.sections.quizzes.form.difficulty"
+                            )}
                             selectedOption={selectedDifficulty}
                             setSelectedOption={setSelectedDifficulty}
                             optionLabelKey="name"
@@ -164,7 +170,7 @@ function Academy() {
                               onClick={() => handleStartQuiz(false)}
                             >
                               <p className="text-base font-semibold capitalize">
-                                Start Quiz{" "}
+                                {t("academy.sections.quizzes.form.start")}{" "}
                                 <EastRoundedIcon sx={{ color: "#F4AA5A" }} />{" "}
                               </p>
                             </button>

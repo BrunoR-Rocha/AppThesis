@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Skeleton from "../../../components/general/Skeleton";
+import { useTranslation } from "react-i18next";
+import AuthContext from "../../../../context/AuthContext";
 
 const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
   const [loading, setLoading] = useState();
@@ -59,6 +61,9 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
       });
   }, [thread]);
 
+  const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+
   return (
     <div
       className={`fixed top-20 right-0 h-full w-1/3 bg-[#1A184C] transform transition-transform duration-300 z-[1000] ${
@@ -69,7 +74,7 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
         <div className="flex justify-between items-center">
           <div className="mt-4">
             <h2 className="text-xl font-semibold text-white">
-              Comments ({comments.length})
+              {t("forums.comments")} ({comments.length})
             </h2>
           </div>
           <div>
@@ -91,7 +96,7 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
       </div>
       <div className="flex flex-col py-5 px-6 gap-4">
         <div className="border-[1px] border-[#FFFFFF26] border-solid bg-[#201F41] rounded-md p-4 flex flex-col gap-4">
-          <p className="text-white font-semibold">User Name and picture </p>
+          <p className="text-white font-semibold">{user.name}</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex-1 flex flex-col w-full z-[1] gap-4"
@@ -100,13 +105,13 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
               <textarea
                 id="post_comment"
                 className="bg-transparent"
-                placeholder="Write your opinion"
+                placeholder={t("forums.form.comments_placeholder")}
                 {...register("comment", { required: true })}
                 rows={5}
               />
               {errors.comment && (
                 <span className="text-xs text-red-500">
-                  This field is required
+                  {t("forums.form.required")}
                 </span>
               )}
             </div>
@@ -120,7 +125,7 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
                 {loading ? (
                   <CircularProgress size={24} sx={{ color: "white" }} />
                 ) : (
-                  "Submit"
+                  t("forums.form.submit")
                 )}
               </button>
             </div>

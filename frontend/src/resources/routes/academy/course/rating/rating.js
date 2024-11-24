@@ -20,7 +20,6 @@ const CourseRating = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-    reset,
   } = useForm();
 
   const onSubmit = async (data) => {
