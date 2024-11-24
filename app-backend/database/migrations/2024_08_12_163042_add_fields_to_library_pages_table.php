@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('author')->nullable();
             $table->date('date')->nullable();
             $table->string('tag')->nullable();
+
+            $table->index('tag');
         });
     }
 
@@ -29,6 +31,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('library_pages', function (Blueprint $table) {
+            $table->dropIndex('tag');
+
             $table->dropColumn('description');
             $table->dropColumn('author');
             $table->dropColumn('date');

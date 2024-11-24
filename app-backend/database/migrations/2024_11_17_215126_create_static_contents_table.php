@@ -15,12 +15,10 @@ return new class extends Migration
     {
         Schema::create('static_contents', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
-            $table->string('title')->nullable();
-            $table->text('content')->nullable();
-            $table->string('image_path')->nullable();
-            $table->json('additional_data')->nullable();
+            $table->string('tag')->unique();
             $table->timestamps();
+            
+            $table->index('tag');
         });
     }
 

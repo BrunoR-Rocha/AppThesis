@@ -30,6 +30,7 @@ use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResponseController;
+use App\Http\Controllers\StaticContentController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserFavoriteController;
@@ -71,6 +72,8 @@ Route::group([
     $router->post('/front/contacts',                                    [ContactController::class, 'frontStore']);
     $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
+
+    $router->get('/static-contents/{tag}',                               [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
 
     // Authenticated Routes
     $router->group(['middleware' => 'auth:api'], function (Router $router) {
@@ -117,6 +120,7 @@ Route::group([
             'course_content_types' =>                                   CourseContentTypeController::class,
             'course_interactive_elements' =>                            CourseInteractiveElementController::class,
             'course_contents' =>                                        CourseContentController::class,
+            'statics'   =>                                              StaticContentController::class
         ]);
 
         $router->post('/front/post/create',                             [ForumThreadController::class, 'frontStore']);
@@ -135,7 +139,7 @@ Route::group([
         $router->delete('forum_threads/{thread}/like',                  [ForumThreadLikeController::class, 'unlike']);
         $router->get('/front/forum/threads',                            [ForumThreadController::class, 'getAll']);
         $router->get('/front/forum/threads/{id}',                       [ForumThreadController::class, 'show']);
-       
+
         $router->get('/front/courses',                                  [CourseController::class, 'getAll']);
         $router->get('/front/courses/{id}',                             [CourseController::class, 'getContent']);
         $router->get('/front/courses/{id}/contents',                    [CourseController::class, 'getCourseContents']);

@@ -3,12 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Translatable;
 
 class StaticContent extends Model
 {
-    protected $fillable = ['key', 'title', 'content', 'image_path', 'additional_data'];
+    use Translatable;
 
-    protected $casts = [
-        'additional_data' => 'array',
+    protected $fillable = [
+        'tag',
     ];
+
+    public $translatedAttributes = ['title', 'content'];
+
+    public function translations()
+    {
+        return $this->hasMany(StaticContentTranslation::class);
+    }
+    
 }

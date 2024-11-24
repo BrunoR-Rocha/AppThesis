@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::table('courses', function (Blueprint $table) {
             $table->boolean('enabled')->default(false);
             $table->string('short_description')->nullable();
+
+            $table->index('enabled');
         });
     }
 

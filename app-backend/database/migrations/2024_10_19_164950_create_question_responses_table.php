@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('response_quality_score', 5, 2)->nullable();
             $table->integer('time_taken')->nullable(); // time taken to answer the question
             $table->timestamps();
+
+            $table->index('is_correct');
         });
     }
 

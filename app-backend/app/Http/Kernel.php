@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'chat.rate.limit' => \App\Http\Middleware\ChatRateLimit::class,
+        'setLocale' => \App\Http\Middleware\SetLocaleFromRequest::class,
     ];
 }

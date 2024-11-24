@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('option_text');
             $table->boolean('is_correct')->default(false);
             $table->timestamps();
+
+            $table->index('is_correct');
         });
     }
 
