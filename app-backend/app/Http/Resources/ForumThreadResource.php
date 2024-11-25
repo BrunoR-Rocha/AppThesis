@@ -28,7 +28,7 @@ class ForumThreadResource extends JsonResource
             'data' => Carbon::parse($this->created_at)->format('d/m/Y'),
             'posts_count' => $this->forumPosts()->count(),
             'likes_count' => $this->likes()->count(),
-            'is_liked_by_user' => $request->user() ? $this->isLikedBy($request->user()) : null,
+            'is_liked_by_user' => $request->user() ? $this->isLikedBy($request->user()) : false,
             'next_thread_id' => $this->nextThread()?->id,
         ];
     }

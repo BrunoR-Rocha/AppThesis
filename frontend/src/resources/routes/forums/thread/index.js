@@ -19,6 +19,8 @@ const ThreadPage = () => {
   const navigate = useNavigate();
   const [thread, setThread] = useState();
   const [loading, setLoading] = useState();
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [isCommentSectionOpen, setCommentSectionOpen] = useState(false);
 
   useEffect(() => {
@@ -28,10 +30,38 @@ const ThreadPage = () => {
       .get(`/front/forum/threads/${id}`)
       .then((res) => {
         setThread(res.data);
+        setHasLiked(res.data.is_liked_by_user);
+        setLikesCount(res.data.likes_count);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [id]);
+
+  const handleLikeClick = () => {
+    if (!thread) return;
+
+    if (hasLiked) {
+      axiosConfig
+        .delete(`/forum_threads/${thread.id}/like`)
+        .then(() => {
+          setHasLiked(false);
+          setLikesCount((prevCount) => prevCount - 1);
+        })
+        .catch((error) => {
+          console.error("Error unliking thread:", error);
+        });
+    } else {
+      axiosConfig
+        .post(`/forum_threads/${thread.id}/like`)
+        .then(() => {
+          setHasLiked(true);
+          setLikesCount((prevCount) => prevCount + 1);
+        })
+        .catch((error) => {
+          console.error("Error liking thread:", error);
+        });
+    }
+  };
 
   const handleNextChapterClick = () => {
     if (thread?.next_thread_id) {
@@ -103,9 +133,14 @@ const ThreadPage = () => {
                 <div className="flex gap-4 border-y-[1px] border-y-[#272A2E] py-6 text-[#E9F0FF]">
                   <div className="flex items-center justify-between w-full">
                     <div className="flex justify-between gap-6">
-                      <div className="flex gap-3">
-                        <ThumbUpAltOutlinedIcon />
-                        <span>{thread?.likes_count}</span>
+                      <div
+                        className="flex gap-3 cursor-pointer"
+                        onClick={handleLikeClick}
+                      >
+                        <ThumbUpAltOutlinedIcon
+                          sx={{ color: hasLiked ? "#6078DF" : "inherit" }}
+                        />
+                        <span>{likesCount}</span>
                       </div>
                       <div
                         className="flex gap-3 cursor-pointer"

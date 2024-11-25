@@ -97,7 +97,7 @@ class StaticContentController extends Controller
 
     public function getContentByTag(Request $request, $tag)
     {
-        $locale = $request->input('locale', app()->getLocale());
+        $locale = app()->getLocale();
 
         $staticContent = StaticContent::where('tag', $tag)->first();
 

@@ -53,11 +53,11 @@ const routes = [
   },
   {
     path: "/privacy-policy",
-    element: <Policy label={"Privacy Policy"} />,
+    element: <Policy tag={"privacy_policy"} />,
   },
   {
     path: "/terms-conditions",
-    element: <Policy label={"Terms and conditions"} />,
+    element: <Policy tag={"terms_conditions"} />,
   },
 
   // Protected Routes
