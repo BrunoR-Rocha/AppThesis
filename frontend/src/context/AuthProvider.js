@@ -9,8 +9,20 @@ const AuthProvider = ({ children }) => {
     const auth = localStorage.getItem('auth');
     return auth ? JSON.parse(auth).user : null;
   });
+  const [expiresAt, setExpiresAt] = useState(() => {
+    const auth = localStorage.getItem('auth');
+    return auth ? new Date(JSON.parse(auth).expires_at) : null;
+  });
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const clearSession = () => {
+    setIsAuthenticated(false);
+    setUserState(null);
+    setExpiresAt(null);
+    localStorage.removeItem('auth');
+  };
+
 
   const setUser = (updatedUser) => {
     setUserState(updatedUser);
@@ -29,7 +41,18 @@ const AuthProvider = ({ children }) => {
 
       const auth = localStorage.getItem('auth');
       if (auth) {
-        setUserState(JSON.parse(auth).user);
+        const parsedAuth = JSON.parse(auth);
+        setUserState(parsedAuth.user);
+        setExpiresAt(new Date(parsedAuth.expires_at));
+        setIsAuthenticated(true);
+
+        const timeout = new Date(parsedAuth.expires_at).getTime() - new Date().getTime();
+        if (timeout > 0) {
+          setTimeout(() => {
+            logout();
+            alert('Session has expired. Please log in again.');
+          }, timeout);
+        }
       }
       setIsAuthenticated(true);
 
@@ -43,7 +66,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await authProvider.logout();
-    setIsAuthenticated(false);
+    clearSession();
   };
 
   useEffect(() => {
@@ -54,16 +77,39 @@ const AuthProvider = ({ children }) => {
         const parsedAuth = JSON.parse(auth);
         setUser(parsedAuth.user);
       } else {
-        setUser(null);
+        clearSession();
       }
     };
 
     window.addEventListener('storage', handleAuthChange);
 
+    window.addEventListener('logout', () => {
+      logout();
+    });
+
+    if (expiresAt) {
+      const timeout = expiresAt.getTime() - new Date().getTime();
+      if (timeout > 0) {
+        const timer = setTimeout(() => {
+          logout();
+          alert('Session has expired. Please log in again.');
+        }, timeout);
+        return () => clearTimeout(timer);
+      } else {
+        // Token already expired
+        logout();
+      }
+    }
+
+
     return () => {
       window.removeEventListener('storage', handleAuthChange);
+      window.removeEventListener('logout', () => {
+        logout();
+      });
     };
   }, []);
+
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, setUser, isLoading, login, logout }}>

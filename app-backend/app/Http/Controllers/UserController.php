@@ -128,9 +128,59 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->all());
 
-        return $user;
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'email' => [
+                'sometimes',
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($id),
+            ],
+            'password' => 'sometimes|nullable|string|min:8|confirmed',
+            'phone_number' => 'sometimes|nullable|digits:9',
+            'birth_date' => 'sometimes|required|date',
+            'role' => [
+                'sometimes',
+                'required',
+                'string',
+                Rule::exists('roles', 'name'),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => __('auth.update_fail'),
+            ], 400);
+        }
+
+        $user->name = $request->has('name') ? $request->name : $user->name;
+        $user->email = $request->has('email') ? $request->email : $user->email;
+        $user->phone_number = $request->has('phone_number') ? $request->phone_number : $user->phone_number;
+        $user->birth_date = $request->has('birth_date') ? $request->birth_date : $user->birth_date;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        if ($request->has('role')) {
+            $user->syncRoles([$request->role]);
+        }
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone_number' => $user->phone_number,
+            'birth_date' => $user->birth_date,
+            'roles' => $user->getRoleNames(),
+            'message' => __('auth.update_success'),
+        ], 200);
     }
 
     public function destroy($id)

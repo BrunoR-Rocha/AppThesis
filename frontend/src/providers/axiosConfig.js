@@ -30,20 +30,31 @@ axiosConfig.interceptors.request.use(
 );
 
 axiosConfig.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (err) => {
-    let res = err.response && err.response.data;
-    if (res) {
-      if (res.message) {
-        err.message = res.message;
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      const { status, data } = error.response;
+
+      if (status === 401 || status === 403) {
+
+        window.dispatchEvent(new Event("logout"));
+      }
+
+      if (status === 503) {
+        window.location.href = '/maintenance';
+        return Promise.reject(error);
+      }
+
+      if (data && data.message) {
+        error.message = data.message;
+      } else if (data && data.error) {
+        error.message = `api.errors.${data.error}`;
       } else {
-        err.message = `api.errors.${res.error}`;
+        error.message = "An unexpected error occurred.";
       }
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
 

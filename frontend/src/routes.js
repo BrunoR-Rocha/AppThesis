@@ -19,13 +19,17 @@ import ResetPassword from "./resources/routes/auth/reset";
 import CourseLearn from "./resources/routes/academy/course/learn";
 import QuizReview from "./resources/routes/academy/quiz/review";
 import CourseRating from "./resources/routes/academy/course/rating/rating";
+import Maintenance from "./resources/routes/maintenance";
 
 const routes = [
-  // Public Routes
   {
     path: "/",
     element: <Landing />,
     exact: true,
+  },
+  {
+    path: "/maintenance",
+    element: <Maintenance />
   },
   {
     path: "/about",

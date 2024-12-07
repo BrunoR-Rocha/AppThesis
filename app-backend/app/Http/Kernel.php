@@ -66,5 +66,8 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'chat.rate.limit' => \App\Http\Middleware\ChatRateLimit::class,
         'setLocale' => \App\Http\Middleware\SetLocaleFromRequest::class,
+        'check.token.expiry' => \App\Http\Middleware\CheckTokenExpiry::class,
+        'check.maintenance' => \App\Http\Middleware\CheckMaintenanceMode::class,
+        'check.mail_send' => \App\Http\Middleware\CheckMailSend::class,
     ];
 }

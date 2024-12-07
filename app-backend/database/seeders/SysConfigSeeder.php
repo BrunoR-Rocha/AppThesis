@@ -23,5 +23,32 @@ class SysConfigSeeder extends Seeder
                 'input_type' => 'text'
             ]
         );
+
+        SysConfig::firstOrCreate(
+            ['tag' => 'maintenance'],
+            [
+                'value' => 'false',
+                'description' => 'Gestão de Manutenção do site',
+                'input_type' => 'boolean'
+            ]
+        );
+
+        SysConfig::firstOrCreate(
+            ['tag' => 'social_logins'],
+            [
+                'value' => 'false',
+                'description' => 'Gestão de Logins com Redes Sociais',
+                'input_type' => 'boolean'
+            ]
+        );
+
+        SysConfig::firstOrCreate(
+            ['tag' => 'mail_send'],
+            [
+                'value' => 'true',
+                'description' => 'Gestão de Envios de Email',
+                'input_type' => 'boolean'
+            ]
+        );
     }
 }

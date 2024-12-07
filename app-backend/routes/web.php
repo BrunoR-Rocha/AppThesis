@@ -15,6 +15,7 @@ use App\Http\Controllers\CourseSubscriptionController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ForumCategoryController;
 use App\Http\Controllers\ForumPostController;
+use App\Http\Controllers\ForumPostLikeController;
 use App\Http\Controllers\ForumThreadController;
 use App\Http\Controllers\ForumThreadLikeController;
 use App\Http\Controllers\JournalController;
@@ -50,6 +51,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => '/backend',
+    'middleware' => ['check.maintenance']
 ], function (Router $router) {
 
     $router->post('/register',                                          [AuthController::class, 'register']);
@@ -67,7 +69,6 @@ Route::group([
     $router->get('/llm/topic',                                          [QuestionTopicController::class, 'generate']);
     $router->get('/llm/question',                                       [QuestionController::class, 'generateRandom']);
 
-    $router->get('/front/comments/{id}',                                [ForumThreadController::class, 'showComments']);
     $router->post('/front/register',                                    [UserController::class, 'frontRegister']);
     $router->post('/front/contacts',                                    [ContactController::class, 'frontStore']);
     $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
@@ -76,7 +77,7 @@ Route::group([
     $router->get('/static-contents/{tag}',                               [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
 
     // Authenticated Routes
-    $router->group(['middleware' => 'auth:api'], function (Router $router) {
+    $router->group(['middleware' => ['auth:api', 'check.token.expiry']], function (Router $router) {
 
         $router->post('/logout',                                        [AuthController::class, 'logout']);
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
@@ -135,8 +136,13 @@ Route::group([
         $router->get('front/library/{id}',                              [LibraryPageController::class, 'showPage']);
         $router->post('library/favorites',                              [UserFavoriteController::class, 'storeLibraryFavorite']);
 
+        $router->get('/front/comments/{id}',                            [ForumThreadController::class, 'showComments']);
+
         $router->post('forum_threads/{thread}/like',                    [ForumThreadLikeController::class, 'like']);
         $router->delete('forum_threads/{thread}/like',                  [ForumThreadLikeController::class, 'unlike']);
+        $router->post('forum_posts/{post}/like',                        [ForumPostLikeController::class, 'like']);
+        $router->delete('forum_posts/{post}/like',                      [ForumPostLikeController::class, 'unlike']);
+
         $router->get('/front/forum/threads',                            [ForumThreadController::class, 'getAll']);
         $router->get('/front/forum/threads/{id}',                       [ForumThreadController::class, 'show']);
 

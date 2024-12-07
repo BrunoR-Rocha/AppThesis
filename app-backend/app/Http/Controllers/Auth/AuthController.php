@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,11 +23,26 @@ class AuthController extends Controller
 
         $user = User::where('email', $request['email'])->firstOrFail();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user->tokens()->delete();
+
+        $tokenResult = $user->createToken('auth_token');
+        $token = $tokenResult->plainTextToken;
+
+        // Set expiration (1 hour from now)
+        $tokenResult = $user->createToken('auth_token');
+        $token = $tokenResult->plainTextToken;
+
+        // Retrieve the PersonalAccessToken instance
+        $accessToken = $tokenResult->accessToken;
+
+        // Set expiration (1 hour from now)
+        $accessToken->expires_at = Carbon::now()->addHour();
+        $accessToken->save();
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'expires_at'   => $accessToken->expires_at->toDateTimeString(),
             'name' => $user->name,
         ]);
     }
@@ -37,7 +53,6 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            // 'password' => 'required|min:6|confirmed',
             'password' => [
                 'required',
                 'confirmed',
@@ -93,13 +108,21 @@ class AuthController extends Controller
             ], 401);
         }
 
+        $user->tokens()->delete();
+
         // Generate token
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $tokenResult = $user->createToken('auth_token');
+        $token = $tokenResult->plainTextToken;
+
+        // Set expiration (1 hour from now)
+        $tokenResult->accessToken->expires_at = Carbon::now()->addHour();
+        $tokenResult->accessToken->save();
 
         // Return response
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'Bearer',
+            'expires_at'   => $tokenResult->accessToken->expires_at->toDateTimeString(),
             'user'         => [
                 'name'     => $user->name,
                 'email'    => $user->email,
@@ -110,11 +133,17 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // Revoke the token that was used to authenticate the current request
-        // $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
 
-        // Alternatively, revoke all tokens:
-        $request->user()->tokens()->delete();
+        if (Auth::guard('api')->check()) {
+            $request->user()->tokens()->delete();
+        }
 
+        $request->session()->invalidate();
+
+        // Regenerate the CSRF token to prevent session fixation attacks
+        $request->session()->regenerateToken();
+    
         return response()->json([
             'message' => 'Logged out successfully',
         ]);

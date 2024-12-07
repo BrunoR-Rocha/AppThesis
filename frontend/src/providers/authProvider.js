@@ -56,6 +56,7 @@ const authProvider = {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       }),
+      
     });
 
     return fetch(request).then((response) => {

@@ -22,7 +22,8 @@ class ForumPostResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'author' => $this->user->name,
-            // 'likes_count' => $this->likes()->count(),
+            'likes_count' => $this->likes->count(),
+            'liked_by_user' => $request->user() ? $this->isLikedBy($request->user()) : false,
         ];
     }
 }

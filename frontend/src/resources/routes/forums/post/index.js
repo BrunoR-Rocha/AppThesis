@@ -47,12 +47,61 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
       });
   };
 
+  const handleLike = (forumPostId, liked) => {
+    if (liked) {
+      axiosConfig
+        .delete(`/forum_posts/${forumPostId}/like`)
+        .then((res) => {
+          setComments((prevComments) =>
+            prevComments.map((post) =>
+              post.id === forumPostId
+                ? {
+                    ...post,
+                    likes_count: post.likes_count - 1,
+                    liked_by_user: false,
+                  }
+                : post
+            )
+          );
+          toast.success(res.data.message);
+        })
+        .catch((err) => {
+          toast.error(
+            err.response?.data?.message || "Failed to unlike the post."
+          );
+        });
+    } else {
+      axiosConfig
+        .post(`/forum_posts/${forumPostId}/like`)
+        .then((res) => {
+          setComments((prevComments) =>
+            prevComments.map((post) =>
+              post.id === forumPostId
+                ? {
+                    ...post,
+                    likes_count: post.likes_count + 1,
+                    liked_by_user: true,
+                  }
+                : post
+            )
+          );
+          toast.success(res.data.message);
+        })
+        .catch((err) => {
+          toast.error(
+            err.response?.data?.message || "Failed to like the post."
+          );
+        });
+    }
+  };
+
   useEffect(() => {
     setLoadingComments(true);
 
     axiosConfig
       .get(`/front/comments/` + thread.id)
       .then((res) => {
+        console.log(res);
         setLoadingComments(false);
         setComments(res.data);
       })
@@ -139,31 +188,45 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
             </>
           ) : (
             comments &&
-            comments.map((comment, index) => (
-              <div
-                className="border-b-[1px] border-b-[#FFFFFF26] border-b-solid flex flex-col gap-3 py-5"
-                key={index}
-              >
-                <div className="">
-                  <p className="text-white font-semibold">{comment.author}</p>
-                  <p className="text-white text-sm font-normal">
-                    {moment(comment.created_at).fromNow()}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[#ECECEC] text-base font-normal">
-                    {comment.body}
-                  </p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-3">
-                    <ThumbUpAltOutlinedIcon />
-                    <span>1</span>
+            comments.map((comment, index) => {
+              console.log(comment);
+              return (
+                <div
+                  className="border-b-[1px] border-b-[#FFFFFF26] border-b-solid flex flex-col gap-3 py-5"
+                  key={index}
+                >
+                  <div className="">
+                    <p className="text-white font-semibold">{comment.author}</p>
+                    <p className="text-white text-sm font-normal">
+                      {moment(comment.created_at).fromNow()}
+                    </p>
                   </div>
-                  <p className="font-medium text-[#ECECEC] text-base">Reply</p>
+                  <div>
+                    <p className="text-[#ECECEC] text-base font-normal">
+                      {comment.body}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div
+                      className="flex gap-3 hover:cursor-pointer"
+                      onClick={() =>
+                        handleLike(comment.id, comment.liked_by_user)
+                      }
+                    >
+                      <ThumbUpAltOutlinedIcon
+                        sx={{
+                          color: comment.liked_by_user ? "#6078DF" : "inherit",
+                        }}
+                      />
+                      <span>{comment.likes_count}</span>
+                    </div>
+                    {/* <p className="font-medium text-[#ECECEC] text-base">
+                      Reply
+                    </p> */}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

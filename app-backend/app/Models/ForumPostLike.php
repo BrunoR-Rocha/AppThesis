@@ -5,20 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ForumThreadLike extends Model
+class ForumPostLike extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'forum_thread_id'];
+    protected $fillable = ['user_id', 'forum_post_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function forumThread()
+    public function forumPost()
     {
-        return $this->belongsTo(ForumThread::class);
+        return $this->belongsTo(ForumPost::class);
     }
-    
 }
