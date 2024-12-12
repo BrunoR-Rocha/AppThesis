@@ -101,7 +101,7 @@ services:
       - LANGCHAIN_API_KEY=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
       - LANGCHAIN_PROJECT=pr-smug-warfare-80
     ports:
-      - "5000:5000"
+      - "4000:4000"
     volumes:
       - ./langchain:/app
     depends_on:
