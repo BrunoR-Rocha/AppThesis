@@ -8,7 +8,7 @@ services:
     container_name: app-backend
     restart: always
     ports:
-      - "9000:9000"
+      - "5050:5050"
     volumes:
       - ./app-backend:/var/www
       - /var/www/vendor
@@ -28,7 +28,7 @@ services:
     container_name: frontend
     restart: always
     ports:
-      - "3000:3000"
+      - "5030:5030"
     volumes:
       - ./frontend:/app
       - '/app/node_modules'
@@ -46,7 +46,7 @@ services:
     container_name: frontend-admin
     restart: always
     ports:
-      - "3001:3001"
+      - "5045:5045"
     volumes:
       - ./frontend-admin:/app
       - '/app/node_modules'
@@ -101,7 +101,7 @@ services:
       - LANGCHAIN_API_KEY=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
       - LANGCHAIN_PROJECT=pr-smug-warfare-80
     ports:
-      - "4000:4000"
+      - "5055:5055"
     volumes:
       - ./langchain:/app
     depends_on:
