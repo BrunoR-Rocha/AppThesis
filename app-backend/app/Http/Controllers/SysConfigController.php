@@ -55,6 +55,11 @@ class SysConfigController extends Controller
         return new SysConfigResource($sysConfig);
     }
 
+    public function showTag($tag)
+    {
+        return SysConfig::getValueByTag($tag);
+    }
+
     public function update(Request $request, $id)
     {
         $sysConfig = SysConfig::findOrFail($id);

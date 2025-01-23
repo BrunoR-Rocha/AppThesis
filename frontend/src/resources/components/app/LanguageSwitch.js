@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 const languages = [
-  { code: "en", name: "English", country_code: "us" },
-  { code: "pt", name: "Português", country_code: "pt" },
+  { code: "en", name: "EN", country_code: "us" },
+  { code: "pt", name: "PT", country_code: "pt" },
 ];
 
 const LanguageSwitch = () => {
