@@ -54,6 +54,10 @@ Route::group([
     'middleware' => ['check.maintenance']
 ], function (Router $router) {
 
+    Route::get('/health', function () {
+        return response()->json(['status' => 'OK'], 200);
+    });
+    
     $router->post('/register',                                          [AuthController::class, 'register']);
     $router->post('/login',                                             [AuthController::class, 'login']);
     $router->post('/forgot/email',                                      [ForgotPasswordController::class, 'sendResetLinkEmail']);

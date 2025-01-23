@@ -9,7 +9,7 @@ export default defineConfig({
     },
     server: {
         host: true,
-        port: 5045
+        port: 3001
     },
     base: '/admin/',
 });

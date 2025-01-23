@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port for API
-EXPOSE 5055
+EXPOSE 4000
 
 # Run the LangChain server
 CMD ["python", "app.py"]
