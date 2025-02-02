@@ -18,11 +18,15 @@ class CheckMaintenanceMode
      */
     public function handle(Request $request, Closure $next)
     {
+        $maintenance = SysConfig::where('tag', 'maintenance')->value('value');
 
-        $maintenance = SysConfig::where('tag', 'maintenance')->value('value') === 'true';
-
-        if ($maintenance && !$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'In maintenance'], 503);
+        $maintenanceEnabled = filter_var($maintenance, FILTER_VALIDATE_BOOLEAN);
+        $maintenanceCondition = $maintenanceEnabled && !$request->is('backend/front/config/*') && !$request->user()->hasRole('admin');
+        if ($maintenanceCondition) {
+            return response()->json([
+                'maintenance_mode' => true, 
+                'message' => 'System is undermaintenance'
+            ], 503);
         }
 
         return $next($request);

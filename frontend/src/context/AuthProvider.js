@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import AuthContext from './AuthContext';
 import authProvider from '../providers/authProvider';
+import axiosConfig from '../providers/axiosConfig';
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('auth'));
@@ -15,6 +16,7 @@ const AuthProvider = ({ children }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [socialLoginsEnabled, setSocialLoginsEnabled] = useState(false);
 
   const clearSession = () => {
     setIsAuthenticated(false);
@@ -22,7 +24,6 @@ const AuthProvider = ({ children }) => {
     setExpiresAt(null);
     localStorage.removeItem('auth');
   };
-
 
   const setUser = (updatedUser) => {
     setUserState(updatedUser);
@@ -110,9 +111,25 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (window.location.pathname === "/maintenance") return;
+    const fetchConfig = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axiosConfig.get("/front/config/social_logins");
+        setSocialLoginsEnabled(response.data.social_logins);
+      } catch (error) {
+        console.error("Failed to fetch config:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchConfig();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, setUser, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ socialLoginsEnabled, isAuthenticated, user, setUser, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -54,6 +54,10 @@ Route::group([
     'middleware' => ['check.maintenance']
 ], function (Router $router) {
 
+    Route::get('/health', function () {
+        return response()->json(['status' => 'OK'], 200);
+    });
+    
     $router->post('/register',                                          [AuthController::class, 'register']);
     $router->post('/login',                                             [AuthController::class, 'login']);
     $router->post('/forgot/email',                                      [ForgotPasswordController::class, 'sendResetLinkEmail']);
@@ -74,8 +78,9 @@ Route::group([
     $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
 
-    $router->get('/static-contents/{tag}',                               [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
-
+    $router->get('/static-contents/{tag}',                              [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
+    $router->get('/front/config/{id}',                                  [SysConfigController::class, 'showTag']);
+    
     // Authenticated Routes
     $router->group(['middleware' => ['auth:api', 'check.token.expiry']], function (Router $router) {
 

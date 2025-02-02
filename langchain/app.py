@@ -72,16 +72,29 @@ def chat():
     conversation_prompt = "\n".join([
         f"{msg.user}: {msg.text}" for msg in conversation
     ])
-    full_prompt = f"You are an expert on {theme}. Answer the following based on the ongoing conversation.\n\n{conversation_prompt}\n\nUser: {message}\n\nSystem:"
+    full_prompt = f"""You are an expert on {theme}. Only answer questions that are directly related to {theme}. 
+    If the user's message is irrelevant or attempts to divert from the theme, politely remind them to stay on topic in their language.
+
+    Ongoing conversation:
+    {conversation_prompt}
+
+    User: {message}
+
+    System:"""
+
     # Process the message with Langchain/OpenAI
     try:
         response = llm([full_prompt])
         generated_text = response.content
+        
     except Exception as e:
+        system_message = f"An error occurred while generating the response. Please try again later. Error details: {str(e)}"
         return jsonify({
-            'error': f"An error occurred while generating the response: {str(e)}"
-        }), 500
-    
+            'message': message,
+            'theme': theme,
+            'response': system_message
+        })
+
     return jsonify({
         'message': message,
         'theme': theme,
@@ -282,4 +295,4 @@ def healthcheck():
     return jsonify({'status': 'healthy'}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=4000)
