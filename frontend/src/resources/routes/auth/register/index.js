@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../media/navbar/logo_moony.svg";
 import AuthLogo from "../../../media/auth/auth_moony.svg";
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosConfig from "../../../../providers/axiosConfig";
 import { useTranslation } from "react-i18next";
+import AuthContext from "../../../../context/AuthContext";
 
 function Register() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function Register() {
     reset,
     getValues,
   } = useForm();
-
+  const { socialLoginsEnabled } = useContext(AuthContext);
   const onSubmit = async (data) => {
     try {
       const response = await axiosConfig.post("/register", data, {
@@ -88,25 +89,29 @@ function Register() {
               <h2 className="text-xl md:text-2xl lg:text-3xl text-[#1A184C] font-bold font-sans">
                 {t("auth.register.title")}
               </h2>
-              <div className="flex flex-wrap gap-3">
-                <AuthButton>
-                  <AuthIcon>
-                    <GoogleIcon />
-                  </AuthIcon>
-                  <span>{t("auth.socials.google")}</span>
-                </AuthButton>
-                <AuthButton>
-                  <AuthIcon>
-                    <FacebookIcon />
-                  </AuthIcon>
-                  <span>{t("auth.socials.facebook")}</span>
-                </AuthButton>
-              </div>
-              <p className="text-center flex items-center uppercase font-medium text-sm">
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-                {t("auth.register.option")}
-                <span className="flex-grow border-t border-gray-300 mx-4"></span>
-              </p>
+              {socialLoginsEnabled && (
+                <>
+                  <div className="flex flex-wrap gap-3">
+                    <AuthButton>
+                      <AuthIcon>
+                        <GoogleIcon />
+                      </AuthIcon>
+                      <span>{t("auth.socials.google")}</span>
+                    </AuthButton>
+                    <AuthButton>
+                      <AuthIcon>
+                        <FacebookIcon />
+                      </AuthIcon>
+                      <span>{t("auth.socials.facebook")}</span>
+                    </AuthButton>
+                  </div>
+                  <p className="text-center flex items-center uppercase font-medium text-sm">
+                    <span className="flex-grow border-t border-gray-300 mx-4"></span>
+                    {t("auth.register.option")}
+                    <span className="flex-grow border-t border-gray-300 mx-4"></span>
+                  </p>
+                </>
+              )}
 
               <form
                 onSubmit={handleSubmit(onSubmit)}
