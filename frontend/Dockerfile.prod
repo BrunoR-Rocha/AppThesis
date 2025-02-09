@@ -1,0 +1,27 @@
+# Use the official Node image as the base image
+FROM node:18
+
+# Set the environment to production
+ENV NODE_ENV production
+
+# Set working directory
+WORKDIR /app
+
+# Ensure local node_modules binaries are available in PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# Install app dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy app files
+COPY . .
+
+# Expose the port that the app will run on
+EXPOSE 3000
+
+# Build the React app
+RUN npm run build
+
+# Start the static server using serve
+CMD ["npx", "serve", "-s", "build", "-l", "3000"]
