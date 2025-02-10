@@ -23,21 +23,17 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: ./frontend/Dockerfile.prod
+      dockerfile: ./Dockerfile.prod
     container_name: frontend
     restart: always
     ports:
       - "5300:3000"
-    # volumes:
-    #   - ./frontend:/app
-    #   - '/app/node_modules'
     environment:
       - CHOKIDAR_USEPOLLING=true 
       - FAST_REFRESH=false
       - WATCHPACK_POLLING=true 
     networks:
       - app-network
-    # command: npm start
 
   frontend-admin:
     build:
