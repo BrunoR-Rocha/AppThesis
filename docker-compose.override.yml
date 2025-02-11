@@ -57,6 +57,7 @@ services:
     container_name: app-nginx
     ports:
       - "5003:80"
+      - "5004:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
