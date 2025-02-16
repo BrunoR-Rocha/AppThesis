@@ -45,5 +45,4 @@ export const ToolsArea = styled("div")`
   justify-content: center;
   align-items: center;
   padding-block: 80px;
-  margin-bottom: 80px;
 `;
