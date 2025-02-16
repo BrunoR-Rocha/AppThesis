@@ -76,7 +76,7 @@ function ContactModal({ open, handleClose }) {
               />
             </div>
           </div>
-          <div className="flex w-full h-full relative overflow-hidden px-12 pb-12 gap-10 items-center">
+          <div className="flex w-full h-full relative overflow-hidden px-12 pb-12 gap-10 items-center flex-wrap lg:flex-nowrap">
             <Flower className="absolute mix-blend-hard-light opacity-25 left-1/4 -top-1/3 object-cover z-0 -rotate-90" />
             <div className="flex flex-col flex-1 gap-5">
               <h2 className="text-4xl text-[#1A184C] font-bold">
@@ -140,7 +140,7 @@ function ContactModal({ open, handleClose }) {
                   </span>
                 )}
               </TextInput>
-              <div className="flex w-full items-center gap-4">
+              <div className="flex flex-wrap lg:flex-nowrap w-full items-center gap-4">
                 <TextInput className="flex-1">
                   <label htmlFor="contact_name">
                     {t("contacts.form.name")}

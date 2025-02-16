@@ -1,10 +1,29 @@
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { MaintenanceArea } from "./styles/maintenance_styles";
+import { useEffect } from "react";
+import axiosConfig from "../../../providers/axiosConfig";
 
 const Maintenance = () => {
   const location = useLocation();
 
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await axiosConfig.get("/front/config/social_logins");
+        if(response.status === 200)
+        {
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error("Failed to fetch config:", error);
+      }
+    };
+
+    fetchConfig();
+  }, []);
+  
   return (
     <MaintenanceArea className="flex items-center justify-center h-screen">
       <div className="flex flex-col justify-between h-full py-20">

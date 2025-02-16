@@ -52,7 +52,7 @@ function Register() {
   return (
     <>
       <AuthArea className="min-h-[900px] md:min-h-max flex">
-        <AuthSideLogo>
+        <AuthSideLogo className="hidden md:flex">
           <img
             src={AuthLogo}
             className="h-full object-cover object-left"
@@ -117,8 +117,8 @@ function Register() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col w-full gap-4"
               >
-                <div className="flex w-full items-center gap-4">
-                  <AuthInput className="flex-1">
+                <div className="flex w-full items-center gap-4 flex-col md:flex-row">
+                  <AuthInput className="flex-1 w-full">
                     <label htmlFor="register_name">{t("auth.form.name")}</label>
                     <input
                       id="register_name"
@@ -132,7 +132,7 @@ function Register() {
                       </span>
                     )}
                   </AuthInput>
-                  <AuthInput className="flex-1">
+                  <AuthInput className="flex-1 w-full">
                     <label htmlFor="register_email">
                       {t("auth.form.email")}
                     </label>
@@ -153,8 +153,8 @@ function Register() {
                   </AuthInput>
                 </div>
 
-                <div className="flex w-full items-center gap-4">
-                  <AuthInput className="flex-1">
+                <div className="flex w-full items-center gap-4 flex-col md:flex-row">
+                  <AuthInput className="flex-1 w-full">
                     <label htmlFor="register_password">
                       {t("auth.form.password")}
                     </label>
@@ -170,7 +170,7 @@ function Register() {
                       </span>
                     )}
                   </AuthInput>
-                  <AuthInput className="flex-1">
+                  <AuthInput className="flex-1 w-full">
                     <label htmlFor="register_c_password">
                       {t("auth.form.password_confirmation")}
                     </label>
