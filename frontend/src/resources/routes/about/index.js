@@ -60,10 +60,10 @@ function About() {
 
   return (
     <>
-      <AboutArea className="min-h-[900px] md:min-h-max pb-20">
+      <AboutArea className="min-h-[900px] md:min-h-max pb-20 px-5 md:px-0">
         <AboutHero className="flex items-center flex-wrap md:flex-nowrap">
-          <HeroLogo className="absolute md:relative md:max-h-[900px] max-w-full md:max-w-screen-lg z-[-1] md:z-0" />
-          <Wrapper className="mt-40 mb-20 md:mt-0 md:mb-0">
+          <HeroLogo className="absolute md:relative max-h-[500px] md:max-h-[900px] max-w-full md:max-w-screen-lg z-[-1] md:z-0 top-0 sm:top-auto left-0 sm:left-auto" />
+          <Wrapper className="mt-72 md:mt-40 mb-20 lg:mt-0 md:mb-0">
             <div className="flex flex-col items-center justify-items-center gap-5 flex-grow">
               <div className="flex xl:flex-row flex-col items-center w-full">
                 <AboutCaption className="basis-3/4 gap-3 sm:gap-10">
@@ -201,7 +201,7 @@ function About() {
                             borderTop: "none",
                           }}
                         >
-                          {faq.body}
+                          <p dangerouslySetInnerHTML={{ __html: faq.body }}></p>
                         </AccordionItemDescription>
                       </Accordion>
                     );

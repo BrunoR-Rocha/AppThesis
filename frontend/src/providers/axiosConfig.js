@@ -41,7 +41,9 @@ axiosConfig.interceptors.response.use(
       }
 
       if (status === 503) {
-        window.location.href = '/maintenance';
+        if (window.location.pathname !== '/maintenance') {
+          window.location.href = '/maintenance';
+        }
         return Promise.reject(error);
       }
 

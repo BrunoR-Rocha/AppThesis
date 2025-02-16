@@ -33,11 +33,11 @@ function Landing() {
   return (
     <>
       <LandingArea>
-        <HeroArea className="min-h-[900px] md:min-h-max pb-20">
+        <HeroArea className="min-h-[900px] md:min-h-max sm:pb-20">
           <Wrapper>
             <div className="flex flex-col items-center justify-center gap-5">
               <div className="flex xl:flex-row flex-col items-center w-full xl:py-[60px] mt-10">
-                <HeroCaption className="flex-grow gap-4 sm:gap-10 mt-44 md:mt-24">
+                <HeroCaption className="flex-grow gap-10 mt-44 md:mt-24">
                   <h1 className="text-5xl md:text-6xl lg:text-8xl text-white font-semibold font-sans leading-[74%]">
                     <Trans
                       i18nKey="landing.title"
@@ -69,9 +69,9 @@ function Landing() {
         </HeroArea>
         <QuoteArea id="about">
           <Wrapper>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               <div className="basis-1/2 flex flex-col text-start font-cormorant text-white">
-                <img src={AboutImg} className="scale-125" alt="" />
+                <img src={AboutImg} className="sm:scale-125" alt="" />
               </div>
               <div className="basis-1/2 flex flex-col gap-5 text-white font-sans justify-center items-center">
                 <div className="text-center flex flex-col gap-7 md:max-w-96">
@@ -163,7 +163,7 @@ function Landing() {
                 {t("landing.tools")}
               </p>
 
-              <div className="flex items-center justify-evenly flex-1 w-full gap-12">
+              <div className="flex items-center justify-evenly flex-1 w-full gap-12 flex-wrap">
                 {imageNames.map((imageName, index) => (
                   <img
                     key={index}
