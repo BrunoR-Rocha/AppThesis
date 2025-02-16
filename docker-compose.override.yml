@@ -38,6 +38,7 @@ services:
   frontend-admin:
     build:
       context: ./frontend-admin
+      dockerfile: ./Dockerfile.prod
     container_name: frontend-admin
     restart: always
     ports:
