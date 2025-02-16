@@ -11,6 +11,10 @@ COPY . .
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update && \
+    apt-get install -y iputils-ping iproute2 net-tools && \
+    rm -rf /var/lib/apt/lists/*
+    
 # Expose port for API
 EXPOSE 4000
 
