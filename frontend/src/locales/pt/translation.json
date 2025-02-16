@@ -15,12 +15,13 @@
         "logout": "Terminar Sessão"
     },
     "footer" :{
-        "title": "Desperte o seu conhecimento sobre <br /><strong>sono <small>&</small> saúde</strong>",
+        "title": "Desperte o seu conhecimento sobre sono & saúde",
         "slogan" : "Junte-se a nós e aprenda algo novo hoje!",
         "explore": "Descubra",
         "privacy": "Política de privacidade",
         "terms": "Termos e Condições",
-        "suggestions" : "Elogios, sugestões e reclamações"
+        "suggestions" : "Elogios, sugestões e reclamações",
+        "reports": "Canal de denúncias"
     },
     "landing":{
         "title": "Desperte o seu conhecimento sobre <br /><strong>sono <small>&</small> saúde</strong>",
