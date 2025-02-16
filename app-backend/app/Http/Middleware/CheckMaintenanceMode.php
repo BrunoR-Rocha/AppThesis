@@ -21,7 +21,8 @@ class CheckMaintenanceMode
         $maintenance = SysConfig::where('tag', 'maintenance')->value('value');
 
         $maintenanceEnabled = filter_var($maintenance, FILTER_VALIDATE_BOOLEAN);
-        $maintenanceCondition = $maintenanceEnabled && !$request->is('backend/front/config/*') && !$request->user()->hasRole('admin');
+        $maintenanceCondition = $maintenanceEnabled && $request->is('backend/front/config/*') && !$request->user()?->hasRole('admin');
+        
         if ($maintenanceCondition) {
             return response()->json([
                 'maintenance_mode' => true, 
