@@ -32,7 +32,6 @@ export const AuthSideLogo = styled("div")`
     flex: 1;
     justify-content: center;
     align-items: center;
-    display: flex;
     height: 100%;
 `;
 

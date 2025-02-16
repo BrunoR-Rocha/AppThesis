@@ -44,7 +44,7 @@ function Login() {
   return (
     <>
       <AuthArea className="min-h-[900px] md:min-h-max flex">
-        <AuthSideLogo>
+        <AuthSideLogo className="hidden md:flex">
           <img
             src={AuthLogo}
             className="h-full object-cover object-left"
