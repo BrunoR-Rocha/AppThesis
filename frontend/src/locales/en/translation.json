@@ -15,12 +15,13 @@
         "logout": "Logout"
     },
     "footer" :{
-        "title": "Awaken your <strong>sleep<br /><small>& health</small></strong> Knowledge",
+        "title": "Awaken your sleep & health Knowledge",
         "slogan" : "Join us now and learn something new today!",
         "explore": "Explore",
         "privacy": "Privacy Policy",
         "terms": "Terms and conditions",
-        "suggestions" : "Compliments, suggestions and complaints"
+        "suggestions" : "Compliments, suggestions and complaints",
+        "reports": "Reports channel"
     },
     "landing":{
         "title": "Awaken your <br /><strong>sleep <small>&</small> health</strong> <br />Knowledge",
