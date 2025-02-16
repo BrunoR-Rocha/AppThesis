@@ -88,7 +88,7 @@ services:
   langchain:
     build:
       context: ./langchain
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile.prod
     container_name: langchain
     restart: always
     environment:
