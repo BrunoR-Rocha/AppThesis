@@ -88,24 +88,28 @@ function PostModal({ open, handleClose, onAddThread }) {
           position: "relative",
         }}
       >
-        <div className="flex justify-between px-12 pt-12 pb-4">
+        <div className="flex justify-between px-12 pt-12 pb-4 items-center">
           <h2 className="text-4xl text-[#1A184C] font-bold flex-1">
             Share your{" "}
             <span className="font-cormorant text-5xl italic">opinion!</span>
           </h2>
-          <Link
-            onClick={() => navigate(-1)}
-            className="border-[#A5A6CC] hover:border-[#F4AA5A] border-2 border-solid rounded-full p-3 group"
-          >
-            <CloseIcon
-              sx={{
-                color: "#A5A6CC",
-                ".group:hover &": {
-                  color: "#F4AA5A",
-                },
-              }}
-            />
-          </Link>
+          <div>
+            <Link
+              onClick={() => handleClose()}
+              className="border-[#A5A6CC] hover:border-[#F4AA5A] border-2 border-solid rounded-full p-3 group"
+            >
+              <CloseIcon
+                sx={{
+                  color: "#A5A6CC",
+                  ".group:hover &": {
+                    color: "#F4AA5A",
+                  },
+                }}
+              />
+            </Link>
+
+          </div>
+          
         </div>
         <div className="flex w-full h-full relative overflow-hidden px-12 pb-12 gap-10 items-center">
           <form

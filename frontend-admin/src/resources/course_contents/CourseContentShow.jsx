@@ -4,16 +4,10 @@ import {
   Show,
   TabbedShowLayout,
   Tab,
-  BooleanField,
   RichTextField,
   ReferenceField,
-  NumberField,
-  SelectField,
-  ImageField,
 } from "react-admin";
-import { generateDifficultyChoices } from "../../utils/helpers";
 
-const difficultyChoices = generateDifficultyChoices(1, 10);
 
 export default function CourseContentShow(props) {
   return (
