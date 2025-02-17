@@ -104,18 +104,18 @@ function Threads() {
               />
             </div>
 
-            <div className="flex text-[#AAA] justify-between">
+            <div className="flex text-[#AAA] justify-between flex-col md:flex-row gap-4">
               {loading2 ? (
                 <CircularProgress className="mx-auto" sx={{ color: "#FFF" }} />
               ) : (
                 <>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 flex-wrap md:flex-nowrap">
                     {categories &&
                       categories?.map((category, index) => (
                         <div key={index}>
                           <button
                             onClick={() => handleCategoryClick(category.id)}
-                            className={`px-5 py-2 rounded-full border-[1px] border-solid ${
+                            className={`px-5 py-2 rounded-full border-[1px] border-solid whitespace-nowrap ${
                               selectedCategories.includes(category.id)
                                 ? "border-[#6078DF] bg-[#6078DF] text-white font-semibold"
                                 : "border-[#272A2E]"
@@ -130,7 +130,7 @@ function Threads() {
                     {selectedCategories.length > 0 && (
                       <button
                         onClick={() => setSelectedCategories([])}
-                        className="px-5 py-2 rounded-full border-[1px] border-solid border-[#272A2E] flex items-center gap-2 hover:text-[#F4AA5A] hover:border-[#F4AA5A] group"
+                        className="px-5 py-2 whitespace-nowrap rounded-full border-[1px] border-solid border-[#272A2E] flex items-center gap-2 hover:text-[#F4AA5A] hover:border-[#F4AA5A] group"
                       >
                         <ClearOutlinedIcon
                           sx={{

@@ -60,28 +60,31 @@ function Library() {
       <LibraryArea>
         <Wrapper>
           <LibraryList className="flex flex-col w-full min-h-screen gap-10">
-            <div className="flex gap-6">
+            <div className="flex flex-col md:flex-row gap-6">
               <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
                 {t("library.title")}
               </h1>
-              <RenderButton
-                tabId="tab1"
-                label={t("library.title")}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-              />
-              <RenderButton
-                tabId="tab2"
-                label={t("library.sections.news.title")}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-              />
-              <RenderButton
-                tabId="tab3"
-                label={t("library.sections.journals.title")}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-              />
+              <div className="flex flex-wrap md:flex-nowrap gap-3">
+                <RenderButton
+                  tabId="tab1"
+                  label={t("library.title")}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                />
+                <RenderButton
+                  tabId="tab2"
+                  label={t("library.sections.news.title")}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                />
+                <RenderButton
+                  tabId="tab3"
+                  label={t("library.sections.journals.title")}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                />
+              </div>
+              
             </div>
 
             {activeTab === "tab1" && (
