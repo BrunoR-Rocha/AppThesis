@@ -57,8 +57,8 @@ const QuizDashboard = () => {
   return (
     <Wrapper>
       <div className="flex flex-col gap-11 pb-10 pt-24">
-        <div className="flex flex-1 gap-5">
-          <div className="flex flex-col basis-1/2 gap-5">
+        <div className="flex flex-1 gap-5 flex-wrap">
+          <div className="flex flex-1 flex-col gap-5">
             <QuizDashboardComponent>
               {loading ? (
                 <Skeleton width="70%" height="50px" />
@@ -78,9 +78,9 @@ const QuizDashboard = () => {
               {loading ? (
                 <Skeleton width="60%" height="50px" />
               ) : (
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                   <p className="text-lg font-semibold text-[#FFF]">Overview</p>
-                  <div className="flex justify-between">
+                  <div className="flex justify-center md:justify-between flex-wrap-reverse md:flex-nowrap items-center">
                     <div className="flex flex-col gap-3">
                       <OverviewBox
                         value={quizzes?.metrics?.finished_quizzes}
