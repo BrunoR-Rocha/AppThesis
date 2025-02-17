@@ -54,7 +54,7 @@ const Profile = () => {
               </div>
 
               <div className="flex items-center">
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center overflow-x-scroll md:overflow-x-auto">
                   {renderButton("dashboard", "Dashboard")}
                   {renderButton("courses", "Courses")}
                   {renderButton("quizzes", "Quizzes")}

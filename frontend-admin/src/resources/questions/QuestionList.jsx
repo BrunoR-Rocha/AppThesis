@@ -1,9 +1,34 @@
 import * as React from "react";
-import { List, Datagrid, TextField, ShowButton, EditButton, ReferenceField, SelectField, RichTextField } from "react-admin";
+import { List, Datagrid, TextField, ShowButton, EditButton, ReferenceField, SelectField, RichTextField, TopToolbar, CreateButton, ExportButton } from "react-admin";
+import CustomGenerateButton from "../../components/general/CustomGenerateButton";
+import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined';
+
+const ListActions = () => (
+  <TopToolbar>
+      <CustomGenerateButton 
+        label={'Generate Questions'} 
+        endpoint={'/llm/question'} 
+        icon={<CloudSyncOutlinedIcon />}
+      />
+      <CreateButton/>
+      <ExportButton/>
+  </TopToolbar>
+);
+
+const EmptyList = () => (
+  <div style={{ textAlign: 'center', marginTop: '2em' }}>
+      <p>No records found.</p>
+      <CustomGenerateButton
+          label={'Generate Questions'} 
+          endpoint={'/llm/question'} 
+          icon={<CloudSyncOutlinedIcon />}
+      />
+  </div>
+);
 
 export default function QuestionList(props) {
   return (
-    <List perPage={25} {...props}>
+    <List perPage={25} actions={<ListActions />} {...props} empty={<EmptyList />}>
       <Datagrid>
         <TextField source="id" />
         <RichTextField source="title" />
