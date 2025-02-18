@@ -25,7 +25,6 @@ const logout = () => {
   const request = new Request(`${apiUrl}/admin/logout`, {
     method: "POST",
     headers: new Headers({ "Content-Type": "application/json" }),
-    credentials: "include",
   });
   return fetch(request)
     .then((response) => {
