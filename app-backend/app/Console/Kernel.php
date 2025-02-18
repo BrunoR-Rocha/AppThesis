@@ -21,6 +21,8 @@ class Kernel extends ConsoleKernel
             $controller = new JournalController();
             $controller->autoUpdateJournalData();
         })->monthly();
+
+        // $schedule->command('sessions:prune')->everyTenMinutes();
     }
 
     /**
