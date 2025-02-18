@@ -140,8 +140,6 @@ class AuthController extends Controller
         }
 
         $request->session()->invalidate();
-
-        // Regenerate the CSRF token to prevent session fixation attacks
         $request->session()->regenerateToken();
     
         return response()->json([

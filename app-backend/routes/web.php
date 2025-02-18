@@ -84,9 +84,10 @@ Route::group([
     // Authenticated Routes
     $router->group(['middleware' => ['auth:api', 'check.token.expiry']], function (Router $router) {
 
+        $router->post('/admin/logout',                                  [AuthController::class, 'logout']);
         $router->post('/logout',                                        [AuthController::class, 'logout']);
+        
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
-
         $router->post('/chat',                                          [ChatbotController::class, 'chat'])->middleware('chat.rate.limit');
 
         $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
