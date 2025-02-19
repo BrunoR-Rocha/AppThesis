@@ -115,7 +115,7 @@ function Footer() {
           </div>
           <div className="flex flex-wrap md:flex-nowrap justify-start">
             <p className="text-white text-center text-sm">
-              Copyright © 2024 Moony Project
+              Copyright © 2025 Moony Project
             </p>
           </div>
         </div>
