@@ -22,22 +22,8 @@ const login = ({ email, password }) => {
 };
 
 const logout = () => {
-  const request = new Request(`${apiUrl}/admin/logout`, {
-    method: "POST",
-    headers: new Headers({ "Content-Type": "application/json" }),
-  });
-  return fetch(request)
-    .then((response) => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.statusText);
-      }
-      localStorage.removeItem("admin_auth");
-      return Promise.resolve();
-    })
-    .catch(() => {
-      localStorage.removeItem("admin_auth");
-      return Promise.resolve();
-    });
+  localStorage.removeItem("admin_auth");
+  return Promise.resolve();
 };
 
 const checkAuth = () => {
