@@ -26,7 +26,7 @@ class CheckTokenExpiry
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
 
-            if($request->user()->hasRole('admin'))
+            if($request->user()->hasRole('superAdmin'))
             {
                 return $next($request);
             }

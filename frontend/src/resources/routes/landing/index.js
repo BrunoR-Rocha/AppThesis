@@ -38,7 +38,7 @@ function Landing() {
             <div className="flex flex-col items-center justify-center gap-5">
               <div className="flex xl:flex-row flex-col items-center w-full xl:py-[60px] mt-10">
                 <HeroCaption className="flex-grow gap-10 mt-44 md:mt-24">
-                  <h1 className="text-5xl md:text-6xl lg:text-8xl text-white font-semibold font-sans leading-[74%]">
+                  <h1 className="text-5xl md:text-6xl lg:text-8xl text-white font-semibold font-sans md:leading-[74%]">
                     <Trans
                       i18nKey="landing.title"
                       components={{
@@ -101,7 +101,7 @@ function Landing() {
         </QuoteArea>
         <FeatureArea>
           <div className="flex flex-col flex-1 justify-center items-center pt-14 gap-20">
-            <h3 className="text-5xl font-semibold font-sans text-[#ECECEC]">
+            <h3 className="text-2xl md:text-5xl font-semibold font-sans text-[#ECECEC]">
               {t("landing.features.title")}
             </h3>
             <div className="flex flex-wrap gap-12 items-center justify-center">
