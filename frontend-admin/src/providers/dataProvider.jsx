@@ -8,8 +8,14 @@ async function httpClient(url, options = {}) {
     options.headers = new Headers({ Accept: "application/json" });
   }
 
-  const { access_token } = JSON.parse(localStorage.getItem("admin_auth"));
-  options.headers.set("Authorization", `Bearer ${access_token}`);
+  const auth = localStorage.getItem('admin_auth')
+
+  if (auth) {
+    const { access_token } = JSON.parse(auth)
+    options.headers.set('Authorization', `Bearer ${access_token}`)
+  }
+  
+  options.headers.set('Accept', 'application/json')
 
   return fetchUtils.fetchJson(url, options).catch((err) => {
     const { error, message } = err.body;
