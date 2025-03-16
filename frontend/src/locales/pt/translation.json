@@ -89,7 +89,9 @@
             "register_link": "Inscreve-te aqui",
             "forgot_password": "Esqueceu a palavra-passe?",
             "guest_pre_title": "Bem-vindo à plataforma Moony",
-            "guest_agree_terms": "Concordo com os termos indicados no documento"
+            "guest_agree_terms": "Concordo com os termos e condições descritos no documento em anexo e confirmo a minha participação voluntária neste teste de usabilidade. Reconheço que esta opção só está disponível durante a fase de teste e analisei a documentação legal anexa que valida a legitimidade do teste. Afirmo ainda que qualquer conteúdo que carregue está livre de restrições de direitos de autor.",
+            "privacy_statement": "Parecer Proteção de Dados UMa",
+            "submit": "Entrar"
         },
         "register":{
             "pre_title": "Bem-vindo ao Moony",
