@@ -7,10 +7,6 @@ WORKDIR /app
 # Copy requirements file and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-RUN apt-get update && \
-    apt-get install -y iputils-ping iproute2 net-tools curl netcat-traditional dnsutils && \
-    rm -rf /var/lib/apt/lists/*
     
 RUN pip install gunicorn
 
