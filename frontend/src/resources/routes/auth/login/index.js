@@ -17,11 +17,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../../../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import DataProtectionStatement from "../../../media/auth/guest/data_privacy_statement.pdf";
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, guestLogin, socialLoginsEnabled, usabilityTestingEnabled} = useContext(AuthContext);
+  const { login, guestLogin, socialLoginsEnabled, usabilityTestingEnabled } =
+    useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -52,7 +54,6 @@ function Login() {
       toast.error("Invalid email or password");
     }
   };
-
 
   const { t } = useTranslation();
 
@@ -113,7 +114,7 @@ function Login() {
                         <span>{t("auth.socials.facebook")}</span>
                       </AuthButton>
                     </div>
-                  
+
                     <p className="text-center flex items-center uppercase font-medium text-sm">
                       <span className="flex-grow border-t border-gray-300 mx-4"></span>
                       {t("auth.login.option")}
@@ -200,35 +201,45 @@ function Login() {
               </div>
             ) : (
               <>
-              <div className="flex flex-col gap-5">
-                <p className="uppercase text-[#44456A] font-medium text-sm">
-                  {t("auth.login.guest_pre_title")}
-                </p>
+                <div className="flex flex-col gap-5">
+                  <p className="uppercase text-[#44456A] font-medium text-sm">
+                    {t("auth.login.guest_pre_title")}
+                  </p>
 
-                <form
-                  onSubmit={handleSubmit(onGuestSubmit)}
-                  className="flex flex-col w-full gap-4"
-                >
-                  <div className="mb-4 flex items-center">
-                    <input
-                      id="agree"
-                      type="checkbox"
-                      className="mr-2"
-                      {...register("agree")}
-                    />
-                    <label htmlFor="agree" className="text-[#575757] text-sm">
-                      {t("auth.login.guest_agree_terms")}
-                    </label>
-                  </div>
-                  <input
-                    type="submit"
-                    className="bg-[#6078DF] rounded-full p-3 text-white cursor-pointer"
-                  />
-                </form>
-              </div>  
+                  <form
+                    onSubmit={handleSubmit(onGuestSubmit)}
+                    className="flex flex-col w-full gap-4"
+                  >
+                    <div className="mb-4 flex items-center">
+                      <input
+                        id="agree"
+                        type="checkbox"
+                        className="mr-2"
+                        {...register("agree")}
+                      />
+                      <label htmlFor="agree" className="text-[#575757] text-sm">
+                        {t("auth.login.guest_agree_terms")} (
+                        <a
+                          href={DataProtectionStatement}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline text-blue-600"
+                        >
+                          {t("auth.login.privacy_statement")}
+                        </a>
+                        )
+                      </label>
+                    </div>
+                    <button
+                      type="submit"
+                      className="bg-[#6078DF] rounded-full p-3 text-white cursor-pointer"
+                    >
+                      {t("auth.login.submit")}
+                    </button>
+                  </form>
+                </div>
               </>
             )}
-            
           </div>
         </div>
       </AuthArea>
