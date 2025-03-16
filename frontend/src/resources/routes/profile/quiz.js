@@ -130,68 +130,71 @@ const QuizDashboard = () => {
             </QuizDashboardComponent>
           </div>
 
-          <QuizDashboardComponent>
-            {loading ? (
-              <Skeleton height="100px" />
-            ) : (
-              <div className="flex flex-col items-start justify-start w-full self-start">
-                <p className="text-lg font-semibold text-[#FFF]">
-                  Quiz History
-                </p>
+          <div className="max-w-full">
+            <QuizDashboardComponent>
+              {loading ? (
+                <Skeleton height="100px" />
+              ) : (
+                <div className="flex flex-col items-start justify-start w-full self-start">
+                  <p className="text-lg font-semibold text-[#FFF]">
+                    Quiz History
+                  </p>
 
-                <div className="overflow-x-auto mt-4 w-full">
-                  <table className="min-w-full text-left">
-                    <thead>
-                      <tr className="border-b border-gray-300 text-[#AAA] font-medium capitalize opacity-75">
-                        <th className="px-4 py-2">Quiz</th>
-                        <th className="px-4 py-2">Score</th>
-                        <th className="px-4 py-2">Date</th>
-                        <th className="px-4 py-2">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {quizzes?.quizzes.length > 0 ? (
-                        quizzes?.quizzes.map((quiz) => (
-                          <tr
-                            key={quiz.quiz_id}
-                            className="hover:bg-[#6078DF1A] font-semibold text-white"
-                          >
-                            <td className="px-4 py-2">{quiz.quiz_id}</td>
-                            <td className="px-4 py-2">{quiz.score}</td>
-                            <td className="px-4 py-2">{quiz.completed_at}</td>
-                            <td className="px-4 py-2">
-                              {quiz.is_completed === true ? (
-                                <Link
-                                  to={`/academy/quiz/review/${quiz.quiz_id}`}
-                                  className="bg-[#6078DF] rounded-lg flex justify-center font-medium cursor-pointer"
-                                >
-                                  Review Quiz
-                                </Link>
-                              ) : (
-                                <Link
-                                  to={`/academy/quiz/continue/${quiz.quiz_id}`}
-                                  state={{ quiz_id: quiz.quiz_id }}
-                                  className="bg-[#4B5057] rounded-lg flex justify-center font-medium cursor-pointer"
-                                >
-                                  Finish Quiz
-                                </Link>
-                              )}
+                  <div className="overflow-x-auto mt-4 w-full">
+                    <table className="min-w-full text-left">
+                      <thead>
+                        <tr className="border-b border-gray-300 text-[#AAA] font-medium capitalize opacity-75">
+                          <th className="px-4 py-2">Quiz</th>
+                          <th className="px-4 py-2">Score</th>
+                          <th className="px-4 py-2">Date</th>
+                          <th className="px-4 py-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {quizzes?.quizzes.length > 0 ? (
+                          quizzes?.quizzes.map((quiz) => (
+                            <tr
+                              key={quiz.quiz_id}
+                              className="hover:bg-[#6078DF1A] font-semibold text-white"
+                            >
+                              <td className="px-4 py-2">{quiz.quiz_id}</td>
+                              <td className="px-4 py-2">{quiz.score}</td>
+                              <td className="px-4 py-2">{quiz.completed_at}</td>
+                              <td className="px-4 py-2">
+                                {quiz.is_completed === true ? (
+                                  <Link
+                                    to={`/academy/quiz/review/${quiz.quiz_id}`}
+                                    className="bg-[#6078DF] rounded-lg flex justify-center font-medium cursor-pointer"
+                                  >
+                                    Review Quiz
+                                  </Link>
+                                ) : (
+                                  <Link
+                                    to={`/academy/quiz/continue/${quiz.quiz_id}`}
+                                    state={{ quiz_id: quiz.quiz_id }}
+                                    className="bg-[#4B5057] rounded-lg flex justify-center font-medium cursor-pointer"
+                                  >
+                                    Finish Quiz
+                                  </Link>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="3" className="px-4 py-2 text-center">
+                              <EmptyValue label={"No quizzes created yet"} />
                             </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="3" className="px-4 py-2 text-center">
-                            <EmptyValue label={"No quizzes created yet"} />
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            )}
-          </QuizDashboardComponent>
+              )}
+            </QuizDashboardComponent>
+          </div>
+          
         </div>
       </div>
     </Wrapper>
