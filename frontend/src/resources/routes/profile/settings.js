@@ -126,7 +126,7 @@ const ProfileSettings = () => {
           <SettingSection title="Profile Information">
             <div className="flex flex-col w-full">
               <div className="flex flex-wrap lg:flex-nowrap justify-between items-center gap-10">
-                <div className="flex flex-col basis-1/2 gap-4 w-full">
+                <div className="flex flex-col basis-full md:basis-1/2 gap-4 w-full">
                   <TextInput>
                     <label htmlFor="profile_name">Name</label>
                     <input
@@ -161,7 +161,7 @@ const ProfileSettings = () => {
                     )}
                   </TextInput>
                 </div>
-                <div className="flex flex-col basis-1/2 w-full">
+                <div className="flex flex-col basis-full md:basis-1/2 w-full">
                   <UploadInput
                     onImageSelected={handleImageSelected}
                     error={errorsProfile.image && "Error when uploading image"}

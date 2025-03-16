@@ -83,7 +83,7 @@ function NavBar() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, usabilityTestingEnabled } = useContext(AuthContext);
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -200,7 +200,7 @@ function NavBar() {
                   to="/login"
                   className="uppercase text-sm text-white font-light hover:opacity-100 bg-[#1A184C] rounded-3xl px-5 py-3"
                 >
-                  {t("links.login")}
+                   {!usabilityTestingEnabled ? t("links.login") :  t("links.guest")}
                 </Link>
               ) : (
                 <>

@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [socialLoginsEnabled, setSocialLoginsEnabled] = useState(false);
+  const [usabilityTestingEnabled, setUsabilityTestingEnabled] = useState(false);
 
   const clearSession = () => {
     setIsAuthenticated(false);
@@ -39,6 +40,36 @@ const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await authProvider.login({ email, password });
+
+      const auth = localStorage.getItem('auth');
+      if (auth) {
+        const parsedAuth = JSON.parse(auth);
+        setUserState(parsedAuth.user);
+        setExpiresAt(new Date(parsedAuth.expires_at));
+        setIsAuthenticated(true);
+
+        const timeout = new Date(parsedAuth.expires_at).getTime() - new Date().getTime();
+        if (timeout > 0) {
+          setTimeout(() => {
+            logout();
+            alert('Session has expired. Please log in again.');
+          }, timeout);
+        }
+      }
+      setIsAuthenticated(true);
+
+      return { success: true };
+    } catch (error) {
+      setIsAuthenticated(false);
+      setIsLoading(false);
+      return { success: false, error };
+    }
+  };
+
+  const guestLogin = async ({ agree }) => {
+    try {
+      setIsLoading(true);
+      await authProvider.guestLogin({ agree });
 
       const auth = localStorage.getItem('auth');
       if (auth) {
@@ -116,8 +147,9 @@ const AuthProvider = ({ children }) => {
     const fetchConfig = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosConfig.get("/front/config/social_logins");
+        const response = await axiosConfig.get("/front/config/params");
         setSocialLoginsEnabled(response.data.social_logins);
+        setUsabilityTestingEnabled(response.data.usability_testing);
       } catch (error) {
         console.error("Failed to fetch config:", error);
       } finally {
@@ -129,7 +161,17 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ socialLoginsEnabled, isAuthenticated, user, setUser, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ 
+      socialLoginsEnabled, 
+      usabilityTestingEnabled, 
+      isAuthenticated, 
+      user, 
+      setUser, 
+      isLoading, 
+      login, 
+      guestLogin, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );

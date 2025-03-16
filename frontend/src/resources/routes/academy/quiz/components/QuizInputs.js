@@ -18,7 +18,7 @@ const MultipleChoiceQuestion = ({
   }, [selectedAnswer]);
 
   return (
-    <div className="py-20 grid grid-cols-2 gap-10 max-w-screen-lg">
+    <div className="py-5 md:py-20 grid md:grid-cols-2 gap-5 md:gap-10 max-w-screen-lg">
       {question?.options.map((option, index) => {
         return (
           <QuizOption

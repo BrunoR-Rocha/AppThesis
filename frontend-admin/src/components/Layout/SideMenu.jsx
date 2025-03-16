@@ -21,6 +21,7 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 const SideMenu = (props) => {
   const [forums, setForums] = useState(true);
   const [quizzes, setQuizzes] = useState(true);
+  const [questionnaires, setQuestionnaires] = useState(true);
   const [libraries, setLibraries] = useState(true);
   const [courses, setCourses] = useState(true);
   const [adminAccess, setAdminAccess] = useState(true);
@@ -162,6 +163,38 @@ const SideMenu = (props) => {
           to="/course_content_types"
           primaryText="Content Types"
           leftIcon={<ArticleIcon />}
+        />
+      </SubMenu>
+
+      <SubMenu
+        handleToggle={() => setQuestionnaires(!questionnaires)}
+        isOpen={questionnaires}
+        name="Questionnaires"
+        dense={true}
+        icon={<QuizIcon />}
+      >
+        <MenuItemLink
+          to="/questionnaires"
+          primaryText="Questionnaires"
+          leftIcon={<ChatBubbleIcon />}
+        />
+
+        <MenuItemLink
+          to="/questionnaires_questions"
+          primaryText="Questionnaires Questions"
+          leftIcon={<ChatBubbleIcon />}
+        />
+
+        <MenuItemLink
+          to="/questionnaires_submissions"
+          primaryText="Questionnaires Submissions"
+          leftIcon={<TopicIcon />}
+        />
+
+        <MenuItemLink
+          to="/questionnaires_answers"
+          primaryText="Questionnaires Answers"
+          leftIcon={<TopicIcon />}
         />
       </SubMenu>
 

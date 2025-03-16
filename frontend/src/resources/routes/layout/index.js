@@ -12,7 +12,7 @@ const CustomLayout = () => {
     "/academy/quiz/*",
     "/academy/course/*",
     "/email-confirmation/*",
-    "/forgot*",
+    "/forgot/*",
     "/maintenance",
     "/academy/course/:id/learn",
   ];
