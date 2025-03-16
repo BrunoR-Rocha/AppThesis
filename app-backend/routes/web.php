@@ -26,6 +26,10 @@ use App\Http\Controllers\MailTemplateController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionnaireAnswersController;
+use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\QuestionnaireQuestionController;
+use App\Http\Controllers\QuestionnaireSubmissionController;
 use App\Http\Controllers\QuestionOptionController;
 use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
@@ -57,9 +61,10 @@ Route::group([
     Route::get('/health', function () {
         return response()->json(['status' => 'OK'], 200);
     });
-    
+
     $router->post('/register',                                          [AuthController::class, 'register']);
     $router->post('/login',                                             [AuthController::class, 'login']);
+    $router->post('/login-guest',                                       [AuthController::class, 'guestLogin']);
     $router->post('/forgot/email',                                      [ForgotPasswordController::class, 'sendResetLinkEmail']);
     $router->post('/forgot/reset',                                      [ResetPasswordController::class, 'reset']);
     $router->post('/admin/login',                                       [AuthController::class, 'adminLogin']);
@@ -79,14 +84,14 @@ Route::group([
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
 
     $router->get('/static-contents/{tag}',                              [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
+    $router->get('/front/config/params',                                [SysConfigController::class, 'showAll']);
     $router->get('/front/config/{id}',                                  [SysConfigController::class, 'showTag']);
-    
     // Authenticated Routes
     $router->group(['middleware' => ['auth:api', 'check.token.expiry']], function (Router $router) {
 
         $router->post('/admin/logout',                                  [AuthController::class, 'logout']);
         $router->post('/logout',                                        [AuthController::class, 'logout']);
-        
+
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
         $router->post('/chat',                                          [ChatbotController::class, 'chat'])->middleware('chat.rate.limit');
 
@@ -127,7 +132,11 @@ Route::group([
             'course_content_types' =>                                   CourseContentTypeController::class,
             'course_interactive_elements' =>                            CourseInteractiveElementController::class,
             'course_contents' =>                                        CourseContentController::class,
-            'statics'   =>                                              StaticContentController::class
+            'statics'   =>                                              StaticContentController::class,
+            'questionnaires' =>                                         QuestionnaireController::class,
+            'questionnaires_questions' =>                               QuestionnaireQuestionController::class,
+            'questionnaires_submissions' =>                             QuestionnaireSubmissionController::class,
+            'questionnaires_answers' =>                                 QuestionnaireAnswersController::class
         ]);
 
         $router->post('/front/post/create',                             [ForumThreadController::class, 'frontStore']);

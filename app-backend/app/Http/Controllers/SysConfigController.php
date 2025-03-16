@@ -60,6 +60,22 @@ class SysConfigController extends Controller
         return SysConfig::getValueByTag($tag);
     }
 
+    public function showAll()
+    {
+        $sysConfigs = SysConfig::all();
+
+        $tagValueArray = $sysConfigs->pluck('value', 'tag')->map(function ($value) {
+            if ($value === '1' || strtolower($value) === 'true') {
+                return true;
+            } elseif ($value === '0' || strtolower($value) === 'false') {
+                return false;
+            }
+            return $value;
+        });
+        
+        return $tagValueArray;
+    }
+
     public function update(Request $request, $id)
     {
         $sysConfig = SysConfig::findOrFail($id);
@@ -70,6 +86,7 @@ class SysConfigController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        // TODO - Adicionar validacao de utilizador administrador
         $sysConfig = SysConfig::findOrFail($id);
         $sysConfig->delete();
 

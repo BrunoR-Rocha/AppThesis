@@ -12,7 +12,8 @@
         "academy": "Academia",
         "login": "Entrar",
         "profile": "Perfil",
-        "logout": "Terminar Sessão"
+        "logout": "Terminar Sessão",
+        "guest": "Entrar como convidado"
     },
     "footer" :{
         "title": "Desperte o seu conhecimento sobre sono & saúde",
@@ -86,7 +87,9 @@
             "option": "Ou",
             "register_title": "Chegaste recentemente?",
             "register_link": "Inscreve-te aqui",
-            "forgot_password": "Esqueceu a palavra-passe?"
+            "forgot_password": "Esqueceu a palavra-passe?",
+            "guest_pre_title": "Bem-vindo à plataforma Moony",
+            "guest_agree_terms": "Concordo com os termos indicados no documento"
         },
         "register":{
             "pre_title": "Bem-vindo ao Moony",

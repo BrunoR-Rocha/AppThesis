@@ -189,7 +189,6 @@ const PostSection = ({ isOpen, onClose, posts_count, thread }) => {
           ) : (
             comments &&
             comments.map((comment, index) => {
-              console.log(comment);
               return (
                 <div
                   className="border-b-[1px] border-b-[#FFFFFF26] border-b-solid flex flex-col gap-3 py-5"

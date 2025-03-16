@@ -119,6 +119,33 @@ import {
   CourseInteractiveElementShow,
 } from "./resources/course_interactive_elements";
 
+import {
+  QuestionnaireCreate,
+  QuestionnaireEdit,
+  QuestionnaireList,
+  QuestionnaireShow,
+} from "./resources/questionnaires";
+
+import {
+  QuestionnaireQuestionCreate,
+  QuestionnaireQuestionEdit,
+  QuestionnaireQuestionList,
+  QuestionnaireQuestionShow,
+} from "./resources/questionnaire_questions";
+
+import {
+
+  QuestionnaireSubmissionList,
+  QuestionnaireSubmissionShow,
+} from "./resources/questionnaire_submissions";
+
+
+import {
+  QuestionnaireAnswerList,
+  QuestionnaireAnswerShow,
+} from "./resources/questionnaire_answers";
+
+
 export const App = () => (
   <SidebarProvider>
     <Admin
@@ -303,6 +330,35 @@ export const App = () => (
         edit={CourseInteractiveElementEdit}
         create={CourseInteractiveElementCreate}
       />
+
+      <Resource
+        name="questionnaires"
+        list={QuestionnaireList}
+        show={QuestionnaireShow}
+        edit={QuestionnaireEdit}
+        create={QuestionnaireCreate}
+      />
+
+      <Resource
+        name="questionnaires_questions"
+        list={QuestionnaireQuestionList}
+        show={QuestionnaireQuestionShow}
+        edit={QuestionnaireQuestionEdit}
+        create={QuestionnaireQuestionCreate}
+      />
+
+      <Resource
+        name="questionnaires_submissions"
+        list={QuestionnaireSubmissionList}
+        show={QuestionnaireSubmissionShow}
+      />
+
+      <Resource
+        name="questionnaires_answers"
+        list={QuestionnaireSubmissionList}
+        show={QuestionnaireSubmissionShow}
+      />
+
     </Admin>
   </SidebarProvider>
 );

@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 const Profile = () => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
-
+  const { usabilityTestingEnabled } = useContext(AuthContext);
   // Set the default active tab or retrieve it from the state
   const [activeTab, setActiveTab] = useState(
     location.state?.activeTab || "dashboard"
@@ -59,7 +59,7 @@ const Profile = () => {
                   {renderButton("courses", "Courses")}
                   {renderButton("quizzes", "Quizzes")}
                   {renderButton("library", "Saved")}
-                  {renderButton("settings", "Settings")}
+                  {!usabilityTestingEnabled && renderButton("settings", "Settings")}
                 </div>
               </div>
             </div>
@@ -72,7 +72,7 @@ const Profile = () => {
               {activeTab === "courses" && <ProfileCourses />}
               {activeTab === "quizzes" && <QuizDashboard />}
               {activeTab === "library" && <Favorites />}
-              {activeTab === "settings" && <ProfileSettings />}
+              {activeTab === "settings" && !usabilityTestingEnabled && <ProfileSettings />}
             </div>
           </Wrapper>
         </div>
