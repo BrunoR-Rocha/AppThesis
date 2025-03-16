@@ -12,7 +12,8 @@
         "academy": "Academy",
         "login": "Sign In",
         "profile": "Profile",
-        "logout": "Logout"
+        "logout": "Logout",
+        "guest": "Sign in as Guest"
     },
     "footer" :{
         "title": "Awaken your sleep & health Knowledge",
@@ -86,7 +87,9 @@
             "option": "Or",
             "register_title": "Are you a Newbie?",
             "register_link": "Get Started",
-            "forgot_password": "Forgot the password?"
+            "forgot_password": "Forgot the password?",
+            "guest_pre_title": "Welcome to Moony platform",
+            "guest_agree_terms": "I agreee with the terms described in the document"
         },
         "register":{
             "pre_title": "Welcome to Moony",

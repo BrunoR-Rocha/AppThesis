@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SysConfig;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -126,6 +128,51 @@ class AuthController extends Controller
             'user'         => [
                 'name'     => $user->name,
                 'email'    => $user->email,
+            ]
+        ]);
+    }
+
+    public function guestLogin(Request $request)
+    {
+        $usabilityTest = SysConfig::getValueByTag('usability_testing');
+
+        if (!isset($usabilityTest) || !$usabilityTest) {
+            return response()->json(['message' => 'Não é possível autenticar'], 422);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'agree' => 'accepted',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        $guestEmail = 'guest-' . time() . '-' . Str::random(6) . '@example.com';
+        $guestName = 'Guest ' . Str::upper(Str::random(4));
+
+        $guest = User::create([
+            'name'     => $guestName,
+            'email'    => $guestEmail,
+            'password' => Hash::make(Str::random(24)),
+            'guest'    => true,
+        ]);
+    
+        $guest->tokens()->delete();
+    
+        $tokenResult = $guest->createToken('auth_token');
+        $token = $tokenResult->plainTextToken;
+
+        $tokenResult->accessToken->expires_at = Carbon::now()->addHour();
+        $tokenResult->accessToken->save();
+        
+        return response()->json([
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+            'expires_at'   => $tokenResult->accessToken->expires_at->toDateTimeString(),
+            'user'         => [
+                'name'  => $guest->name,
+                'email' => $guest->email,
             ]
         ]);
     }

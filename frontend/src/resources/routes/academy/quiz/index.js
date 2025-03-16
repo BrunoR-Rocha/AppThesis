@@ -239,7 +239,7 @@ function QuizPage() {
               </div>
             </>
           ) : (
-            <div className="w-full flex flex-col pt-20">
+            <div className="w-full flex flex-col pt-10 md:pt-20">
               <div className="flex flex-1 justify-between">
                 {/* Close Button */}
                 <div className="flex items-center">
@@ -273,12 +273,12 @@ function QuizPage() {
                 {!isSubmitting && !results && (
                   <>
                     {/* Question Title */}
-                    <p className="text-3xl font-semibold text-[#ECECEC] text-center mt-10">
+                    <p className="text-3xl font-semibold text-[#ECECEC] text-center mt-5 md:mt-10">
                       {questions[currentQuestionIndex]?.title}
                     </p>
 
                     {/* Question Component */}
-                    <div className="flex-1 flex justify-center items-center w-3/4">
+                    <div className="flex-1 flex justify-center items-start md:items-center w-3/4  max-h-[calc(100vh-450px)] overflow-y-auto md:max-h-full md:overflow-visible">
                       {QuestionComponent && (
                         <QuestionComponent
                           question={currentQuestion}
@@ -319,7 +319,7 @@ function QuizPage() {
               {/* Footer */}
               <div className="fixed bottom-0 left-0 w-full">
                 {!isSubmitting && !results && (
-                  <div className="flex flex-col gap-10">
+                  <div className="flex flex-col gap-5 md:gap-10">
                     {/* Buttons */}
                     <div className="flex justify-center items-center gap-5 py-4">
                       <button

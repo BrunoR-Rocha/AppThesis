@@ -32,7 +32,7 @@ const ProfileCourses = () => {
       <div className="flex flex-col gap-11 pb-10 pt-24">
         <div className="d-flex flex-col">
           <div className="flex flex-1 gap-5 flex-wrap-reverse md:flex-nowrap">
-            <div className="flex flex-col basis-full md:basis-1/2 gap-5">
+            <div className="flex flex-col basis-full md:basis-1/2 gap-5 max-w-full">
               <QuizDashboardComponent>
                 {loading ? (
                   <>
