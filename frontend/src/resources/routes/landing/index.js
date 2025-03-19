@@ -57,7 +57,7 @@ function Landing() {
                     to={"/#about"}
                     smooth
                   >
-                    <p className="text-base font-medium text-white">
+                    <p className="text-base font-medium text-white z-10">
                       {t("landing.learn_more")}
                     </p>
                     <ArrowDownwardRoundedIcon sx={{ color: "#AAAAAA" }} />
