@@ -20,6 +20,7 @@ import CourseLearn from "./resources/routes/academy/course/learn";
 import QuizReview from "./resources/routes/academy/quiz/review";
 import CourseRating from "./resources/routes/academy/course/rating/rating";
 import Maintenance from "./resources/routes/maintenance";
+import Report from "./resources/routes/reports/reports";
 
 const routes = [
   {
@@ -62,6 +63,10 @@ const routes = [
   {
     path: "/terms-conditions",
     element: <Policy tag={"terms_conditions"} />,
+  },
+  {
+    path: "/reports",
+    element: <Report />,
   },
 
   // Protected Routes

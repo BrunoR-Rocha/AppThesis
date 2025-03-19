@@ -76,7 +76,7 @@ function ContactModal({ open, handleClose }) {
               />
             </div>
           </div>
-          <div className="flex w-full h-full relative overflow-hidden px-12 pb-12 gap-10 items-center flex-wrap lg:flex-nowrap">
+          <div className="flex w-full h-full relative overflow-hidden px-6 md:px-12 pb-12 gap-10 items-center flex-wrap lg:flex-nowrap">
             <Flower className="absolute mix-blend-hard-light opacity-25 left-1/4 -top-1/3 object-cover z-0 -rotate-90" />
             <div className="flex flex-col flex-1 gap-5">
               <h2 className="text-4xl text-[#1A184C] font-bold">
@@ -111,12 +111,12 @@ function ContactModal({ open, handleClose }) {
                   {t("contacts.modal.email")}
                 </p>
                 <a
-                  href="mailto:support_sleepinsight@gmail.com"
+                  href="mailto:2041316@student.uma.pt"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="text-sm font-medium text-[#575757] underline"
                 >
-                  support_sleepinsight@gmail.com
+                  2041316@student.uma.pt
                 </a>
               </div>
             </div>
