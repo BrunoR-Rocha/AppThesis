@@ -29,6 +29,12 @@ const SideMenu = (props) => {
   return (
     <Menu {...props}>
       <MenuItemLink
+        to="/reports"
+        primaryText="Reports"
+        leftIcon={<ContactSupportIcon />}
+      />
+
+      <MenuItemLink
         to="/contacts"
         primaryText="Contacts"
         leftIcon={<ContactSupportIcon />}

@@ -412,6 +412,60 @@ class QuizController extends Controller
         }
 
         $totalQuestions = count($questions);
+        $evaluatedData = $this->evaluateAnswers($questions, $answers);
+
+        $correctAnswers = $evaluatedData['correctAnswers'];
+        $questionResponses = $evaluatedData['questionResponses'];
+
+        $score = ($correctAnswers / $totalQuestions) * 100;
+
+        $userQuiz = UserQuiz::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'quiz_id' => $quiz->id
+            ],
+            [
+                'score' => round($score, 2),
+                'time_taken' => $timeTaken,
+                'completed_at' => $endTime,
+                'is_completed' => true,
+            ]
+        );
+
+        foreach ($questionResponses as $response) {
+            $answer = is_array($response['answer']) ? json_encode($response['answer']) : $response['answer'];
+            $suggestedAnswer = is_array($response['suggested_answer']) ? json_encode($response['suggested_answer']) : $response['suggested_answer'];
+
+            QuestionResponse::updateOrCreate([
+                'user_quiz_id' => $userQuiz->id,
+                'question_id' => $response['question_id']
+            ], [
+                'is_correct' => $response['is_correct'],
+                'response_quality_score' => $response['response_quality_score'],
+                'time_taken' => $response['time_taken'],
+                'answer' => $answer,
+                'suggested_answer' =>  $suggestedAnswer,
+            ]);
+        }
+
+        $this->updateUserMetrics($user->id);
+
+        return response()->json([
+            'message' => 'Quiz submitted successfully.',
+            'score' => round($score, 2),
+        ], 200);
+    }
+
+    public function assessQuiz(Request $request, $quizId)
+    {
+        $quiz = Quiz::findOrFail($quizId);
+
+        $userQuiz = UserQuiz::where('quiz_id', $quiz->id)->first();
+        dd($userQuiz->questionResponses);
+    }
+
+    private function evaluateAnswers($questions, $answers)
+    {
         $correctAnswers = 0;
         $questionResponses = [];
 
@@ -440,46 +494,20 @@ class QuizController extends Controller
 
             $questionResponses[] = [
                 'question_id' => $questionId,
+                'answer' => $answer,
                 'is_correct' => $evaluationResult['is_correct'],
                 'response_quality_score' => $evaluationResult['response_quality_score'],
                 'time_taken' => $evaluationResult['time_taken'] ?? null,
+                'suggested_answer' => $evaluationResult['suggested_answer'] ?? null,
             ];
         }
 
-        $score = ($correctAnswers / $totalQuestions) * 100;
+        return [
+            'correctAnswers' => $correctAnswers,
+            'questionResponses' => $questionResponses
+        ];
 
-        $userQuiz = UserQuiz::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'quiz_id' => $quiz->id
-            ],
-            [
-                'score' => round($score, 2),
-                'time_taken' => $timeTaken,
-                'completed_at' => $endTime,
-                'is_completed' => true,
-            ]
-        );
-
-        foreach ($questionResponses as $response) {
-            QuestionResponse::updateOrCreate([
-                'user_quiz_id' => $userQuiz->id,
-                'question_id' => $response['question_id']
-            ], [
-                'is_correct' => $response['is_correct'],
-                'response_quality_score' => $response['response_quality_score'],
-                'time_taken' => $response['time_taken'],
-            ]);
-        }
-
-        $this->updateUserMetrics($user->id);
-
-        return response()->json([
-            'message' => 'Quiz submitted successfully.',
-            'score' => round($score, 2),
-        ], 200);
     }
-
     /**
      * Evaluate predefined answers (non-free_text questions).
      *

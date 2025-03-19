@@ -134,17 +134,15 @@ import {
 } from "./resources/questionnaire_questions";
 
 import {
-
   QuestionnaireSubmissionList,
   QuestionnaireSubmissionShow,
 } from "./resources/questionnaire_submissions";
-
 
 import {
   QuestionnaireAnswerList,
   QuestionnaireAnswerShow,
 } from "./resources/questionnaire_answers";
-
+import { ReportList, ReportShow } from "./resources/reports";
 
 export const App = () => (
   <SidebarProvider>
@@ -357,6 +355,12 @@ export const App = () => (
         name="questionnaires_answers"
         list={QuestionnaireSubmissionList}
         show={QuestionnaireSubmissionShow}
+      />
+
+      <Resource
+        name="reports"
+        list={ReportList}
+        show={ReportShow}
       />
 
     </Admin>

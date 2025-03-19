@@ -102,14 +102,9 @@ function Footer() {
                 >
                   {t("footer.suggestions")}
                 </a>
-                <a
-                  href="#"
-                  target={"_blank"}
-                  rel={"noopener noreferrer"}
-                  className="flex justify-end"
-                >
+                <Link to="/reports" className="flex justify-end">
                   {t("footer.reports")}
-                </a>
+                </Link>
               </div>
             </div>
           </div>

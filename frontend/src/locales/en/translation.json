@@ -171,5 +171,36 @@
                 "title" : "Courses"
             }
         }
+    },
+    "reports": {
+      "title": "Reports Channel",
+      "description": "Welcome to the Reports Channel. Here you can confidentially report any incidents, concerns, or unethical practices. You have the option to remain anonymous to ensure your identity is protected. Please provide as many details as possible to help us investigate the matter effectively.",
+      "form": {
+        "anonymous": "Would you like to make an anonymous report?",
+        "anonymousOptions": {
+            "yes": "Yes",
+            "no": "No"
+        },
+        "name": "Full name",
+        "name_placeholder": "Enter your full name",
+        "email": "Email",
+        "email_placeholder": "Your email",
+        "phone": "Mobile number",
+        "phone_placeholder": "XXX XXX XXX",
+        "phone_error_msg": "Phone number must be 9 digits",
+        "subject": "Subject of the report",
+        "subjectOptions": {
+          "default": "Choose an option",
+          "corruption": "Corruption and conflict of interest",
+          "dataProtection": "Data protection",
+          "ethics": "Ethics and good practices",
+          "others": "Other"
+        },
+        "date": "Date of occurrence",
+        "description": "Description of the incident",
+        "description_placeholder": "Write here",
+        "required": "Required",
+        "submit": "Submit"
+      }
     }
 }

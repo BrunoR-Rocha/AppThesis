@@ -53,7 +53,7 @@ const Policy = ({ tag }) => {
             <div className="py-24">
               <Wrapper>
                 <div className="flex flex-1 bg-[#6078DF26] p-7 gap-4 rounded-xl border border-[#6078DF] items-center backdrop-blur-xl text-[#ECECEC] leading-10">
-                  <div className="policy-content" dangerouslySetInnerHTML={{ __html: content?.content }}></div>
+                  <div className="policy-content break-all" dangerouslySetInnerHTML={{ __html: content?.content }}></div>
                 </div>
               </Wrapper>
             </div>

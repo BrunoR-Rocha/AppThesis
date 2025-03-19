@@ -171,5 +171,36 @@
                 "title" : "Cursos"
             }
         }
+    },
+    "reports":{
+        "title": "Canal de denúncias",
+        "description": "Bem-vindo ao Canal de Denúncias. Aqui pode reportar de forma confidencial quaisquer ocorrências, preocupações ou práticas antiéticas. Tem a opção de permanecer anónimo, garantindo que a sua identidade fique protegida. Por favor, forneça o máximo de detalhes possível para que possamos investigar a situação de forma eficaz.",
+        "form":{
+            "anonymous": "Pretende fazer uma denúncia anónima?",
+            "anonymousOptions": {
+                "yes": "Sim",
+                "no": "Não"
+            },
+            "name": "Nome completo",
+            "name_placeholder": "Indique o seu nome completo",
+            "email": "Email",
+            "email_placeholder": "O seu email",
+            "phone": "Número de telemóvel",
+            "phone_placeholder": "XXX XXX XXX",
+            "phone_error_msg": "Número de telemóvel deve ter pelo menos 9 digitos",
+            "subject": "Assunto da denúncia",
+            "subjectOptions" :{
+                "default": "Escolha uma opção",
+                "corruption": "Corrupção e conflito de interesses",
+                "dataProtection": "Proteção de dados",
+                "ethics": "Ética e boas práticas",
+                "others": "Outro"
+            },
+            "date": "Data da ocorrência",
+            "description": "Descrição da ocorrência",
+            "description_placeholder": "Escreva aqui",
+            "required": "Obrigatório",
+            "submit": "Enviar"
+        }
     }
 }
