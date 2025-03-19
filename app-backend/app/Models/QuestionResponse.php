@@ -12,6 +12,8 @@ class QuestionResponse extends Model
         'is_correct',
         'response_quality_score',
         'time_taken',
+        'answer',
+        'suggested_answer'
     ];
 
     public function userQuiz()

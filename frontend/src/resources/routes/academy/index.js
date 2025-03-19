@@ -86,22 +86,25 @@ function Academy() {
               </>
             ) : (
               <>
-                <div className="flex gap-6">
+                 <div className="flex flex-col md:flex-row gap-6">
                   <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
                     {t("academy.title")}
                   </h1>
-                  <RenderButton
-                    tabId="quizzes"
-                    label={t("academy.sections.quizzes.title")}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                  />
-                  <RenderButton
-                    tabId="courses"
-                    label={t("academy.sections.courses.title")}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                  />
+                  <div className="flex flex-wrap md:flex-nowrap gap-3">
+                    <RenderButton
+                      tabId="quizzes"
+                      label={t("academy.sections.quizzes.title")}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                    />
+                    <RenderButton
+                      tabId="courses"
+                      label={t("academy.sections.courses.title")}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                    />
+                  </div>
+
                 </div>
                 {activeTab === "quizzes" && (
                   <div className="flex flex-col items-center justify-center py-10 gap-10">

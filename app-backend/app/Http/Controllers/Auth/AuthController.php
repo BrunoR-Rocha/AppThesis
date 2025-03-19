@@ -180,8 +180,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // Revoke the token that was used to authenticate the current request
-        $request->user()->currentAccessToken()->delete();
-
         if (Auth::guard('api')->check()) {
             $request->user()->tokens()->delete();
         }

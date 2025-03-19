@@ -34,7 +34,7 @@ use App\Http\Controllers\QuestionOptionController;
 use App\Http\Controllers\QuestionTopicController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\ResponseController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StaticContentController;
 use App\Http\Controllers\SysConfigController;
 use App\Http\Controllers\UserController;
@@ -86,8 +86,10 @@ Route::group([
     $router->get('/static-contents/{tag}',                              [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
     $router->get('/front/config/params',                                [SysConfigController::class, 'showAll']);
     $router->get('/front/config/{id}',                                  [SysConfigController::class, 'showTag']);
+    $router->post('/front/report',                                      [ReportController::class, 'store']);
+
     // Authenticated Routes
-    $router->group(['middleware' => ['auth:api', 'check.token.expiry']], function (Router $router) {
+    $router->group(['middleware' => ['auth:sanctum', 'check.token.expiry']], function (Router $router) {
 
         $router->post('/admin/logout',                                  [AuthController::class, 'logout']);
         $router->post('/logout',                                        [AuthController::class, 'logout']);
@@ -96,6 +98,7 @@ Route::group([
         $router->post('/chat',                                          [ChatbotController::class, 'chat'])->middleware('chat.rate.limit');
 
         $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
+        $router->post('quiz/{id}/assessment',                           [QuizController::class, 'assessQuiz']);
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);
         $router->post('quiz/{id}/save-progress',                        [QuizController::class, 'saveProgress']);
         $router->post('quiz/{id}/questions',                            [QuizController::class, 'getQuizInfo']);
@@ -124,7 +127,7 @@ Route::group([
             'questions' =>                                              QuestionController::class,
             'question_options' =>                                       QuestionOptionController::class,
             'quizzes' =>                                                QuizController::class,
-            'responses' =>                                              ResponseController::class,
+            'reports' =>                                                ReportController::class,
             'library_pages' =>                                          LibraryPageController::class,
             'library_page_modules' =>                                   LibraryPageModuleController::class,
             'courses' =>                                                CourseController::class,
