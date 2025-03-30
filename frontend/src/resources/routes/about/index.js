@@ -33,7 +33,8 @@ function About() {
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n} = useTranslation();
+  const currentLanguage = i18n.language;
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -50,13 +51,17 @@ function About() {
   useEffect(() => {
     setLoading(true);
     axiosConfig
-      .get(`/front/faqs`)
+      .get(`/front/faqs`, {
+        params: {
+          locale: currentLanguage,
+        },
+      })
       .then((res) => {
         setFaqs(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [currentLanguage]);
 
   return (
     <>
