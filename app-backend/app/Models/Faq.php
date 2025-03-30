@@ -4,30 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Translatable;
 
 class Faq extends Model
 {
-    use HasFactory;
+    use Translatable;
 
     protected $fillable = [
-        'title', 
-        'body', 
-        'section', 
-        'enabled'
+        'enabled',
+        'tag'
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    public $translatedAttributes = ['title', 'body'];
     public function scopeActive($query)
     {
         return $query->where('enabled', true);
     }
     
-    // public function toSearchableArray()
-    // {
-    //     return [
-    //         'title' => '',
-    //         'body' => '',
-    //     ];
-    // }
+    public function translations()
+    {
+        return $this->hasMany(FaqTranslation::class);
+    }
 }

@@ -80,7 +80,7 @@ Route::group([
 
     $router->post('/front/register',                                    [UserController::class, 'frontRegister']);
     $router->post('/front/contacts',                                    [ContactController::class, 'frontStore']);
-    $router->get('/front/faqs',                                         [FaqController::class, 'getAll']);
+    $router->get('/front/faqs',                                         [FaqController::class, 'getAll'])->middleware('setLocale');
     $router->get('/front/post/category',                                [ForumCategoryController::class, 'getAll']);
 
     $router->get('/static-contents/{tag}',                              [StaticContentController::class, 'getContentByTag'])->middleware('setLocale');
