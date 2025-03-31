@@ -3,12 +3,14 @@ import axiosConfig from "../../../providers/axiosConfig";
 import Wrapper from "../../components/general/Wrapper";
 import Skeleton from "../../components/general/Skeleton";
 import LibraryCard from "../../components/app/library/LibraryCard";
+import { useTranslation } from "react-i18next";
 
 const Favorites = () => {
   const [loading, setLoading] = useState();
   const [recentFavorites, setRecentFavorites] = useState([]);
   const [favorites, setFavorites] = useState();
   const [savedPages, setSavedPages] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -56,7 +58,7 @@ const Favorites = () => {
           <>
             <div className="d-flex flex-col">
               <h5 className="text-white font-semibold text-lg">
-                Recently Saved
+                {t("profile.saved.titleRecent")}
               </h5>
               <div className="flex gap-4 mt-4">
                 {recentFavorites && recentFavorites.length > 0 ? (
@@ -70,7 +72,7 @@ const Favorites = () => {
                   ))
                 ) : (
                   <p className="text-white font-medium text-base">
-                    No recent favorites found.
+                    {t("profile.saved.emptyRecent")}
                   </p>
                 )}
               </div>
@@ -78,7 +80,7 @@ const Favorites = () => {
 
             <div className="d-flex flex-col">
               <h5 className="text-white text-lg font-semibold mt-8">
-                All Favorites
+                {t("profile.saved.titleFavorites")}
               </h5>
               <div className="grid grid-cols-1 gap-4 mt-4">
                 {favorites && favorites.length > 0 ? (
@@ -92,7 +94,7 @@ const Favorites = () => {
                   ))
                 ) : (
                   <p className="text-white font-medium text-base">
-                    No favorites saved yet.
+                    {t("profile.saved.emptyFavorites")}
                   </p>
                 )}
               </div>

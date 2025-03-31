@@ -10,12 +10,14 @@ import QuizDashboard from "./quiz";
 import Favorites from "./favorites";
 import ProfileCourses from "./courses";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
   const { usabilityTestingEnabled } = useContext(AuthContext);
-  // Set the default active tab or retrieve it from the state
+  const { t } = useTranslation();
+
   const [activeTab, setActiveTab] = useState(
     location.state?.activeTab || "dashboard"
   );
@@ -55,11 +57,12 @@ const Profile = () => {
 
               <div className="flex items-center">
                 <div className="flex gap-3 items-center overflow-x-scroll md:overflow-x-auto">
-                  {renderButton("dashboard", "Dashboard")}
-                  {renderButton("courses", "Courses")}
-                  {renderButton("quizzes", "Quizzes")}
-                  {renderButton("library", "Saved")}
-                  {!usabilityTestingEnabled && renderButton("settings", "Settings")}
+                  {renderButton("dashboard", t("profile.tabs.dashboard"))}
+                  {renderButton("courses", t("profile.tabs.courses"))}
+                  {renderButton("quizzes", t("profile.tabs.quizzes"))}
+                  {renderButton("library", t("profile.tabs.saved"))}
+                  {!usabilityTestingEnabled &&
+                    renderButton("settings", t("profile.tabs.settings"))}
                 </div>
               </div>
             </div>
@@ -72,7 +75,9 @@ const Profile = () => {
               {activeTab === "courses" && <ProfileCourses />}
               {activeTab === "quizzes" && <QuizDashboard />}
               {activeTab === "library" && <Favorites />}
-              {activeTab === "settings" && !usabilityTestingEnabled && <ProfileSettings />}
+              {activeTab === "settings" && !usabilityTestingEnabled && (
+                <ProfileSettings />
+              )}
             </div>
           </Wrapper>
         </div>
