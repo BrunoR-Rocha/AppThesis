@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\FrontCourseResource;
 use App\Models\Course;
-use App\Models\CourseSubscription;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CourseSubscriptionController extends Controller

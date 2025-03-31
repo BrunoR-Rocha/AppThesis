@@ -7,12 +7,14 @@ import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import EmptyValue from "../../components/general/EmptyValue";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ProfileCourses = () => {
   const [loading, setLoading] = useState();
   const [courses, setCourses] = useState([]);
   const [firstPendingCourse, setFirstPendingCourse] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -42,17 +44,25 @@ const ProfileCourses = () => {
                 ) : (
                   <div className="flex flex-col items-start justify-start w-full self-start">
                     <p className="text-lg font-semibold text-[#FFF]">
-                      Courses History
+                      {t("profile.courses.title")}
                     </p>
 
                     <div className="overflow-x-auto mt-4 w-full">
                       <table className="min-w-full text-left">
                         <thead>
                           <tr className="border-b border-gray-300 text-[#AAA] font-medium capitalize opacity-75">
-                            <th className="px-4 py-2">Course</th>
-                            <th className="px-4 py-2">Progress</th>
-                            <th className="px-4 py-2">Date</th>
-                            <th className="px-4 py-2">Status</th>
+                            <th className="px-4 py-2">
+                              {t("profile.courses.headerCourse")}
+                            </th>
+                            <th className="px-4 py-2">
+                              {t("profile.courses.headerProgress")}
+                            </th>
+                            <th className="px-4 py-2">
+                              {t("profile.courses.headerDate")}
+                            </th>
+                            <th className="px-4 py-2">
+                              {t("profile.courses.headerStatus")}
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -72,11 +82,11 @@ const ProfileCourses = () => {
                                 <td className="px-4 py-2">
                                   {course.is_completed === true ? (
                                     <div className="bg-[#98E39940] rounded-lg flex justify-center font-medium px-3 py-2">
-                                      Finished
+                                      {t("profile.courses.finished")}
                                     </div>
                                   ) : (
                                     <div className="bg-[#FC5E5540] rounded-full flex justify-center font-medium px-3 py-2">
-                                      Unfinished
+                                      {t("profile.courses.unfinished")}
                                     </div>
                                   )}
                                 </td>
@@ -85,7 +95,9 @@ const ProfileCourses = () => {
                           ) : (
                             <tr>
                               <td colSpan="3" className="px-4 py-2 text-center">
-                                <EmptyValue label={"No courses enrolled yet"} />
+                                <EmptyValue
+                                  label={t("profile.courses.empty")}
+                                />
                               </td>
                             </tr>
                           )}
@@ -102,7 +114,7 @@ const ProfileCourses = () => {
               ) : firstPendingCourse ? (
                 <>
                   <p className="text-lg font-semibold text-[#FFF]">
-                    Don’t forget to finish!
+                    {t("profile.courses.forget")}
                   </p>
                   <CourseCard>
                     <div className="flex flex-col gap-10 p-4">
@@ -142,7 +154,9 @@ const ProfileCourses = () => {
                             href={`/courses/${firstPendingCourse?.id}`}
                             className="flex rounded-full bg-[#F4AA5A] px-4 py-2"
                           >
-                            <p className="text-white">Continue</p>
+                            <p className="text-white">
+                              {t("profile.courses.continue")}
+                            </p>
                           </a>
                         </div>
                       </div>
@@ -151,7 +165,7 @@ const ProfileCourses = () => {
                 </>
               ) : (
                 <div className="flex flex-col items-center text-center text-white gap-10">
-                  <p>You have no pending courses. Explore new courses!</p>
+                  <p>{t("profile.courses.pending")}</p>
                   <a
                     href="#"
                     onClick={() =>
@@ -161,7 +175,7 @@ const ProfileCourses = () => {
                     }
                     className="flex rounded-full bg-[#F4AA5A] px-4 py-2"
                   >
-                    Go to Courses
+                    {t("profile.courses.redirect")}
                   </a>
                 </div>
               )}

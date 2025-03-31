@@ -202,5 +202,55 @@
             "required": "Obrigatório",
             "submit": "Enviar"
         }
+    },
+    "profile":{
+        "title": "Painel de Controlo",
+        "motivation": "Vamos iniciar a nossa jornada de aprendizagem!",
+        "generalScore": "Pontuação geral",
+        "userCourses": "Cursos participados",
+        "userQuizzes": "Questionários concluídos",
+        "tabs": {
+            "dashboard": "Painel de controlo",
+            "courses": "Cursos",
+            "quizzes": "Questionários",
+            "saved": "Artigos",
+            "settings": "Definições"
+        },
+        "courses":{
+            "title": "Histórico de cursos",
+            "headerCourse": "Curso",
+            "headerProgress": "Progresso",
+            "headerDate": "Data",
+            "headerStatus": "Estado",
+            "empty": "Sem inscrições em cursos",
+            "finished": "Finalizado",
+            "unfinished": "Não Finalizado",
+            "forget": "Não se esqueça de finalizar o curso!",
+            "pending": "Não tem cursos pendentes. Explore novos cursos!",
+            "redirect": "Ir para os cursos",
+            "continue": "Continue"
+        },
+        "saved":{
+            "titleRecent": "Guardados recentemente",
+            "titleFavorites": "Todos os favoritos",
+            "emptyRecent": "Sem favoritos recentes.",
+            "emptyFavorites": "Sem favoritos guardados"
+        },
+        "quiz": {
+            "empty": "Sem cursos criados de momento",
+            "title": "Histórico de Questionários",
+            "headerQuiz": "Quiz",
+            "headerScore": "Pontuação",
+            "headerDate": "Data",
+            "headerAction": "Ação",
+            "review": "Rever Quiz",
+            "finish": "Terminar",
+            "finished": "Finalizado",
+            "unfinished": "Não Finalizado",
+            "overall": "Pontuação geral",
+            "avgTime": "Tempo médio",
+            "total": "Total",
+            "overview": "Resumo"
+        }
     }
 }
