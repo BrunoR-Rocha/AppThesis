@@ -49,4 +49,16 @@ class Question extends Model
     {
         return $query->where('status', $status);
     }
+
+    public function quizzes()
+    {
+        return $this->belongsToMany(Quiz::class, 'quiz_questions')
+                    ->withPivot('order')
+                    ->orderBy('order');
+    }
+
+    public function responses()
+    {
+        return $this->hasMany(QuestionResponse::class);
+    }
 }

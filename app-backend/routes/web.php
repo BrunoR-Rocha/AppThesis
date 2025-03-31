@@ -104,6 +104,7 @@ Route::group([
         $router->post('quiz/{id}/questions',                            [QuizController::class, 'getQuizInfo']);
         $router->get('quiz/{id}/review',                                [QuizController::class, 'getQuizReview']);
 
+        $router->get('profile/dashboard',                               [UserController::class, 'getUserDashboard']);
         $router->get('profile/quizzes',                                 [QuizController::class, 'getUserQuizDashboard']);
         $router->get('profile/favorites',                               [UserFavoriteController::class, 'getFavoritePages']);
         $router->get('profile/courses',                                 [CourseSubscriptionController::class, 'getUserCoursesDashboard']);

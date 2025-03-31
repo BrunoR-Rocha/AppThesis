@@ -115,7 +115,9 @@ function NavBar() {
 
   
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
+    
     logout();
     navigate("/");
   };

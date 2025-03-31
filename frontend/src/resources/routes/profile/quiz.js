@@ -7,6 +7,7 @@ import { QuizDashboardComponent } from "./style";
 import { Link } from "react-router-dom";
 import { formatTimeText } from "../../utils/timeUtils";
 import EmptyValue from "../../components/general/EmptyValue";
+import { useTranslation } from "react-i18next";
 
 const QuizDashboard = () => {
   const OverviewBox = ({
@@ -42,6 +43,7 @@ const QuizDashboard = () => {
 
   const [loading, setLoading] = useState();
   const [quizzes, setQuizzes] = useState();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -65,7 +67,7 @@ const QuizDashboard = () => {
               ) : (
                 <div className="flex items-center justify-between w-full">
                   <span className="text-lg font-semibold text-[#FFF]">
-                    Overall Score
+                    {t("profile.quiz.overall")}
                   </span>
                   <span className="text-3xl font-bold text-[#FFF]">
                     {quizzes?.metrics?.totalScore} pts
@@ -79,7 +81,7 @@ const QuizDashboard = () => {
                 <Skeleton width="60%" height="50px" />
               ) : (
                 <div className="flex flex-col w-full">
-                  <p className="text-lg font-semibold text-[#FFF]">Overview</p>
+                  <p className="text-lg font-semibold text-[#FFF]">{t("profile.quiz.overview")}</p>
                   <div className="flex justify-center md:justify-between flex-wrap-reverse md:flex-nowrap items-center">
                     <div className="flex flex-col gap-3">
                       <OverviewBox
@@ -88,7 +90,7 @@ const QuizDashboard = () => {
                           quizzes?.metrics?.percentage_finished_quizzes
                         }
                         color={"#6078DF"}
-                        colorLabel={"Finished"}
+                        colorLabel={t("profile.quiz.finished")}
                       />
                       <OverviewBox
                         value={quizzes?.metrics?.unfinished_quizzes}
@@ -96,13 +98,13 @@ const QuizDashboard = () => {
                           quizzes?.metrics?.percentage_unfinished_quizzes
                         }
                         color={"#6078DF66"}
-                        colorLabel={"Unfinished"}
+                        colorLabel={t("profile.quiz.unfinished")}
                       />
                       <OverviewBox
                         value={formatTimeText(
                           quizzes?.metrics?.time_efficiency
                         )}
-                        colorLabel={"Average Time"}
+                        colorLabel={t("profile.quiz.avgTime")}
                       />
                     </div>
                     <div>
@@ -116,7 +118,7 @@ const QuizDashboard = () => {
                               {quizzes?.quizzes?.length}
                             </p>
                             <p className="font-medium text-lg text-[#AAA] text-center">
-                              Total Quizzes
+                              {t("profile.quiz.total")}
                             </p>
                           </div>
                         }
@@ -137,17 +139,25 @@ const QuizDashboard = () => {
               ) : (
                 <div className="flex flex-col items-start justify-start w-full self-start">
                   <p className="text-lg font-semibold text-[#FFF]">
-                    Quiz History
+                    {t("profile.quiz.title")}
                   </p>
 
                   <div className="overflow-x-auto mt-4 w-full">
                     <table className="min-w-full text-left">
                       <thead>
                         <tr className="border-b border-gray-300 text-[#AAA] font-medium capitalize opacity-75">
-                          <th className="px-4 py-2">Quiz</th>
-                          <th className="px-4 py-2">Score</th>
-                          <th className="px-4 py-2">Date</th>
-                          <th className="px-4 py-2">Action</th>
+                          <th className="px-4 py-2">
+                            {t("profile.quiz.headerQuiz")}
+                          </th>
+                          <th className="px-4 py-2">
+                            {t("profile.quiz.headerScore")}
+                          </th>
+                          <th className="px-4 py-2">
+                            {t("profile.quiz.headerDate")}
+                          </th>
+                          <th className="px-4 py-2">
+                            {t("profile.quiz.headerAction")}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -166,7 +176,7 @@ const QuizDashboard = () => {
                                     to={`/academy/quiz/review/${quiz.quiz_id}`}
                                     className="bg-[#6078DF] rounded-lg flex justify-center font-medium cursor-pointer"
                                   >
-                                    Review Quiz
+                                    {t("profile.quiz.review")}
                                   </Link>
                                 ) : (
                                   <Link
@@ -174,7 +184,7 @@ const QuizDashboard = () => {
                                     state={{ quiz_id: quiz.quiz_id }}
                                     className="bg-[#4B5057] rounded-lg flex justify-center font-medium cursor-pointer"
                                   >
-                                    Finish Quiz
+                                    {t("profile.quiz.finish")}
                                   </Link>
                                 )}
                               </td>
@@ -183,7 +193,7 @@ const QuizDashboard = () => {
                         ) : (
                           <tr>
                             <td colSpan="3" className="px-4 py-2 text-center">
-                              <EmptyValue label={"No quizzes created yet"} />
+                              <EmptyValue label={t("profile.quiz.empty")} />
                             </td>
                           </tr>
                         )}
@@ -194,7 +204,6 @@ const QuizDashboard = () => {
               )}
             </QuizDashboardComponent>
           </div>
-          
         </div>
       </div>
     </Wrapper>
