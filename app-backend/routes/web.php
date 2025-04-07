@@ -97,7 +97,7 @@ Route::group([
         $router->get('/email/verify',                                   [VerificationController::class, 'verify'])->name('verification.verify');
         $router->post('/chat',                                          [ChatbotController::class, 'chat'])->middleware('chat.rate.limit');
 
-        $router->get('question/params',                                 [QuestionController::class, 'getQuizParams']);
+        $router->get('question/params',                                 [QuestionController::class, 'getQuizParams'])->middleware('setLocale');;
         $router->post('quiz/{id}/assessment',                           [QuizController::class, 'assessQuiz']);
         $router->post('quiz/{id}/submit',                               [QuizController::class, 'evaluateQuiz']);
         $router->post('quiz/{id}/save-progress',                        [QuizController::class, 'saveProgress']);

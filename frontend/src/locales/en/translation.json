@@ -164,7 +164,8 @@
                     "option": "Or",
                     "topic": "Topic",
                     "difficulty": "Difficulty",
-                    "start": "Start Quiz"
+                    "start": "Start Quiz",
+                    "option_error": "Please select both a topic and a difficulty."
                 }
             },
             "courses": {

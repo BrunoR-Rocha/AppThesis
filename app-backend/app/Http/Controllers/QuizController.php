@@ -313,6 +313,7 @@ class QuizController extends Controller
                 })->toArray(),
                 'is_correct' => $response->is_correct,
                 'response_quality_score' => $response->response_quality_score,
+                'suggested_answer' => $response->suggested_answer
             ];
         });
 
@@ -508,6 +509,7 @@ class QuizController extends Controller
                 'response_quality_score' => $evaluationResult['response_quality_score'],
                 'time_taken' => $evaluationResult['time_taken'] ?? null,
                 'suggested_answer' => $evaluationResult['suggested_answer'] ?? null,
+                
             ];
         }
 
@@ -581,6 +583,7 @@ class QuizController extends Controller
             return [
                 'is_correct' => $response[0]['is_correct'],
                 'response_quality_score' => $response[0]['response_quality_score'],
+                'suggested_answer' => $response[0]['feedback'],
                 'time_taken' => null,
             ];
         } else {
@@ -600,7 +603,6 @@ class QuizController extends Controller
      */
     private function callLangChainAPI($data)
     {
-
         $llmUrl = config('llm.url');
         $response = Http::post($llmUrl . '/question-evaluate', $data);
 
@@ -724,7 +726,7 @@ class QuizController extends Controller
     public function getUserQuizDashboard(Request $request)
     {
         $user = $request->user();
-
+        
         $userQuizzes = UserQuiz::where('user_id', $user->id)->get();
 
         $totalScore = $userQuizzes->sum('score');
