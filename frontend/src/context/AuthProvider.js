@@ -127,9 +127,6 @@ const AuthProvider = ({ children }) => {
           alert('Session has expired. Please log in again.');
         }, timeout);
         return () => clearTimeout(timer);
-      } else {
-        // Token already expired
-        logout();
       }
     }
 
