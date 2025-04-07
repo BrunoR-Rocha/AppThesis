@@ -201,7 +201,7 @@ class QuestionController extends Controller
                     if (!$questionType) {
                         continue;
                     }
-                    
+
                     $existingQuestion = Question::where('title', $question['title'])
                         ->where('type_id', $questionType->id)
                         ->first();
@@ -247,9 +247,11 @@ class QuestionController extends Controller
 
     public function getQuizParams(Request $request)
     {
+        $locale = app()->getLocale();
+
         $topics = QuestionTopic::all();
-        $difficulty = Difficulty::getStandardDifficulty();
-        
+        $difficulty = Difficulty::getStandardDifficulty(null, $locale);
+
         return response()->json([
             'topics' => $topics,
             'difficulty' => $difficulty

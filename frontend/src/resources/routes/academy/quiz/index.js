@@ -18,8 +18,10 @@ import {
 import ProgressCircle from "./components/Progress";
 import { useRef } from "react";
 import Skeleton from "../../../components/general/Skeleton";
+import { useTranslation } from "react-i18next";
 
 function QuizPage() {
+
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -57,7 +59,7 @@ function QuizPage() {
   const [resultsScore, setResultsScore] = useState(false);
   const timerIntervalRef = useRef(null);
   const { quiz_id } = location.state || {};
-
+  const { t } = useTranslation();
   useEffect(() => {
     setLoading(true);
     axiosConfig
@@ -172,14 +174,15 @@ function QuizPage() {
     navigate("/academy");
   };
 
-  // Save progress every 5 seconds
   useEffect(() => {
-    const autoSaveInterval = setInterval(() => {
-      saveQuizProgress();
-    }, 5000);
-
-    return () => clearInterval(autoSaveInterval);
-  }, [saveQuizProgress]);
+    if (!results && !isSubmitting) {
+      const autoSaveInterval = setInterval(() => {
+        saveQuizProgress();
+      }, 5000);
+  
+      return () => clearInterval(autoSaveInterval);
+    }
+  }, [saveQuizProgress, results, isSubmitting]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -203,6 +206,7 @@ function QuizPage() {
       }, 1000);
     } else if (timer === 0) {
       clearInterval(timerIntervalRef.current);
+      handleSubmitQuiz();
     }
 
     return () => {
