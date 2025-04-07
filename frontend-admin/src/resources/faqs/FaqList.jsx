@@ -14,11 +14,7 @@ export default function FaqList(props) {
       <List perPage={25} {...props}>
         <Datagrid>
           <TextField source="id" />
-          <TextField source="title" />
-          <SelectField source="section" choices={[
-             {id: 'general', name: 'Gerais'},
-             {id: 'quiz', name: 'Quizzes'},
-          ]} />
+          <TextField source="tag" />
           <BooleanField source="enabled" />
           <ShowButton basePath={props.basePath} />
           <EditButton basePath={props.basePath} />

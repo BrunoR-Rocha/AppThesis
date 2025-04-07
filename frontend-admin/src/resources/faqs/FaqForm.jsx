@@ -4,7 +4,8 @@ import {
   TextInput,
   required,
   BooleanInput,
-  SelectInput,
+  ArrayInput,
+  SimpleFormIterator,
 } from "react-admin";
 
 const RichTextInput = React.lazy(() =>
@@ -16,18 +17,15 @@ const RichTextInput = React.lazy(() =>
 export default function FaqForm(props) {
   return (
     <SimpleForm {...props}>
-      <TextInput source="title" validate={required()} />
-      <RichTextInput source="body" validate={required()} />
-      <SelectInput
-        source="section"
-        validate={required()}
-        choices={[
-          { id: "general", name: "Gerais" },
-          { id: "quiz", name: "Quizzes" },
-        ]}
-      />
-
       <BooleanInput source="enabled" validate={required()} />
+      <TextInput source="tag" />
+      <ArrayInput source="translations">
+        <SimpleFormIterator>
+          <TextInput source="locale" />
+          <TextInput source="title" />
+          <RichTextInput source="body" />
+        </SimpleFormIterator>
+      </ArrayInput>
     </SimpleForm>
   );
 }

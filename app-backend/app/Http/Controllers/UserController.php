@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserQuiz;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -186,6 +187,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
         $user->delete();
 
         return response()->json([
@@ -274,7 +276,7 @@ class UserController extends Controller
                 'errors'  => $validator->errors(),
             ], 422);
         }
-        
+
         // Check if current password matches
         if (!Hash::check($request->input('current_password'), $user->password)) {
             return response()->json([
@@ -282,7 +284,7 @@ class UserController extends Controller
                 'errors'  => ['current_password' => ['Current password is incorrect.']],
             ], 422);
         }
-        
+
         // Update password
         $user->password = Hash::make($request->input('new_password'));
         $user->save();
@@ -290,5 +292,23 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Password changed successfully.',
         ], 200);
+    }
+
+    public function getUserDashboard(Request $request)
+    {
+        $user = $request->user();
+        $userQuizzes = UserQuiz::where('user_id', $user->id)->get();
+        $totalScore = $userQuizzes->sum('score');
+        $finished = $userQuizzes->filter(function ($quiz) {
+            return $quiz->is_completed;
+        })->count();
+
+        $courses = $user->courseSubscriptions()->with('course')->get()->pluck('course');
+
+        return [
+            'userQuizzes' => $finished,
+            'userCourses' => count($courses),
+            'generalScore' => $totalScore
+        ];
     }
 }

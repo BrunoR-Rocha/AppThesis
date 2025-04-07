@@ -202,5 +202,55 @@
         "required": "Required",
         "submit": "Submit"
       }
+    },
+    "profile":{
+        "title": "Dashboard",
+        "motivation": "Let's start our learning journey!",
+        "generalScore": "Overall Score",
+        "userCourses": "Enrolled Courses",
+        "userQuizzes": "Completed Quizzes",
+        "tabs": {
+            "dashboard": "Dashboard",
+            "courses": "Courses",
+            "quizzes": "Quizzes",
+            "saved": "Saved",
+            "settings": "Settings"
+        },
+        "courses":{
+            "title": "Courses History",
+            "headerCourse": "Course",
+            "headerProgress": "Progress",
+            "headerDate": "Date",
+            "headerStatus": "Status",
+            "empty": "No courses enrolled yet",
+            "finished": "Finished",
+            "unfinished": "Unfinished",
+            "forget": "Don’t forget to finish!",
+            "pending": "You have no pending courses. Explore new courses!",
+            "redirect": "Go to courses",
+            "continue": "Continue"
+        },
+        "saved":{
+            "titleRecent": "Recently Saved",
+            "titleFavorites": "All Favorites",
+            "emptyRecent": "No recent favorites found.",
+            "emptyFavorites": "No favorites saved yet."
+        },
+        "quiz" :{
+            "empty": "No quizzes created yet",
+            "title": "Quiz History",
+            "headerQuiz": "Quiz",
+            "headerScore": "Score",
+            "headerDate": "Date",
+            "headerAction": "Action",
+            "review": "Review Quiz",
+            "finish": "Finish Quiz",
+            "finished": "Finished",
+            "unfinished": "Unfinished",
+            "overall": "Overall Score",
+            "avgTime": "Average Time",
+            "total": "Total Quizzes",
+            "overview": "Overview"
+        }
     }
 }

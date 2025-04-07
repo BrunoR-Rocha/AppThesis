@@ -154,7 +154,7 @@ class QuizController extends Controller
         $userId = Auth::user()->id;
         $topicId = null;
         $difficultyLevel = null;
-        
+
         if ($request->is_random) {
             $questions = Question::inRandomOrder()->take(20)->get();
         } else {
@@ -461,7 +461,15 @@ class QuizController extends Controller
         $quiz = Quiz::findOrFail($quizId);
 
         $userQuiz = UserQuiz::where('quiz_id', $quiz->id)->first();
-        dd($userQuiz->questionResponses);
+
+        $questions = $quiz->questions;
+        $answers = $userQuiz->questionResponses->pluck('answer', 'question_id')->toArray();
+        $evaluation = $this->evaluateAnswers($questions, $answers, true);
+
+        return response()->json([
+            'message' => 'Avaliação testada com sucesso',
+            'data' => $evaluation
+        ], 200);
     }
 
     private function evaluateAnswers($questions, $answers)
@@ -494,6 +502,7 @@ class QuizController extends Controller
 
             $questionResponses[] = [
                 'question_id' => $questionId,
+                'question_options' => $question->options,
                 'answer' => $answer,
                 'is_correct' => $evaluationResult['is_correct'],
                 'response_quality_score' => $evaluationResult['response_quality_score'],
@@ -506,7 +515,6 @@ class QuizController extends Controller
             'correctAnswers' => $correctAnswers,
             'questionResponses' => $questionResponses
         ];
-
     }
     /**
      * Evaluate predefined answers (non-free_text questions).
@@ -515,7 +523,7 @@ class QuizController extends Controller
      * @param mixed    $answer   The submitted answer.
      * @return bool              True if the answer is correct, false otherwise.
      */
-    private function evaluatePredefinedAnswer(Question $question, $answer): bool
+    private function evaluatePredefinedAnswer(Question $question, $answer, $debug = false): bool
     {
         $correctOptions = QuestionOption::where('question_id', $question->id)
             ->where('is_correct', true)
@@ -527,14 +535,20 @@ class QuizController extends Controller
             ->toArray();
 
         if ($question->type->tag === 'multiple_choice') {
-            if (is_array($answer)) {
-                foreach ($answer as $option) {
-                    if (!in_array($option, $allOptions)) {
+
+            $parsedAnswer = $answer;
+            if ($debug) {
+                $parsedAnswer = json_decode($answer, true);
+            }
+
+            if (is_array($parsedAnswer)) {
+                foreach ($answer as $option => $optionValue) {
+                    if ($option == 'option_text' && !in_array($optionValue, $allOptions)) {
                         return false;
                     }
                 }
-               
-                return empty(array_diff($correctOptions, $answer)) && empty(array_diff($answer, $correctOptions));
+
+                return empty(array_diff($correctOptions, [$parsedAnswer['option_text']])) && empty(array_diff([$parsedAnswer['option_text']], $correctOptions));
             } else {
                 return in_array($answer, $correctOptions);
             }
@@ -557,7 +571,7 @@ class QuizController extends Controller
         $data = [
             'theme' => SysConfig::tag('theme')->first()->value,
             'question' => $question->title,
-            'answer' => is_string($answer) ? $answer : strval($answer) 
+            'answer' => is_string($answer) ? $answer : strval($answer)
         ];
 
         $responseLangchain = $this->callLangChainAPI($data);

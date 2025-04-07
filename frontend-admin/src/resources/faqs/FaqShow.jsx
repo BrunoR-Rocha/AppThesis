@@ -6,6 +6,8 @@ import {
   Tab,
   BooleanField,
   RichTextField,
+  ArrayField,
+  Datagrid,
 } from "react-admin";
 
 export default function FaqShow(props) {
@@ -13,10 +15,15 @@ export default function FaqShow(props) {
     <Show {...props}>
       <TabbedShowLayout>
         <Tab label="Details">
-          <TextField source="title" />
-          <RichTextField source="body" />
-          <TextField source="section" />
+          <TextField source="tag" />
           <BooleanField source="enabled" />
+          <ArrayField source="translations" label="Translations">
+            <Datagrid bulkActionButtons={false}>
+              <TextField source="locale" label="Locale" />
+              <TextField source="title" label="Title" />
+              <RichTextField source="body" label="Content" />
+            </Datagrid>
+          </ArrayField>
         </Tab>
       </TabbedShowLayout>
     </Show>

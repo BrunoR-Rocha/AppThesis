@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             SysConfigSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
-            FaqSeeder::class,
             NewsSeeder::class,
             ForumCategoriesSeeder::class,
             QuestionTypeSeeder::class,
