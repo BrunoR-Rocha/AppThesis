@@ -263,14 +263,14 @@ def questionEvaluate():
 
     1. Is the student's answer correct? Respond with 'Yes' or 'No'.
     2. Provide a response quality score between 0 and 1, where 1 means the answer is completely correct, and 0 means it is incorrect.
-    3. Provide feedback to the student on their answer.
+    3. Detailed feedback that outlines what the student did well, areas for improvement, and a complete suggested answer for the question.
 
     Your response should be in the following JSON format:
     [
         {{
             "is_correct": true or false,
             "response_quality_score": float between 0 and 1,
-            "feedback": 1, "Your feedback here."
+            "feedback": "Detailed feedback including a suggested answer to the question."
         }}
     ]
     """

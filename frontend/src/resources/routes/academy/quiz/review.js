@@ -39,11 +39,16 @@ function QuizReview() {
   const getCorrectAnswerText = (question) => {
     if (question.correct_answer) {
       return question.correct_answer;
-    } else if (Array.isArray(question.question_options)) {
+    } else if (
+      Array.isArray(question.question_options) &&
+      question.question_options.length > 0
+    ) {
       const correctOption = question.question_options.find(
         (option) => option.is_correct
       );
       return correctOption ? correctOption.option_text : "N/A";
+    } else if (question.question_type == "free_text") {
+      return question.suggested_answer ?? "N/A";
     } else {
       return "No correct answer available";
     }
