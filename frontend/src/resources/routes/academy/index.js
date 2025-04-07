@@ -23,6 +23,9 @@ function Academy() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+
+  const currentLanguage = i18n.language;
 
   const [activeTab, setActiveTab] = useState(
     location?.state?.activeTab ?? "quizzes"
@@ -30,21 +33,25 @@ function Academy() {
   useEffect(() => {
     setLoadingParams(true);
     axiosConfig
-      .get(`/question/params`)
+      .get(`/question/params`, {
+        params: {
+          locale: currentLanguage,
+        },
+      })
       .then((res) => {
         setTopicOptions(res.data.topics);
         setDifficultyOptions(res.data.difficulty);
         setLoadingParams(false);
       })
       .catch(() => setLoadingParams(false));
-  }, []);
+  }, [currentLanguage]);
 
   const handleStartQuiz = (isRandom = true) => {
     setLoading(true);
     let formData = {};
     if (!isRandom) {
       if (!selectedTopic || !selectedDifficulty) {
-        toast.error("Please select both a topic and a difficulty.");
+        toast.error(t("academy.sections.quizzes.form.option_error"));
         return;
       }
 
@@ -70,8 +77,6 @@ function Academy() {
       .catch(() => setLoading(false));
   };
 
-  const { t } = useTranslation();
-
   return (
     <>
       <AcademyArea>
@@ -86,7 +91,7 @@ function Academy() {
               </>
             ) : (
               <>
-                 <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
                   <h1 className="text-[#ECECEC] text-3xl lg:text-4xl font-semibold">
                     {t("academy.title")}
                   </h1>
@@ -104,7 +109,6 @@ function Academy() {
                       setActiveTab={setActiveTab}
                     />
                   </div>
-
                 </div>
                 {activeTab === "quizzes" && (
                   <div className="flex flex-col items-center justify-center py-10 gap-10">

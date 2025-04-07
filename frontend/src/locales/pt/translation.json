@@ -164,7 +164,8 @@
                     "option": "Ou",
                     "topic": "Tópicos",
                     "difficulty": "Dificuldade",
-                    "start": "Iniciar teste"
+                    "start": "Iniciar teste",
+                    "option_error": "Selecione um tópico e uma dificuldade!"
                 }
             },
             "courses": {
