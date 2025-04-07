@@ -21,18 +21,17 @@ class CheckTokenExpiry
         $user = $request->user();
         
         try{
-
             if (!$user) {
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
 
-            if($request->user()->hasRole('superAdmin'))
+            if($user->hasRole('superAdmin'))
             {
                 return $next($request);
             }
-
-            $token = $user->currentAccessToken();
-
+            
+            $token = $user->currentAccessToken();   
+            
             if ($token && $token->expires_at && Carbon::now()->greaterThan($token->expires_at)) {
                 $token->delete();
     
