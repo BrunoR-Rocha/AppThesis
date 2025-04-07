@@ -117,7 +117,6 @@ function NavBar() {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    
     logout();
     navigate("/");
   };
