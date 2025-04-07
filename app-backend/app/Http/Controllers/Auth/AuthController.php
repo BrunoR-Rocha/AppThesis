@@ -158,7 +158,8 @@ class AuthController extends Controller
             'guest'    => true,
         ]);
     
-        $guest->tokens()->delete();
+        // Eliminate concurrent users in the platform
+        // $guest->tokens()->delete();
     
         $tokenResult = $guest->createToken('auth_token');
         $token = $tokenResult->plainTextToken;
