@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import GeneralBg from "../../../media/about/background.png";
+import GeneralBg from "../../../media/about/background.webp";
 import CourseShowBg from "../../../media/general/bg_gradient.png";
 import QuizBg from "../../../media/academy/quizzes/quiz_bg.svg";
 

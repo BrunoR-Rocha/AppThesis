@@ -94,15 +94,16 @@ function About() {
           <div className="w-11/12 mx-auto md:w-full flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-10">
             <TeamCard>
               <TeamMemberInfo>
-                <TeamMemberImage src={Member_1} />
+                <TeamMemberImage src={Member_1} alt="Team member Bruno"/>
                 <TeamMemberName>Bruno Rocha</TeamMemberName>
                 <p className="mx-5">
-                  Computer Science Masters Student and Full-Stack Developer
+                  Informatics Engineer Masters Student and Full-Stack Developer
                 </p>
                 <TeamMemberSocial
-                  href={"#"}
+                  href={"linkedin.com/in/bruno-rocha-3a48651a3"}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Find more about Bruno"
                 >
                   <Linkedin />
                 </TeamMemberSocial>
@@ -110,16 +111,17 @@ function About() {
             </TeamCard>
             <TeamCard>
               <TeamMemberInfo>
-                <TeamMemberImage src={Member_2} />
+                <TeamMemberImage src={Member_2} alt="Team member Morgado"/>
                 <TeamMemberName>Morgado Dias</TeamMemberName>
                 <p className="mx-5">
                   Project Coordinator and Associate Professor at the University
                   of Madeira
                 </p>
                 <TeamMemberSocial
-                  href={"#"}
+                  href={"https://www.linkedin.com/in/morgado-dias-b631883/"}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Find more about Morgado"
                 >
                   <Linkedin />
                 </TeamMemberSocial>
@@ -127,15 +129,16 @@ function About() {
             </TeamCard>
             <TeamCard>
               <TeamMemberInfo>
-                <TeamMemberImage src={Member_3} />
+                <TeamMemberImage src={Member_3} alt="Team member Fábio"/>
                 <TeamMemberName>Fábio Mendonça</TeamMemberName>
                 <p className="mx-5">
                   Project Co-Coordinator and ITI/Larsys Investigator
                 </p>
                 <TeamMemberSocial
-                  href={"#"}
+                  href={"https://www.linkedin.com/in/fábio-mendonça/"}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Find more about Fábio"
                 >
                   <Linkedin />
                 </TeamMemberSocial>
@@ -172,7 +175,7 @@ function About() {
                         onChange={handleChange("faq_" + index)}
                       >
                         <AccordionItem
-                          expanded={expanded === "faq_" + index}
+                          // expanded={expanded === "faq_" + index}
                           expandIcon={
                             expanded === "faq_" + index ? (
                               <RemoveIcon sx={{ color: "#6078DF" }} />

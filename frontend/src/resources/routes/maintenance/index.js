@@ -1,12 +1,10 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { MaintenanceArea } from "./styles/maintenance_styles";
 import { useEffect } from "react";
 import axiosConfig from "../../../providers/axiosConfig";
 
 const Maintenance = () => {
-  const location = useLocation();
 
   useEffect(() => {
     const fetchConfig = async () => {

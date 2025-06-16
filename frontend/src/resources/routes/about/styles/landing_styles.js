@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import AboutBackgroundBg from "../../../media/about/background.png";
+import AboutBackgroundBg from "../../../media/about/background.webp";
 
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 
 export const AboutArea = styled("div")`
   width: 100%;
@@ -34,7 +34,7 @@ export const TeamArea = styled("div")`
   margin-bottom: 100px;
 `;
 
-export const TeamCaption = styled("h3")`
+export const TeamCaption = styled("h2")`
   font-size: 48px;
   font-weight: 500;
   text-align: center;
@@ -45,12 +45,12 @@ export const TeamCard = styled("div")`
   display: flex;
   flex-basis: 25%;
   border-radius: 10px;
-  border: 1px solid #6078DF;
+  border: 1px solid #6078df;
   background: rgba(96, 120, 223, 0.15);
   backdrop-filter: blur(30px);
-  
+
   :hover {
-    background: rgba(96, 120, 223, 0.30);
+    background: rgba(96, 120, 223, 0.3);
     transition: 800ms ease;
   }
 `;
@@ -78,7 +78,7 @@ export const TeamMemberName = styled("p")`
   text-transform: uppercase;
 `;
 
-export const TeamMemberImage = styled('img')`
+export const TeamMemberImage = styled("img")`
   max-width: 220px;
   max-height: 220px;
   flex-shrink: 0;
@@ -96,11 +96,11 @@ export const TeamMemberSocial = styled("a")`
   backdrop-filter: blur(8px);
 
   &:hover {
-    background: #6078DF;
+    background: #6078df;
   }
 `;
 
-export const FaqArea = styled('div')`
+export const FaqArea = styled("div")`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -116,11 +116,10 @@ export const AccordionItem = styled(AccordionSummary)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
- 
 `;
 
 export const AccordionItemDescription = styled(AccordionDetails)`
-  border-top: 2px solid #1A184C;
+  border-top: 2px solid #1a184c;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   background: rgba(96, 120, 223, 0.5);
