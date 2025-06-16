@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../styles/contact";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
@@ -22,7 +22,6 @@ function PostModal({ open, handleClose, onAddThread }) {
     setValue,
     reset,
   } = useForm();
-  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     const formData = new FormData();

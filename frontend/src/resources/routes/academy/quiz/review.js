@@ -47,7 +47,7 @@ function QuizReview() {
         (option) => option.is_correct
       );
       return correctOption ? correctOption.option_text : "N/A";
-    } else if (question.question_type == "free_text") {
+    } else if (question.question_type === "free_text") {
       return question.suggested_answer ?? "N/A";
     } else {
       return "No correct answer available";
