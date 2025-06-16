@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Wrapper from "../../components/general/Wrapper";
 import axiosConfig from "../../../providers/axiosConfig";
 import { useTranslation } from "react-i18next";
+import { CircularProgress } from "@mui/material";
 
 const ProfileDashboard = () => {
   const [loading, setLoading] = useState();
@@ -32,31 +33,37 @@ const ProfileDashboard = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="flex flex-col gap-11 pb-10 pt-24">
-        <div className="flex flex-col gap-5">
-          <h3 className="text-xl font-semibold text-white capitalize">
-            {t("profile.title")}
-          </h3>
-          <div className="flex items-center flex-wrap gap-5 flex-1">
-            {dashboardData &&
-              Object.entries(dashboardData).map(([key, value]) => (
-                <DashboardItem
-                  key={key}
-                  valueLabel={t(`profile.${key}`)}
-                  value={value}
-                />
-              ))}
+    <>
+      {loading ? (
+        <CircularProgress className="mx-auto" sx={{ color: "#FFF" }} />
+      ) : (
+        <Wrapper>
+          <div className="flex flex-col gap-11 pb-10 pt-24">
+            <div className="flex flex-col gap-5">
+              <h3 className="text-xl font-semibold text-white capitalize">
+                {t("profile.title")}
+              </h3>
+              <div className="flex items-center flex-wrap gap-5 flex-1">
+                {dashboardData &&
+                  Object.entries(dashboardData).map(([key, value]) => (
+                    <DashboardItem
+                      key={key}
+                      valueLabel={t(`profile.${key}`)}
+                      value={value}
+                    />
+                  ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-5">
+              <h3 className="text-xl font-semibold text-white capitalize">
+                {t("profile.motivation")}
+              </h3>
+              <div></div>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-5">
-          <h3 className="text-xl font-semibold text-white capitalize">
-            {t("profile.motivation")}
-          </h3>
-          <div></div>
-        </div>
-      </div>
-    </Wrapper>
+        </Wrapper>
+      )}
+    </>
   );
 };
 

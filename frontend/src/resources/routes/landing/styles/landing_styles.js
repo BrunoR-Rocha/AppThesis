@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BackgroundBg from "../../../media/landing/background.png";
+import BackgroundBg from "../../../media/landing/background.webp";
 import FeatureBg from "../../../media/landing/feature_bg.svg";
 
 export const HeroArea = styled("div")`
