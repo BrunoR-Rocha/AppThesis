@@ -166,8 +166,7 @@ const ProfileCourses = () => {
               ) : (
                 <div className="flex flex-col items-center text-center text-white gap-10">
                   <p>{t("profile.courses.pending")}</p>
-                  <a
-                    href="#"
+                  <button
                     onClick={() =>
                       navigate("/academy", {
                         state: { activeTab: "courses" },
@@ -176,7 +175,7 @@ const ProfileCourses = () => {
                     className="flex rounded-full bg-[#F4AA5A] px-4 py-2"
                   >
                     {t("profile.courses.redirect")}
-                  </a>
+                  </button>
                 </div>
               )}
             </div>

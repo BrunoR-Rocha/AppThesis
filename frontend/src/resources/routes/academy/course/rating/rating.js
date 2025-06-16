@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 const CourseRating = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState();
 
   const {

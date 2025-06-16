@@ -18,7 +18,6 @@ import {
 import ProgressCircle from "./components/Progress";
 import { useRef } from "react";
 import Skeleton from "../../../components/general/Skeleton";
-import { useTranslation } from "react-i18next";
 
 function QuizPage() {
 
@@ -59,7 +58,7 @@ function QuizPage() {
   const [resultsScore, setResultsScore] = useState(false);
   const timerIntervalRef = useRef(null);
   const { quiz_id } = location.state || {};
-  const { t } = useTranslation();
+
   useEffect(() => {
     setLoading(true);
     axiosConfig
@@ -130,7 +129,7 @@ function QuizPage() {
     setCloseConfirmationModal({ show: false });
   };
 
-  const handleSubmitQuiz = async () => {
+  const handleSubmitQuiz = useCallback(async () => {
     clearInterval(timerIntervalRef.current);
 
     try {
@@ -150,7 +149,7 @@ function QuizPage() {
       toast.error("There was an error submitting your quiz. Please try again.");
       setIsSubmitting(false);
     }
-  };
+  }, [quiz_id, answers]);
 
   const saveQuizProgress = useCallback(() => {
     axiosConfig
@@ -212,7 +211,7 @@ function QuizPage() {
     return () => {
       clearInterval(timerIntervalRef.current);
     };
-  }, [timer]);
+  }, [timer, handleSubmitQuiz]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
