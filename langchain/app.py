@@ -84,9 +84,8 @@ def chat():
 
     # Process the message with Langchain/OpenAI
     try:
-        response = llm([full_prompt])
+        response = llm.invoke([full_prompt])
         generated_text = response.content
-        
     except Exception as e:
         system_message = f"An error occurred while generating the response. Please try again later. Error details: {str(e)}"
         return jsonify({
@@ -135,7 +134,7 @@ def questionTopics():
 
     # Process the message with Langchain/OpenAI
     try:
-        response = llm([full_prompt])
+        response = llm.invoke([full_prompt])
         generated_text = response.content
     except Exception as e:
         return jsonify({
@@ -213,7 +212,7 @@ def randomQuestions():
 
     # Process the message with Langchain/OpenAI
     try:
-        response = llm([full_prompt])
+        response = llm.invoke([full_prompt])
         generated_text = response.content
     except Exception as e:
         return jsonify({
@@ -277,7 +276,7 @@ def questionEvaluate():
 
     # Process the message with Langchain/OpenAI
     try:
-        response = llm([full_prompt])
+        response = llm.invoke([full_prompt])
         generated_text = response.content
     except Exception as e:
         return jsonify({
