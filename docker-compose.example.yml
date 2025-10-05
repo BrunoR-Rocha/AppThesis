@@ -14,9 +14,9 @@ services:
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_DATABASE=laravel
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=secret
+      - DB_DATABASE=
+      - DB_USERNAME=
+      - DB_PASSWORD=
     networks:
       - app-network
 
@@ -76,9 +76,9 @@ services:
     image: postgres:13
     container_name: postgres
     environment:
-      POSTGRES_DB: laravel
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB:
+      POSTGRES_USER: 
+      POSTGRES_PASSWORD:
     ports:
       - "54320:5432"
     volumes:
@@ -93,11 +93,11 @@ services:
     container_name: langchain
     restart: always
     environment:
-      - PYTHONUNBUFFERED=1
-      - LANGCHAIN_TRACING_V2=true
-      - LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-      - LANGCHAIN_API_KEY=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
-      - LANGCHAIN_PROJECT=pr-smug-warfare-80
+      - PYTHONUNBUFFERED=
+      - LANGCHAIN_TRACING_V2=
+      - LANGCHAIN_ENDPOINT=
+      - LANGCHAIN_API_KEY=
+      - LANGCHAIN_PROJECT=
     ports:
       - "5400:4000"
     volumes:
